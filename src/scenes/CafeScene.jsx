@@ -103,7 +103,7 @@ export default function CafeScene({
     });
 
     setCameraTarget(new Vector3(-30, 0, -69.5));
-    if (bgAudio) bgAudio.play(); //📢
+    // if (bgAudio) bgAudio.play(); //📢
   }
   };
 
@@ -118,7 +118,7 @@ export default function CafeScene({
 
       // 카페 스팟 매쉬 도달시
       if (dist < 1.5) {
-        if (bgAudio) bgAudio.pause(); //📢
+        // if (bgAudio) bgAudio.pause(); //📢
 
         setTriggered(true);
         // if (emotionRef.current) emotionRef.current.visible = false;

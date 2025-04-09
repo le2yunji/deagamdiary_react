@@ -85,7 +85,7 @@ export default function MetroScene({
       z: 1.2,
       ease: "expo.in",
     });
-    if (bgAudio) bgAudio.play(); //📢
+    // if (bgAudio) bgAudio.play(); //📢
 
   };
 
@@ -121,7 +121,7 @@ export default function MetroScene({
       const dist = playerPosXZ.distanceTo(spotPosXZ);
 
       if (dist < 1.5) {
-        if (bgAudio) bgAudio.pause(); //📢
+        // if (bgAudio) bgAudio.pause(); //📢
 
         setTriggered(true);
         disappearPlayer(playerRef);

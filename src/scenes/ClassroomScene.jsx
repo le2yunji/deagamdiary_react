@@ -288,7 +288,7 @@ const restorePlayerAfterClass = () => {
   setCameraTarget(new Vector3(-89, 0, -49));
   setDisableMovement(false);
 
-  if (bgAudio) bgAudio.play(); //📢
+  // if (bgAudio) bgAudio.play(); //📢
 
 };
 
@@ -344,7 +344,7 @@ useFrame(() => {
     const dist = playerRef.current.position.clone().setY(0).distanceTo(ClassroomSpotMeshPosition);
     if (dist < 1.5) {
 
-      if (bgAudio) bgAudio.pause(); //📢
+      // if (bgAudio) bgAudio.pause(); //📢
 
       // setTriggered(true)
       triggered.current = true; // 👈 즉각 변경됨
@@ -379,16 +379,13 @@ useFrame(() => {
         gsap.to(camera.position,{
           duration: 1, 
           // x: -95,
-          y: 2.5, 
+          y: 3, 
           // z: 5.5,
           ease: "expo.inOut",
           onUpdate: () => {
             camera.updateProjectionMatrix();
           },        
         })
-
-        console.log(camera.position)
-
       }, 500);
 
       setTimeout(() => {

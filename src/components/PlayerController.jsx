@@ -8,7 +8,7 @@ import { PositionalAudio } from '@react-three/drei';
 const PlayerController = forwardRef(({ destination, cameraRef, disableMovement = false }, ref) => {
   const playerRef = useRef();
   const cameraOffset = new Vector3(1, 5, 5); // 감자 뒤/왼쪽 위
-  const speed = 0.2;
+  const speed = 0.25;
   const isMovingRef = useRef(false);
   const currentActionRef = useRef(null);
   const walkAudioRef = useRef();
@@ -50,27 +50,27 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
       const dz = destination.z - playerPos.z;
       const distance = Math.sqrt(dx * dx + dz * dz);
     
-      console.log(destination.x, destination.z)
+      // console.log(destination.x, destination.z)
 
       if (distance < 0.1) {
         if (isMovingRef.current) {
           isMovingRef.current = false;
           playAnimation(player, 'Idle');
             
-    // 🔇 걷기 멈추면 소리 정지
-    if (walkAudioRef.current) {
-      walkAudioRef.current.pause();
-    }
+    // // 🔇 걷기 멈추면 소리 정지
+    // if (walkAudioRef.current) {
+    //   walkAudioRef.current.pause();
+    // }
         }
       } else {
         if (!isMovingRef.current) {
           isMovingRef.current = true;
           playAnimation(player, 'Walk');
           // 🔊 걷기 시작하면 소리 재생
-    if (walkAudioRef.current) {
-      walkAudioRef.current.setVolume(0.7);
-      walkAudioRef.current.play();
-    }
+            // if (walkAudioRef.current) {
+            //   walkAudioRef.current.setVolume(0.7);
+            //   walkAudioRef.current.play();
+            // }
         }
 
         // 🔽 여기에 추가: 너무 가까운 경우 이동 생략
@@ -117,7 +117,7 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
  
   return (
     <Player ref={playerRef}>
-    <PositionalAudio
+    {/* <PositionalAudio
       ref={walkAudioRef}
       url="/assets/audio/walk_sound.mp3"
       position={[0,0 ,0]}
@@ -126,7 +126,7 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
       rolloffFactor={1}
       loop
       volume={0.7}
-    />
+    /> */}
 
     </Player>
   );;

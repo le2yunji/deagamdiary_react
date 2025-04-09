@@ -85,7 +85,7 @@ import {
       setCameraTarget(new Vector3(99, 0, 25));  
       enableMouseEvents();      // 마우스 이벤트 복원
       setDisableMovement(false)
-      if (bgAudio) bgAudio.play(); //📢
+      // if (bgAudio) bgAudio.play(); //📢
 
     };
 
@@ -104,7 +104,7 @@ import {
 
         // 일정 거리 이내에 도달하면 이벤트 트리거
         if (dist < 1.5) {
-          if (bgAudio) bgAudio.pause(); //📢
+          // if (bgAudio) bgAudio.pause(); //📢
           setTriggered(true);
           disableMouseEvents();
           setDisableMovement(true)

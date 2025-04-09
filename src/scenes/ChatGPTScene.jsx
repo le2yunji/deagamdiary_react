@@ -83,7 +83,7 @@ export default function ChatGPTScene({
 
     setDisableMovement(false);
 
-    if (bgAudio) bgAudio.play(); //📢
+    // if (bgAudio) bgAudio.play(); //📢
 
 
     // if (cafeGamzaRef.current) {
@@ -119,7 +119,7 @@ export default function ChatGPTScene({
         // if (emotionRef.current) emotionRef.current.visible = false;
         disappearPlayer(playerRef);
         setDisableMovement(true);
-        if (bgAudio) bgAudio.pause(); // 혹은 bgAudio.volume = 0;
+        // if (bgAudio) bgAudio.pause(); // 혹은 bgAudio.volume = 0;
 
         scene.remove(scene.getObjectByName('chatGptSpot'));
         scene.remove(chatGptSpotRef.current);
