@@ -1,24 +1,15 @@
-// src/components/Emotion.jsx
-import { useFrame } from '@react-three/fiber';
-import { useRef } from 'react';
-import { Html } from '@react-three/drei';
+// import { useLoader } from '@react-three/fiber';
+// import { TextureLoader } from 'three';
+// import { useMemo } from 'react';
 
-export default function Emotion({ targetRef, imageSrc = "/assets/images/emotion.png" }) {
-  const emotionRef = useRef();
+// export default function Emotion({ textureUrl, position }) {
+//   const validUrl = useMemo(() => textureUrl ?? '/assets/images/happy.webp', [textureUrl]);
+//   const texture = useLoader(TextureLoader, validUrl);
 
-  useFrame(() => {
-    if (targetRef.current && emotionRef.current) {
-      const player = targetRef.current;
-      const pos = player.position.clone();
-      emotionRef.current.position.set(pos.x, pos.y + 2.5, pos.z); // 머리 위 고정
-    }
-  });
-
-  return (
-    <group ref={emotionRef} name="Emotion">
-      <Html distanceFactor={20} center style={{ pointerEvents: 'none' }}>
-        <img src={imageSrc} alt="emotion" width="2" />
-      </Html>
-    </group>
-  );
-}
+//   return (
+//     <mesh position={position}>
+//       <planeGeometry args={[1.2, 1.2]} />
+//       <meshBasicMaterial map={texture} transparent alphaTest={0.5} />
+//     </mesh>
+//   );
+// }

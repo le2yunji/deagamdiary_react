@@ -1,14 +1,53 @@
-import React from 'react';
+// src/index.jsx
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RecoilRoot } from 'recoil';
 import './index.css';
 import Scene from './Scene';
 
+const AppWithStartScreen = () => {
+  const [showCanvas, setShowCanvas] = useState(false);
+
+  useEffect(() => {
+    const startBtn = document.getElementById('start-button');
+    const startScreen = document.getElementById('start-screen');
+    const bgAudio = document.getElementById("bg-audio");
+
+    if (startBtn && startScreen) {
+      setTimeout(() => {
+        startBtn.style.display = "block";
+      }, 10000);
+
+      startBtn.addEventListener("click", () => {
+        startScreen.style.display = "none";
+        setShowCanvas(true); // 🎯 버튼 클릭 시 캔버스 렌더 시작
+        if (bgAudio) {
+          bgAudio.volume = 0.2;
+          bgAudio.play();
+        }
+        const endingVideo = document.getElementById('ending-video');
+        if (endingVideo) {
+          endingVideo.muted = false;
+          endingVideo.volume = 1.0;
+        }
+      });
+    } else {
+      console.error("시작 버튼 또는 시작 화면 요소를 찾을 수 없습니다.");
+    }
+  }, []);
+
+  
+  return (
+    <RecoilRoot>
+      {showCanvas && <Scene />} {/* ✅ 클릭 후에만 Canvas 생성 */}
+    </RecoilRoot>
+  );
+};
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RecoilRoot>
-    <Scene />
-    </RecoilRoot>
+    <AppWithStartScreen />
   </React.StrictMode>
 );

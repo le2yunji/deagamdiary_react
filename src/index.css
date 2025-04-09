@@ -1,7 +1,81 @@
+/* src/index.css */
 * {
     box-sizing: border-box;
 }
-body {
+body, #root {
     margin: 0;
     padding: 0;
-}
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: sans-serif;
+  }
+
+#start-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    overflow: hidden;
+  }
+  
+  #start-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  #start-button {
+    margin: 0 auto;
+    padding: 10px 10px;
+    font-size: 16px;
+    position: absolute; /* relative → absolute 변경 */
+    width: 240px;
+    height: 160px;
+    top: 550px;
+	background: url('./assets/images/gamza_button_unclick.webp') no-repeat center;
+	background-size: cover;
+    border: none;
+    cursor: pointer;
+    left: 50%; /* 가로 정렬을 위해 left: 50% */
+    transform: translateX(-50%); /* 가로 중앙 정렬 */
+    cursor: pointer;
+    z-index: 999;
+	transition: background 0.3s ease-in-out;
+	display: none; /* 기본적으로 버튼 숨김 */
+  }
+  /* Hover 시 이미지 변경 */
+#start-button:hover {
+    background: url('./assets/images/gamza_button_click.webp') no-repeat center;
+    background-size: cover;
+    }
+
+    #ending-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      overflow: hidden;
+      display: none;       /* 처음엔 숨김 */
+      opacity: 0;           /* 투명도 0으로 시작 */
+      transition: opacity 1.5s ease-in-out;
+      pointer-events: none; /* 클릭 방지 */
+    }
+    #ending-screen.fade-in {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #ending-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    #ending-screen.show {
+      display: block;
+      opacity: 1;
+      pointer-events: auto;
+    }

@@ -7,14 +7,32 @@
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
-      content="3D 웹 자동차 시뮬레이션 프로젝트"
+      content="3D 웹 인터랙티브"
     />
-    <meta name="keywords" content="자동차 시뮬레이션, 3D 웹, fast-campus" />
+    <meta name="keywords" content="나는야 말하는 감자, 3D 웹" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>나는야 말하는 감자</title>
   </head>
   <body>
+        <!-- ✅ 시작화면 -->
+        <div id="start-screen">
+          <video autoplay loop muted playsinline id="start-video">
+            <source src="/assets/video/startpage.mp4" type="video/mp4" />          
+          </video>
+          <button id="start-button" style="display: none;"></button>
+          <audio id="bg-audio" src="/assets/audio/ending_bgm.mp3" loop />
+        </div>
+
     <div style="width: 100vw; height: 100vh;"  id="root"></div>
+
+    <div id="ending-screen">
+      <video muted playsinline id="ending-video">
+        <source src="/assets/video/ending.mp4" type="video/mp4" />
+      </video>
+      
+    </div>
+
+
   </body>
 </html>
