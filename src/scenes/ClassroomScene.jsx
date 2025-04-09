@@ -146,13 +146,13 @@ export default function ClassroomScene({ playerRef, emotionRef, setCameraTarget,
 
 // 피피티, 슬라이드 
   useEffect(() => {
-    const geometry = new PlaneGeometry(10, 5.6);
+    const geometry = new PlaneGeometry(10, 5.7);
     setSlides(
       slidePaths.map((path, i) => {
         const mat = new MeshBasicMaterial({ transparent: true, opacity: 0 });
         const mesh = new Mesh(geometry, mat);
         mesh.rotation.y = THREE.MathUtils.degToRad(-30);
-        mesh.position.set(-92.3, 6.2, -69.3);
+        mesh.position.set(-92.3, 6.05, -69.3);
         // mesh.scale.set(1.3, 1.25, 1.3);
         mesh.visible = false;
         loader.load(path, (tex) => {
@@ -262,11 +262,7 @@ const startSlideShow = () => {
 // ✅ 클래스룸 인터랙션 끝 완료
 const restorePlayerAfterClass = () => {
 
-  if (classroomGamzaRef.current) {
-    gsap.to(classroomGamzaRef.current.scale, {
-      x: 0, y: 0, z: 0, duration: 1, ease: "bounce.inOut"
-    });
-  }
+
 
   gsap.to(camera,{
     duration: 1, 
@@ -280,6 +276,17 @@ const restorePlayerAfterClass = () => {
     ease: "power3.out",
     onUpdate: () => camera.updateProjectionMatrix(),
   })
+
+  setTimeout(() => {
+    if (classroomGamzaRef.current) {
+      gsap.to(classroomGamzaRef.current.position, {
+        y: 3, duration: 1, ease: "expo.inOut"
+      });
+      gsap.to(classroomGamzaRef.current.scale, {
+        x: 0, y: 0, z: 0, duration: 1, ease: "expo.inOut"
+      });
+    }
+  }, 500)
 
   playerRef.current.visible = true;
   playerRef.current.position.set(-92, 0.3, -56);
@@ -372,7 +379,7 @@ useFrame(() => {
 
         gsap.to(camera,{
           duration: 1, 
-          zoom: 55,
+          zoom: 45,
           ease: "power3.out",
           onUpdate: () => camera.updateProjectionMatrix(),
         })

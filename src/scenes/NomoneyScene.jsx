@@ -62,7 +62,7 @@ export default function NomoneyScene({
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
-    const geometry = new THREE.PlaneGeometry(0.8, 0.8);
+    const geometry = new THREE.PlaneGeometry(0.5, 0.5);
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(-92, 1.2, -9.4);
     mesh.rotation.y = THREE.MathUtils.degToRad(5);
@@ -191,7 +191,7 @@ export default function NomoneyScene({
         gsap.to([nomoneyGamzaRef.current.position,nomoneyBankRef.current.position] , {
           y: 0,
           duration: 1,
-          ease: "bounce.inOut"
+          ease: "expo.inOut"
         });
 
         // gsap.to(nomoneyGamzaRef.current.position , {
@@ -234,17 +234,17 @@ export default function NomoneyScene({
           if (noMoneyText.current) {
             noMoneyText.current.visible = true;
           }
-        }, 4000);
+        }, 5000);
 
         // 텍스트 확대 & 이동
         setTimeout(() => {
           if (noMoneyText.current) {
             gsap.to(noMoneyText.current.scale, {
               duration: 1,
-              x: 5,
-              y: 5,
-              z: 5,
-              ease: 'bounce.inOut',
+              x: 6,
+              y: 6,
+              z: 6,
+              ease: 'expo.out',
             });
             gsap.to(noMoneyText.current.position, {
               duration: 2,

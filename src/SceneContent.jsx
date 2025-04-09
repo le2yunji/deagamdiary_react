@@ -182,7 +182,7 @@ export default function SceneContent() {
           cameraRef={cameraRef}
           playerRef={playerRef}
         />
-        
+
         <ambientLight intensity={2.2}  ref={ambientLightRef} />
 
         <directionalLight

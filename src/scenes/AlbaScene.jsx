@@ -93,7 +93,13 @@ export default function AlbaScene({
 
         gsap.to(camera, {
           duration: 1,
-          zoom: 40,
+          zoom: 50,
+          ease: "power2.out",
+          onUpdate: () => camera.updateProjectionMatrix(),
+        });
+          gsap.to(camera, {
+          duration: 1,
+          zoom: 50,
           ease: "power2.out",
           onUpdate: () => camera.updateProjectionMatrix(),
         });

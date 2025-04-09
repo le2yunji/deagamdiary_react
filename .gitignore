@@ -32,3 +32,4 @@ dist/
 *.log
 *.blend1
 *.glb 
+.vercel

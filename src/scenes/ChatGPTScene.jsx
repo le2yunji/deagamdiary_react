@@ -150,7 +150,7 @@ export default function ChatGPTScene({
 
         setTimeout(() => {
         const chatGPTAnim =  chatGptActions.current?.["Scene"]?.reset().play()
-        if (chatGPTAnim) { chatGptActions.timeScale = 0.8; }
+        if (chatGPTAnim) { chatGptActions.timeScale = 0.6; }
         }, 1000);
 
         // setTimeout(() => {

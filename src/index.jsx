@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { RecoilRoot } from 'recoil';
 import './index.css';
 import Scene from './Scene';
+import styled from "styled-components"; // ✅ 올바른 스타일 임포트
 
 const AppWithStartScreen = () => {
   const [showCanvas, setShowCanvas] = useState(false);
@@ -39,7 +40,9 @@ const AppWithStartScreen = () => {
   
   return (
     <RecoilRoot>
+      <Wrapper>
       {showCanvas && <Scene />} {/* ✅ 클릭 후에만 Canvas 생성 */}
+      </Wrapper>
     </RecoilRoot>
   );
 };
@@ -51,3 +54,9 @@ root.render(
     <AppWithStartScreen />
   </React.StrictMode>
 );
+
+const Wrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+`

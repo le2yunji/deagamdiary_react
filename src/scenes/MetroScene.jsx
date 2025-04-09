@@ -83,7 +83,7 @@ export default function MetroScene({
       x: 1.2,
       y: 1.2,
       z: 1.2,
-      ease: "expo.in",
+      ease: "power1.in",
     });
     // if (bgAudio) bgAudio.play(); //📢
 
@@ -162,9 +162,12 @@ export default function MetroScene({
         });
 
         setTimeout(() => {
-          if (actions) {
-            actions['Scene']?.reset().play();
+          const sceneAction = actions['Scene'];
+          if (sceneAction) {
+            sceneAction.timeScale = 0.7;
+            sceneAction.reset().play();
           }
+          
         }, 2000);
         setTimeout(() => {
           gsap.to(camera, {
@@ -173,7 +176,7 @@ export default function MetroScene({
             ease: "power2.out",
             onUpdate: () => camera.updateProjectionMatrix(),
           });
-        }, 4000);
+        }, 4500);
         setTimeout(() => {
           // restoreMainCamera(setMainCameraActive, setUseSceneCamera);
           restorePlayerAfterMetro();

@@ -159,6 +159,7 @@ export default function CafeScene({
        
 
         setTimeout(() => {
+          // 커피 기다림
           const anim1 = cafeActions.current?.["CoffeAnim1"];
           const idle = cafeGamzaActions.current?.["Idle"];
           if (anim1) { anim1.reset().play(); anim1.timeScale = 0.8; }
@@ -166,6 +167,7 @@ export default function CafeScene({
         }, 1500);
 
         setTimeout(() => {
+          // 커피 전달
           cafeActions.current?.["CoffeAnim1"]?.stop();
           const anim2 = cafeActions.current?.["CoffeAnim2"];
           const cup1 = coffeeActions.current?.["cupfee1"];
@@ -174,16 +176,21 @@ export default function CafeScene({
         }, 2000);
 
         setTimeout(() => {
-          const cup2 = coffeeActions.current?.["cupfee2"];
+          coffeeActions.current?.["cupfee1"]?.stop();
+
+          if(coffeeRef){
+            coffeeRef.current.visible = false
+            scene.remove(coffeeRef)
+          }
+
+          // const cup2 = coffeeActions.current?.["cupfee2"];
           const drink = cafeGamzaActions.current?.["drink"];
           const aitt = cafeGamzaActions.current?.["aitt"];
 
-          coffeeActions.current?.["cupfee1"]?.stop();
           if (coffeeRef.current?.position) {
             coffeeRef.current.position.set(-38.6, 0, -88);
           }
 
-          if (cup2) { cup2.reset().play(); cup2.timeScale = 0.8; }
           if (drink) { drink.reset().play(); drink.timeScale = 0.8; }
           if (aitt) { aitt.reset().play(); aitt.timeScale = 0.8; }
         }, 6000);

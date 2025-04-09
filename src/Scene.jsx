@@ -1,12 +1,16 @@
 // src/Scene.jsx
 import { Canvas } from '@react-three/fiber';
 import SceneContent from './SceneContent';
+import { Suspense } from 'react';
+import { Loader } from './components/Loader';
 
 export default function App() {
   return (
-  <Canvas shadows dpr={[1, 1.5]} gl={{ preserveDrawingBuffer: false, powerPreference: "high-performance" }}>
+    <Canvas shadows dpr={[1, 1.5]} gl={{ preserveDrawingBuffer: false, powerPreference: "high-performance" }}>
       <color attach="background" args={['white']} />
-      <SceneContent />
+      <Suspense fallback={<Loader />}>
+          <SceneContent />
+      </Suspense>
     </Canvas>
   );
 }

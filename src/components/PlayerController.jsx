@@ -50,7 +50,7 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
       const dz = destination.z - playerPos.z;
       const distance = Math.sqrt(dx * dx + dz * dz);
     
-      // console.log(destination.x, destination.z)
+      console.log(destination.x, destination.z)
 
       if (distance < 0.1) {
         if (isMovingRef.current) {
