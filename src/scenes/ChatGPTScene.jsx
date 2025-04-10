@@ -83,7 +83,7 @@ export default function ChatGPTScene({
 
     setDisableMovement(false);
 
-    // if (bgAudio) bgAudio.play(); //📢
+    if (bgAudio) bgAudio.play(); //📢
 
 
     // if (cafeGamzaRef.current) {
@@ -119,7 +119,7 @@ export default function ChatGPTScene({
         // if (emotionRef.current) emotionRef.current.visible = false;
         disappearPlayer(playerRef);
         setDisableMovement(true);
-        // if (bgAudio) bgAudio.pause(); // 혹은 bgAudio.volume = 0;
+        if (bgAudio) bgAudio.pause(); // 혹은 bgAudio.volume = 0;
 
         scene.remove(scene.getObjectByName('chatGptSpot'));
         scene.remove(chatGptSpotRef.current);
@@ -182,27 +182,27 @@ export default function ChatGPTScene({
             chatGptActions.current = actions;
         }}
     />
-<AudioTimelinePlayer
-  mixer={chatGptMixer.current}
-  action={chatGptActions.current?.["Scene"]}
-  position={[93.5, 2, -10.7]}
-  timeline={[
-    {
-      time: 3.1,
-      url: '/assets/audio/Keyboard.mp3',
-      duration: 3,
-      volume: 0.7,
-      loop: false,
-      refDistance: 4
-    },
-    // {
-    //   time: 2.0,
-    //   url: '/assets/audio/Keyboard.mp3',
-    //   duration: 2.5,
-    //   volume: 1.0,
-    //   loop: false,
-    //   refDistance: 6
-    // },
+    <AudioTimelinePlayer
+      mixer={chatGptMixer.current}
+      action={chatGptActions.current?.["Scene"]}
+      position={[93.5, 2, -10.7]}
+      timeline={[
+        {
+          time: 3.1,
+          url: '/assets/audio/Keyboard.mp3',
+          duration: 3,
+          volume: 10.0,
+          loop: false,
+          refDistance: 4
+        },
+      {
+        time: 5.0,
+        url: '/assets/audio/Keyboard.mp3',
+        duration: 2.5,
+        volume: 1.0,
+        loop: false,
+        refDistance: 6
+      },
     // {
     //   time: 4.8,
     //   url: '/assets/audio/Keyboard.mp3',

@@ -27,10 +27,7 @@ export const Player = forwardRef((props, ref) => {
   }, [actions]);
 
   return (
-    // <group ref={ref} {...props} dispose={null} position={[7.5, 0, -109] }  scale={[1.2, 1.2, 1.2]} rotation={[0, Math.PI, 0]} >
-
-<group ref={ref} {...props} dispose={null} position={[88.6, 0, -2] }  scale={[1.2, 1.2, 1.2]} rotation={[0, Math.PI, 0]} >
-
+    <group ref={ref} {...props} dispose={null} position={[7.5, 0, -109] }  scale={[1.2, 1.2, 1.2]} rotation={[0, Math.PI, 0]} > 
       <group name="Scene">
         <group name="Bone" position={[-0.115, 0, 0]}>
           <primitive object={nodes.spine} />

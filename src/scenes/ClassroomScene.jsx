@@ -293,7 +293,7 @@ const restorePlayerAfterClass = () => {
   setCameraTarget(new Vector3(-89, 0, -49));
   setDisableMovement(false);
 
-  // if (bgAudio) bgAudio.play(); //📢
+  if (bgAudio) bgAudio.play(); //📢
 
 };
 
@@ -348,7 +348,7 @@ useFrame(() => {
     const dist = playerRef.current.position.clone().setY(0).distanceTo(ClassroomSpotMeshPosition);
     if (dist < 1.5) {
 
-      // if (bgAudio) bgAudio.pause(); //📢
+      if (bgAudio) bgAudio.pause(); //📢
 
       // setTriggered(true)
       triggered.current = true; // 👈 즉각 변경됨

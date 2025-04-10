@@ -7,6 +7,7 @@ import { gsap } from 'gsap';
 import { Cafe } from '../components/Cafe';
 import { Coffee } from '../components/Coffee';
 import { CafeGamza } from '../components/CafeGamza';
+import { AudioTimelinePlayer } from '../utils/AudioTimelinePlayer';
 
 import {
   disappearPlayer,
@@ -97,7 +98,7 @@ export default function CafeScene({
     });
 
     setCameraTarget(new Vector3(-30, 0, -69.5));
-    // if (bgAudio) bgAudio.play(); //📢
+    if (bgAudio) bgAudio.play(); //📢
   }
   };
 
@@ -112,20 +113,9 @@ export default function CafeScene({
 
       // 카페 스팟 매쉬 도달시
       if (dist < 1.5) {
-        // if (bgAudio) bgAudio.pause(); //📢
-
-        setTriggered(true);
-        // if (emotionRef.current) emotionRef.current.visible = false;
+        if (bgAudio) bgAudio.pause(); //📢
         triggerCloudEffect();
         disappearPlayer(playerRef);
-
-        scene.remove(scene.getObjectByName('cafeSpot'));
-        scene.remove(cafeSpotRef.current);
-        if (cafeSpotRef.current) cafeSpotRef.current.visible = false;
-
-        // disableMouseEvents();
-        setDisableMovement(true);
-
         gsap.to(camera, {
           duration: 1,
           zoom: 40,
@@ -139,6 +129,19 @@ export default function CafeScene({
           ease: "expo.inOut",
           onUpdate: () => camera.updateProjectionMatrix(),
         });
+
+        setTriggered(true);
+        // if (emotionRef.current) emotionRef.current.visible = false;
+       
+
+        scene.remove(scene.getObjectByName('cafeSpot'));
+        scene.remove(cafeSpotRef.current);
+        if (cafeSpotRef.current) cafeSpotRef.current.visible = false;
+
+        // disableMouseEvents();
+        setDisableMovement(true);
+
+   
 
         if (lightRef.current) scene.add(lightRef.current);
 
@@ -266,7 +269,19 @@ export default function CafeScene({
     cafeGamzaActions.current = actions;
   }}
 />
-
+   <AudioTimelinePlayer
+      mixer={cafeGamzaMixer.current}
+      action={cafeGamzaActions.current?.["drink"]}
+      position={[-34, 2, -77]}
+      timeline={[
+      {
+        time: 2,
+        url: '/assets/audio/DrinkCoffee.mp3',
+        duration: 4.5,
+        volume: 10.0,
+        loop: false,
+        refDistance: 6
+      }]} />
 
       {showCloudEffect && cafeGamzaRef.current && (
         <CloudEffect
