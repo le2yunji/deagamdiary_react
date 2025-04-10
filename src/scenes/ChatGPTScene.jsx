@@ -149,8 +149,9 @@ export default function ChatGPTScene({
         }
 
         setTimeout(() => {
-        const chatGPTAnim =  chatGptActions.current?.["Scene"]?.reset().play()
-        if (chatGPTAnim) { chatGptActions.timeScale = 0.4; }
+        const chatGPTAnim = chatGptActions.current?.["Scene"]
+        chatGPTAnim.timeScale = 0.63
+        chatGPTAnim?.reset().play()
         }, 1000);
 
         // setTimeout(() => {
@@ -160,7 +161,7 @@ export default function ChatGPTScene({
         setTimeout(() => {
             chatGptFinished = true
           restorePlayerAfterChatGPT();
-        }, 18000);
+        }, 23000);
       }
     }
   });
@@ -174,7 +175,7 @@ export default function ChatGPTScene({
     <ChatGPT
         ref={ chatGptRef } // ✅ ref 넘기기
         position={[87, 0, -16]}
-        rotation={[0, THREE.MathUtils.degToRad(60), 0]}
+        rotation={[0, THREE.MathUtils.degToRad(50), 0]}
         scale={[0, 0, 0]}
         onLoaded={({ mixer, actions }) => {
             chatGptMixer.current = mixer;

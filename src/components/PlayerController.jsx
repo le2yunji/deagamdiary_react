@@ -7,8 +7,8 @@ import { PositionalAudio } from '@react-three/drei';
 
 const PlayerController = forwardRef(({ destination, cameraRef, disableMovement = false }, ref) => {
   const playerRef = useRef();
-  const cameraOffset = new Vector3(1, 5, 5); // 감자 뒤/왼쪽 위
-  const speed = 0.2;
+  const cameraOffset = new Vector3(1, 4, 5); // 감자 뒤/왼쪽 위
+  const speed = 0.25;
   const isMovingRef = useRef(false);
   const currentActionRef = useRef(null);
   const walkAudioRef = useRef();
@@ -51,7 +51,7 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
       const distance = Math.sqrt(dx * dx + dz * dz);
     
       // 😀😀
-      // console.log(destination.x, destination.z)
+      console.log(destination.x, destination.z)
 
       if (distance < 0.1) {
         if (isMovingRef.current) {

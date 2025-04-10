@@ -16,7 +16,6 @@ export const AlbaGamza = forwardRef(function AlbaGamza({ onLoaded, ...props }, r
   useEffect(() => {
     if (onLoaded && group.current) {
       Object.values(actions).forEach((action) => {
-        action.setLoop(THREE.LoopOnce, 1);
         action.clampWhenFinished = true;
       });
 

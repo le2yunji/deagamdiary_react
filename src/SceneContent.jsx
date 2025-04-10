@@ -187,18 +187,18 @@ export default function SceneContent() {
 
         <directionalLight
           ref={directionalLightRef}
-          position={[5, 10, 5]}
+          position={[100, 200, 100]} // 높게 배치해서 전체를 커버
           castShadow
-          intensity={2}
-          shadow-mapSize-width={2048}
-          shadow-mapSize-height={2048}
-          shadow-camera-left={-100}
-          shadow-camera-right={100}
-          shadow-camera-top={200}
-          shadow-camera-bottom={-100}
+          intensity={3}
+          shadow-mapSize-width={2024}
+          shadow-mapSize-height={2024}
+          shadow-camera-left={-250}     // ✅ 400x400보다 살짝 크게
+          shadow-camera-right={250}
+          shadow-camera-top={250}
+          shadow-camera-bottom={-250}
           shadow-camera-near={1}
-          shadow-camera-far={200}
-          shadow-bias={-0.001}
+          shadow-camera-far={500}       // ✅ 카메라 거리도 넉넉히
+          shadow-bias={-0.0005}
         />
 
         <Ground onClickGround={(point) => setDestination(point)} />

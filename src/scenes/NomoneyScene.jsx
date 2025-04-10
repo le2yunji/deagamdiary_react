@@ -55,7 +55,7 @@ export default function NomoneyScene({
   const { scene, camera } = useThree();
   const nomoneySpotRef = useRef(); // ✅ 메쉬 ref 추가
 
-  // 텅장 텍스트
+  // 텅장 텍스트 💬
   const noMoneyText = useRef();
   useEffect(() => {
     const texture = new THREE.TextureLoader().load('/assets/images/nomoney.webp');
@@ -64,9 +64,9 @@ export default function NomoneyScene({
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
     const geometry = new THREE.PlaneGeometry(1, 1);
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(-92, 1.2, -9.4);
+    mesh.position.set(-92, 1.6, -9.1);
     mesh.rotation.y = THREE.MathUtils.degToRad(5);
-    mesh.scale.set(0.1, 0.1, 0.1); // 아주 작게 시작
+    mesh.scale.set(0.01, 0.01, 0.01); // 아주 작게 시작
     mesh.visible = false;
     scene.add(mesh);
     noMoneyText.current = mesh;
@@ -82,7 +82,7 @@ export default function NomoneyScene({
     const geometry = new THREE.PlaneGeometry(2, 2);
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(-89, 4.5, -10);
-    mesh.rotation.y = THREE.MathUtils.degToRad(20);
+    mesh.rotation.y = THREE.MathUtils.degToRad(10);
     mesh.visible = false;
     scene.add(mesh);
     nomoneyTalk.current = mesh;
@@ -113,21 +113,8 @@ export default function NomoneyScene({
 
     triggerCloudEffect();
 
-    setTimeout(() => {
       appearPlayer(playerRef, 1.2); // 부드럽게 다시 나타남
-    }, 1000)
-    gsap.to(nomoneyGamzaRef.current.position,{
-      y: 2,
-      duration: 0.5,
-      ease: "expo.in"
-    })
-    gsap.to(nomoneyGamzaRef.current.scale,{
-      x: 0,
-      y: 0,
-      z: 0,
-      duration: 0.5,
-      ease: "expo.in"
-    })
+
 
     // 카메라 복귀
     returnCameraY(camera)
@@ -175,7 +162,7 @@ export default function NomoneyScene({
         gsap.to(camera.position, {
           duration: 0.5,  
           // x: -90,  
-          y: 3,   
+          y: 2,   
           ease: "power2.out", // ✅ 부드러운 감속 애니메이션
           onUpdate: () => {
             camera.updateProjectionMatrix(); // ✅ 변경 사항 반영
@@ -191,12 +178,16 @@ export default function NomoneyScene({
         });
 
         // 노머니 모델들
-        gsap.to([nomoneyGamzaRef.current.position,nomoneyBankRef.current.position] , {
+        gsap.to(nomoneyGamzaRef.current.position , {
           y: 0,
-          duration: 1,
+          duration: 0.5,
           ease: "expo.inOut"
         });
-
+        gsap.to(nomoneyBankRef.current.position , {
+          y: 0.3,
+          duration: 0.5,
+          ease: "expo.inOut"
+        });
         // gsap.to(nomoneyGamzaRef.current.position , {
         //   y: 0,
         //   duration: 1,
@@ -211,7 +202,7 @@ export default function NomoneyScene({
         //     ease: "expo.in"
         //   });
         // }, 2000)
-
+        nomoneyBankRef.current.visible = false
 
 
         // 노머니💵💸 통장 animations:  ['Anim2', 'Bank', 'NoMoney', 'Pocket', 'Walk_Bone.002']
@@ -220,6 +211,8 @@ export default function NomoneyScene({
         // 🚊 애니메이션 및 카메라 연출
         setTimeout(() => {
           if (nomoneyBankActions.current && nomoneyGamzaActions.current) {
+            nomoneyBankRef.current.visible = true
+
             const bankAction = nomoneyBankActions.current["Bank"];
             const noMoneyAction = nomoneyGamzaActions.current["NoMoney"];
             const ahewAction = nomoneyGamzaActions.current["ahew"];
@@ -246,7 +239,7 @@ export default function NomoneyScene({
           if (noMoneyText.current) {
             noMoneyText.current.visible = true;
           }
-        }, 5000);
+        }, 6000);
 
         // 텍스트 확대 & 이동
         setTimeout(() => {
@@ -256,20 +249,20 @@ export default function NomoneyScene({
               x: 6,
               y: 6,
               z: 6,
-              ease:'none',
+              ease:'bounce.out',
             });
             gsap.to(noMoneyText.current.position, {
-              duration: 2,
+              duration: 1,
               x: -98,
-              y: 4,
-              ease: 'expo.inOut',
+              y: 5,
+              ease: 'none',
             });
             gsap.to(noMoneyText.current.rotation, {
               duration: 2,
               y: THREE.MathUtils.degToRad(10),
             });
           }
-        }, 4500);
+        }, 6000);
 
         // 말풍선 & gif 표시
         setTimeout(() => {
@@ -278,8 +271,23 @@ export default function NomoneyScene({
         }, 6500);
 
         setTimeout(() => {
-          restorePlayerAfterNomoney();
-        }, 12000);
+
+          gsap.to(nomoneyGamzaRef.current.position,{
+            y: 2,
+            duration: 0.3,
+            ease: "expo.inOut"
+          })
+          gsap.to(nomoneyGamzaRef.current.scale,{
+            x: 0,
+            y: 0,
+            z: 0,
+            duration: 0.3,
+            ease: "expo.inOut"
+          })
+          setTimeout(() => {
+            restorePlayerAfterNomoney();
+          }, 1000)
+        }, 11000);
       
       } 
     }
@@ -295,7 +303,7 @@ export default function NomoneyScene({
   return (
     <group ref={group}>
       <NomoneyBank
-        position={[-91.9, -10, -10.1]}
+        position={[-91.9, -9.3, -10.1]}
         rotation={[0, THREE.MathUtils.degToRad(-60), 0]}
         scale={[1.8, 1.5, 1.8]}
         onLoaded={({ ref, mixer, actions }) => {

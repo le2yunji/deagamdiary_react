@@ -15,26 +15,42 @@
     <title>나는야 말하는 감자</title>
   </head>
   <body>
-        <!-- ✅ 시작화면 -->
-        <div id="start-screen">
-          <video autoplay loop muted playsinline id="start-video">
-            <source src="/assets/video/startpage.mp4" type="video/mp4" />          
-            <source src="/assets/video/startpage.wepm" type="video/wepm" />          
-          </video>
-          <button id="start-button" style="display: none;"></button>
-          <audio id="bg-audio" src="/assets/audio/ending_bgm.mp3" loop />
-        </div>
 
-    <div style="width: 100vw; height: 100vh;"  id="root"></div>
+    <!-- ✅ 시작화면 -->
+    <div id="start-screen">
+      <video autoplay loop muted playsinline id="start-video">
+        <source src="/assets/video/startpage.mp4" type="video/mp4" />          
+        <source src="/assets/video/startpage.wepm" type="video/wepm" />          
+      </video>
+      <button id="start-button" style="display: none;"></button>
+      <audio id="bg-audio" src="/assets/audio/ending_bgm.mp3" loop />
+    </div>
+
+    <div style="width: 100vw; height: 100vh;" id="root">
+      <!-- <video autoplay loop muted playsinline id="subway-video">
+        <source src="/assets/video/subway.mp4" type="video/mp4" />          
+        <source src="/assets/video/subway.wepm" type="video/wepm" />          
+      </video> -->
+    </div>
 
     <div id="ending-screen">
-      <video muted playsinline id="ending-video">
+      <video autoplay muted playsinline id="ending-video" >
         <source src="/assets/video/ending.wepm" type="video/wepm" />
         <source src="/assets/video/ending.mp4" type="video/mp4" />
       </video>
-      
     </div>
 
+<script>
+const video = document.getElementById("ending-video");
+
+if (video) {
+  video.addEventListener("ended", () => {
+    video.pause();
+    video.currentTime = 0;
+  });
+}
+
+</script>
 
   </body>
 </html>

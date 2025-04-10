@@ -1,10 +1,11 @@
 // src/components/SceneCameraManager.jsx
-import { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { OrthographicCamera } from '@react-three/drei';
 import { useThree, useFrame } from '@react-three/fiber';
+import { useControls } from '@react-three/drei';
 
 export default function SceneCameraManager({
-  position = [1, 5, 5],
+  position = [1, 4, 5],
   zoom = 30,
   near = -1000,
   far = 1000,

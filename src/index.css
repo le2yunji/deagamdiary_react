@@ -27,6 +27,7 @@ body, #root {
     object-fit: cover;
   }
   
+  
   #start-button {
     margin: 0 auto;
     padding: 10px 10px;
@@ -34,7 +35,7 @@ body, #root {
     position: absolute; /* relative → absolute 변경 */
     width: 240px;
     height: 160px;
-    top: 550px;
+    top: 580px;
 	background: url('./assets/images/gamza_button_unclick.webp') no-repeat center;
 	background-size: cover;
     border: none;
@@ -78,4 +79,9 @@ body, #root {
       display: block;
       opacity: 1;
       pointer-events: auto;
+    }
+
+    #subway-video {
+      display: none;       /* 처음엔 숨김 */
+
     }

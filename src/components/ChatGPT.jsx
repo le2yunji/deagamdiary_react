@@ -32,6 +32,7 @@ export const ChatGPT = forwardRef(({ onLoaded, ...props }, ref) => {
     if (group.current) {
       group.current.traverse((child) => {
         if (child.isMesh) child.castShadow = true;
+        // if (child.isMesh) child.receiveShadow = true;
       }); 
     }
   }, []);

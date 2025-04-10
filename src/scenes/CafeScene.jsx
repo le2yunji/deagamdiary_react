@@ -84,15 +84,9 @@ export default function CafeScene({
     playerRef.current.scale.set(0.3, 0.3, 0.3);
     setDisableMovement(false);
 
-    setTimeout(()=>{
-      appearPlayer(playerRef, 1.2);
-    }, 1000)
-    triggerCloudEffect();  
-    if (cafeGamzaRef.current) {
-      gsap.to(cafeGamzaRef.current.scale, {
-        x: 0, y: 0, z: 0, duration: 1, ease: "expo.inOut"
-      });
-    }
+    appearPlayer(playerRef, 1.2);
+
+  
     returnCameraY(camera);
 
     gsap.to(camera, {
@@ -155,34 +149,23 @@ export default function CafeScene({
         //     { x: 1.7, y: 1.7, z: 1.7, duration: 0.5, ease: "expo.inOut" }
         //   );
         // }
+        if (cafeGamzaRef.current) {
+          gsap.to(
+            [cafeRef.current.scale, coffeeRef.current.scale, cafeGamzaRef.current.scale],
+            { x: 1.7, y: 1.7, z: 1.7, duration: 0.5, ease: "power3.inOut" }
+          );
 
+          const anim1 = cafeActions.current?.["CoffeAnim1"];
+          if (anim1) { anim1.reset().play(); anim1.timeScale = 0.6; }
+        }
+        const idle = cafeGamzaActions.current?.["Idle"];
+        if (idle) { idle.reset().play(); idle.timeScale = 0.6; }       
 
-        setTimeout(() => {
-          if (cafeGamzaRef.current) {
-            gsap.to(
-              [cafeRef.current.scale, coffeeRef.current.scale, cafeGamzaRef.current.scale],
-              { x: 1.7, y: 1.7, z: 1.7, duration: 0.5, ease: "power3.inOut" }
-            );
-
-            const anim1 = cafeActions.current?.["CoffeAnim1"];
-                  if (anim1) { anim1.reset().play(); anim1.timeScale = 0.6; }
-          }
-
-        }, 1000)
-       
-
-        setTimeout(() => {
-                  
-
-          // 커피 기다림
-          const idle = cafeGamzaActions.current?.["Idle"];
-          if (idle) { idle.reset().play(); idle.timeScale = 0.6; }
-        }, 1500);
 
         setTimeout(() => {
           // 커피 전달
           cafeActions.current?.["CoffeAnim1"]?.stop();
-          cafeGamzaActions.current?.["Idle"]?.stop();
+          // cafeGamzaActions.current?.["Idle"]?.stop();
           const anim2 = cafeActions.current?.["CoffeAnim2"];
           const cup1 = coffeeActions.current?.["cupfee1"];
           const smile = cafeActions.current?.["Coffe_Smile"];
@@ -204,31 +187,39 @@ export default function CafeScene({
           const drink = cafeGamzaActions.current?.["drink"];
           const aitt = cafeGamzaActions.current?.["aitt"];
 
-          if (coffeeRef.current?.position) {
-            coffeeRef.current.position.set(-38.6, 0, -88);
-          }
-
-          if (drink) { drink.reset().play(); drink.timeScale = 0.7; }
+          if (drink) { 
+            cafeGamzaActions.current?.["Idle"].stop()
+            drink.reset().play(); drink.timeScale = 0.7;
+             }
           if (aitt) { aitt.reset().play(); aitt.timeScale = 0.7; }
-        }, 6000);
-       
-        setTimeout(() => {
+
           cafeActions.current?.["CoffeAnim2"]?.stop();
           const anim3 = cafeActions.current?.["CoffeAnim3"];
-          const surprise = cafeActions.current?.["Coffe_Surprise"];
+          const surprise = cafeActions.current?.["Coffe_Surprise"];          
+          surprise.timeScale = 1.2;
+          anim3.reset().play();
+          surprise.reset().play();
 
-          if (anim3) { anim3.reset().play(); anim3.timeScale = 0.8; }
-          if (surprise) { surprise.reset().play(); surprise.timeScale = 0.8; }
-
-          setTimeout(() => {
-            if (coffeeRef.current) coffeeRef.current.visible = false;
-          }, 6000);
-        }, 6800);
-
+        }, 4900);
+       
+  
         setTimeout(() => {
           coffeeFinished = true
-          restorePlayerAfterCafe();
-        }, 15000);
+          triggerCloudEffect(); 
+          
+          if (cafeGamzaRef.current) {
+            gsap.to(cafeGamzaRef.current.position, {
+              y: 1, duration: 0.3, ease: "expo.inOut"
+            });
+            gsap.to(cafeGamzaRef.current.scale, {
+              x: 0, y: 0, z: 0, duration: 0.3, ease: "expo.inOut"
+            });
+          }
+          setTimeout(()=>{
+            restorePlayerAfterCafe();
+          }, 1500)
+        }, 13500);
+        
       }
     }
   });

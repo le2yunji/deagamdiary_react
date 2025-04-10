@@ -44,8 +44,12 @@ export default function AlbaScene({
 
   const bgAudio = document.getElementById("bg-audio");
 
+  const gamzaActions = useRef();
+  const gamzaMixer = useRef();
+
+
   const restorePlayerAfterAlba = () => {
-    if (bgAudio) bgAudio.play();
+    // if (bgAudio) bgAudio.play();
 
     playerRef.current.visible = true;
     playerRef.current.position.set(-39, 0.3, -16);
@@ -58,15 +62,6 @@ export default function AlbaScene({
       onUpdate: () => camera.updateProjectionMatrix(),
     });
 
-    if (albaGamzaRef.current) {
-      gsap.to(albaGamzaRef.current.scale, {
-        x: 0,
-        y: 0,
-        z: 0,
-        duration: 1,
-        ease: "bounce.inOut",
-      });
-    }
 
     appearPlayer(playerRef, 1.2);
     setCameraTarget(new Vector3(-43, 0, -9));
@@ -95,16 +90,22 @@ export default function AlbaScene({
 
         gsap.to(camera, {
           duration: 1,
-          zoom: 50,
+          zoom: 40,
           ease: "power2.out",
           onUpdate: () => camera.updateProjectionMatrix(),
         });
-          gsap.to(camera, {
+          gsap.to(camera.position, {
           duration: 1,
-          zoom: 50,
+          x: -35.7,
+          y: 3,
+          z: -16,
           ease: "power2.out",
-          onUpdate: () => camera.updateProjectionMatrix(),
+          onUpdate: () => {
+            camera.updateProjectionMatrix()
+            // camera.lookAt(-35, 5, -13)
+          },
         });
+
 
         if (albaGamzaRef.current) {
           setShowCloudEffect(true);
@@ -118,20 +119,48 @@ export default function AlbaScene({
           });
         }
 
-          if (actions) {
-            Object.values(actions).forEach((action) => action.play());
-            actions["Confuse"]?.reset().play();
+          // if (actions) {
+          //   Object.values(actions).forEach((action) => action.play());
+          //   actions["Confuse"]?.reset().play();
+          // }
+          
+          const confuse = gamzaActions.current?.["Confuse"];
+          if (confuse) {
+            confuse.setLoop(THREE.LoopRepeat, Infinity);
+            confuse.clampWhenFinished = false;
+            confuse.reset().play();
           }
 
-        setTimeout(() => {
-          restorePlayerAfterAlba();
-        }, 10000);
+          // Aha: 한 번만 재생, 마지막 프레임 유지
+          const aha = gamzaActions.current?.["Aha"];
+          if (aha) {
+            aha.setLoop(THREE.LoopOnce, 1);
+            aha.clampWhenFinished = true;
+          }
+
+        setTimeout(() => {    
+          if (albaGamzaRef.current) {
+          confuse.stop();
+          aha.reset().play();
+
+          gsap.to(albaGamzaRef.current.scale, {
+            x: 0,
+            y: 0,
+            z: 0,
+            duration: 0.5,
+            ease: "bounce.inOut",
+          });
+        }
+          setTimeout(() => {
+            restorePlayerAfterAlba();
+          }, 1000 )
+        }, 20000);
       }
     }
-
-    if (mixer) mixer.update(clock.getDelta());
   });
-
+  useFrame((_, delta) => {
+    gamzaMixer.current?.update(delta);
+  });
   return (
     <>
       {/* 👇 카메라 매니저는 비활성화 */}
@@ -149,8 +178,8 @@ export default function AlbaScene({
           position={[-35, 0.5, -20]}
           scale={[0, 0, 0]}
           onLoaded={({ mixer, actions }) => {
-            setMixer(mixer);
-            setActions(actions);
+            gamzaMixer.current = mixer;
+            gamzaActions.current = actions;
           }}
         />
 
