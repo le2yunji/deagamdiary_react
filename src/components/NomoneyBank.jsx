@@ -1,5 +1,4 @@
-// NomoneyBank.jsx
-
+// NomoneyGamza.jsx
 import React, { useEffect } from 'react'
 import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
@@ -39,10 +38,15 @@ export function NomoneyBank({ onLoaded, ...props }) {
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
-        <group name="BankBone" position={[0.067, 0, 0]}>
-          <primitive object={nodes.bank_back} />
-          <primitive object={nodes.bank_side} />
-          <skinnedMesh name="Cube003" geometry={nodes.Cube003.geometry} material={materials.Material} skeleton={nodes.Cube003.skeleton} />
+        <group name="Empty">
+          <group name="BankBone" position={[0.067, 0, 0]}>
+            <primitive object={nodes.bank_back} />
+            <primitive object={nodes.bank_side} />
+          </group>
+          <group name="Cube003">
+            <skinnedMesh name="Cube002" geometry={nodes.Cube002.geometry} material={materials.Material} skeleton={nodes.Cube002.skeleton} />
+            <skinnedMesh name="Cube002_1" geometry={nodes.Cube002_1.geometry} material={materials['Material.024']} skeleton={nodes.Cube002_1.skeleton} />
+          </group>
         </group>
       </group>
     </group>

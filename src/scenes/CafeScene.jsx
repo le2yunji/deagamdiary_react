@@ -83,16 +83,16 @@ export default function CafeScene({
     playerRef.current.position.set(-37.7, 0.3, -86.7);
     playerRef.current.scale.set(0.3, 0.3, 0.3);
     setDisableMovement(false);
-    appearPlayer(playerRef, 1.2);
-    triggerCloudEffect();
 
+    setTimeout(()=>{
+      appearPlayer(playerRef, 1.2);
+    }, 1000)
+    triggerCloudEffect();  
     if (cafeGamzaRef.current) {
       gsap.to(cafeGamzaRef.current.scale, {
-        x: 0, y: 0, z: 0, duration: 1, ease: "bounce.inOut"
+        x: 0, y: 0, z: 0, duration: 1, ease: "expo.inOut"
       });
     }
-
-    // if (emotionRef.current) emotionRef.current.visible = true;
     returnCameraY(camera);
 
     gsap.to(camera, {
@@ -130,53 +130,70 @@ export default function CafeScene({
         if (cafeSpotRef.current) cafeSpotRef.current.visible = false;
 
         // disableMouseEvents();
-        downCameraY(camera);
         setDisableMovement(true);
 
         gsap.to(camera, {
           duration: 1,
           zoom: 40,
-          ease: "power2.out",
+          ease: "expo.inOut",
+          onUpdate: () => camera.updateProjectionMatrix(),
+        });
+
+        gsap.to(camera.position, {
+          duration: 1,
+          y: 3,
+          ease: "expo.inOut",
           onUpdate: () => camera.updateProjectionMatrix(),
         });
 
         if (lightRef.current) scene.add(lightRef.current);
 
-        if (cafeRef.current && coffeeRef.current) {
-          gsap.to(
-            [cafeRef.current.scale, coffeeRef.current.scale, cafeGamzaRef.current.scale],
-            { x: 1.5, y: 1.5, z: 1.5, duration: 0.3, ease: "bounce.inOut" }
-          );
-        }
+
+        // if (cafeRef.current && coffeeRef.current) {
+        //   gsap.to(
+        //     [cafeRef.current.scale, coffeeRef.current.scale, cafeGamzaRef.current.scale],
+        //     { x: 1.7, y: 1.7, z: 1.7, duration: 0.5, ease: "expo.inOut" }
+        //   );
+        // }
+
+
         setTimeout(() => {
           if (cafeGamzaRef.current) {
             gsap.to(
               [cafeRef.current.scale, coffeeRef.current.scale, cafeGamzaRef.current.scale],
-              { x: 1.5, y: 1.5, z: 1.5, duration: 0.5, ease: "power3.inOut" }
+              { x: 1.7, y: 1.7, z: 1.7, duration: 0.5, ease: "power3.inOut" }
             );
+
+            const anim1 = cafeActions.current?.["CoffeAnim1"];
+                  if (anim1) { anim1.reset().play(); anim1.timeScale = 0.6; }
           }
+
         }, 1000)
        
 
         setTimeout(() => {
+                  
+
           // 커피 기다림
-          const anim1 = cafeActions.current?.["CoffeAnim1"];
           const idle = cafeGamzaActions.current?.["Idle"];
-          if (anim1) { anim1.reset().play(); anim1.timeScale = 0.8; }
-          if (idle) { idle.reset().play(); idle.timeScale = 0.8; }
+          if (idle) { idle.reset().play(); idle.timeScale = 0.6; }
         }, 1500);
 
         setTimeout(() => {
           // 커피 전달
           cafeActions.current?.["CoffeAnim1"]?.stop();
+          cafeGamzaActions.current?.["Idle"]?.stop();
           const anim2 = cafeActions.current?.["CoffeAnim2"];
           const cup1 = coffeeActions.current?.["cupfee1"];
-          if (anim2) { anim2.reset().play(); anim2.timeScale = 0.8; }
-          if (cup1) { cup1.reset().play(); cup1.timeScale = 0.8; }
+          const smile = cafeActions.current?.["Coffe_Smile"];
+          if (anim2) { anim2.reset().play(); anim2.timeScale = 0.6; }
+          if (cup1) { cup1.reset().play(); cup1.timeScale = 0.6; }
+          if (smile) { smile.reset().play(); smile.timeScale = 0.6; }
         }, 2000);
 
         setTimeout(() => {
           coffeeActions.current?.["cupfee1"]?.stop();
+          cafeActions.current?.["CoffeAnim2"]?.stop();
 
           if(coffeeRef){
             coffeeRef.current.visible = false
@@ -191,14 +208,15 @@ export default function CafeScene({
             coffeeRef.current.position.set(-38.6, 0, -88);
           }
 
-          if (drink) { drink.reset().play(); drink.timeScale = 0.8; }
-          if (aitt) { aitt.reset().play(); aitt.timeScale = 0.8; }
+          if (drink) { drink.reset().play(); drink.timeScale = 0.7; }
+          if (aitt) { aitt.reset().play(); aitt.timeScale = 0.7; }
         }, 6000);
-
+       
         setTimeout(() => {
           cafeActions.current?.["CoffeAnim2"]?.stop();
           const anim3 = cafeActions.current?.["CoffeAnim3"];
           const surprise = cafeActions.current?.["Coffe_Surprise"];
+
           if (anim3) { anim3.reset().play(); anim3.timeScale = 0.8; }
           if (surprise) { surprise.reset().play(); surprise.timeScale = 0.8; }
 
@@ -210,7 +228,7 @@ export default function CafeScene({
         setTimeout(() => {
           coffeeFinished = true
           restorePlayerAfterCafe();
-        }, 12000);
+        }, 15000);
       }
     }
   });

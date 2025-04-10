@@ -1,17 +1,19 @@
-// CafeGamza.jsx
-import React, { useEffect, forwardRef, useImperativeHandle }  from 'react'
+import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react'
 import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
 import * as THREE from 'three';
 
-
 export const CafeGamza = forwardRef(({ onLoaded, ...props }, ref) => {
   const group = React.useRef()
-  const { scene, animations } = useGLTF('/assets/models/Gamza_Coffee.glb');
+  const { scene, animations } = useGLTF('/assets/models/Gamza_Coffee.glb')
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
   const { actions, mixer } = useAnimations(animations, group);
+  
+  // 1. CoffeeGam 그룹의 visibility 상태 관리
+  const [coffeeGamVisible, setCoffeeGamVisible] = useState(false);
+  
   useImperativeHandle(ref, () => group.current);
 
   useEffect(() => {
@@ -26,6 +28,7 @@ export const CafeGamza = forwardRef(({ onLoaded, ...props }, ref) => {
   }, [onLoaded, mixer, actions]);
 
   useEffect(() => {
+    // 2. group 내부 객체에 대해 그림자 설정
     group.current.traverse((child) => {
       if (child.isMesh) {
         child.castShadow = true;
@@ -34,7 +37,15 @@ export const CafeGamza = forwardRef(({ onLoaded, ...props }, ref) => {
         }
       }
     });
-  }, []);
+
+    // 3. CafeGamza 등장 후 일정 시간 뒤 CoffeeGam 나타나게 설정
+    const timer = setTimeout(() => {
+      setCoffeeGamVisible(true); // 일정 시간 뒤 CoffeeGamVisible을 true로 설정
+    }, 7000); // 3초 뒤에 나타나게 설정 (시간 조정 가능)
+
+    return () => clearTimeout(timer); // cleanup
+  }, []);  
+
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
@@ -48,11 +59,28 @@ export const CafeGamza = forwardRef(({ onLoaded, ...props }, ref) => {
           <primitive object={nodes.thighR_1} />
           <primitive object={nodes.ArmpoleL} />
           <primitive object={nodes.ArmpoleR} />
-          <group name="CoffeeGam">
-            <skinnedMesh name="Cylinder001" geometry={nodes.Cylinder001.geometry} material={materials['Material.014']} skeleton={nodes.Cylinder001.skeleton} />
-            <skinnedMesh name="Cylinder001_1" geometry={nodes.Cylinder001_1.geometry} material={materials['Material.013']} skeleton={nodes.Cylinder001_1.skeleton} />
-            <skinnedMesh name="Cylinder001_2" geometry={nodes.Cylinder001_2.geometry} material={materials['Material.015']} skeleton={nodes.Cylinder001_2.skeleton} />
+
+          <group name="CoffeeGam" visible={coffeeGamVisible}>
+            <skinnedMesh 
+              name="Cylinder001" 
+              geometry={nodes.Cylinder001.geometry} 
+              material={materials['Material.014']} 
+              skeleton={nodes.Cylinder001.skeleton} 
+            />
+            <skinnedMesh 
+              name="Cylinder001_1" 
+              geometry={nodes.Cylinder001_1.geometry} 
+              material={materials['Material.013']} 
+              skeleton={nodes.Cylinder001_1.skeleton} 
+            />
+            <skinnedMesh 
+              name="Cylinder001_2" 
+              geometry={nodes.Cylinder001_2.geometry} 
+              material={materials['Material.015']} 
+              skeleton={nodes.Cylinder001_2.skeleton} 
+            />
           </group>
+
           <group name="Cube001">
             <skinnedMesh name="Cube001_1" geometry={nodes.Cube001_1.geometry} material={materials['Material.016']} skeleton={nodes.Cube001_1.skeleton} morphTargetDictionary={nodes.Cube001_1.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_1.morphTargetInfluences} />
             <skinnedMesh name="Cube001_2" geometry={nodes.Cube001_2.geometry} material={materials['Material.017']} skeleton={nodes.Cube001_2.skeleton} morphTargetDictionary={nodes.Cube001_2.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_2.morphTargetInfluences} />

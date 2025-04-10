@@ -62,10 +62,11 @@ export default function NomoneyScene({
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
-    const geometry = new THREE.PlaneGeometry(0.5, 0.5);
+    const geometry = new THREE.PlaneGeometry(1, 1);
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(-92, 1.2, -9.4);
     mesh.rotation.y = THREE.MathUtils.degToRad(5);
+    mesh.scale.set(0.1, 0.1, 0.1); // 아주 작게 시작
     mesh.visible = false;
     scene.add(mesh);
     noMoneyText.current = mesh;
@@ -110,20 +111,22 @@ export default function NomoneyScene({
     playerRef.current.scale.set(0.3, 0.3, 0.3);
     setDisableMovement(false);
 
-    appearPlayer(playerRef, 1.2); // 부드럽게 다시 나타남
     triggerCloudEffect();
 
+    setTimeout(() => {
+      appearPlayer(playerRef, 1.2); // 부드럽게 다시 나타남
+    }, 1000)
     gsap.to(nomoneyGamzaRef.current.position,{
       y: 2,
       duration: 0.5,
-      ease: "bounce.inOut"
+      ease: "expo.in"
     })
     gsap.to(nomoneyGamzaRef.current.scale,{
       x: 0,
       y: 0,
       z: 0,
       duration: 0.5,
-      ease: "bounce.inOut"
+      ease: "expo.in"
     })
 
     // 카메라 복귀
@@ -217,15 +220,24 @@ export default function NomoneyScene({
         // 🚊 애니메이션 및 카메라 연출
         setTimeout(() => {
           if (nomoneyBankActions.current && nomoneyGamzaActions.current) {
-            nomoneyBankActions.current["Bank"].timeScale = 0.5;
-            nomoneyGamzaActions.current["NoMoney"].timeScale = 0.5;
-            nomoneyGamzaActions.current["ahew"].timeScale = 0.5;
-
-            nomoneyBankActions.current["Bank"]?.reset().play();
-            nomoneyGamzaActions.current["NoMoney"]?.reset().play();
-            nomoneyGamzaActions.current["ahew"]?.reset().play();
-            // nomoneyBankActions.current["CoffeAnim1"]?.reset().play();
-            // nomoneyGamzaActions.current["Idle"]?.reset().play();
+            const bankAction = nomoneyBankActions.current["Bank"];
+            const noMoneyAction = nomoneyGamzaActions.current["NoMoney"];
+            const ahewAction = nomoneyGamzaActions.current["ahew"];
+            
+            if (bankAction) {
+              bankAction.timeScale = 0.4;
+              bankAction.reset().play();
+            }
+        
+            if (noMoneyAction) {
+              noMoneyAction.timeScale = 0.4;
+              noMoneyAction.reset().play();
+            }
+        
+            if (ahewAction) {
+              ahewAction.timeScale = 0.4;
+              ahewAction.reset().play();
+            }
           }
         }, 500);
 
@@ -244,7 +256,7 @@ export default function NomoneyScene({
               x: 6,
               y: 6,
               z: 6,
-              ease: 'expo.out',
+              ease:'none',
             });
             gsap.to(noMoneyText.current.position, {
               duration: 2,

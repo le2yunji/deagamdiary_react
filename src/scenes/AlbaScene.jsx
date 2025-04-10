@@ -73,6 +73,8 @@ export default function AlbaScene({
     setDisableMovement(false);
   };
 
+
+
   useFrame(() => {
     if (!triggered && playerRef.current) {
       const dist = new Vector3(
@@ -85,7 +87,7 @@ export default function AlbaScene({
         setTriggered(true);
         setDisableMovement(true);
 
-        if (bgAudio) bgAudio.pause();
+        // if (bgAudio) bgAudio.pause();
         disappearPlayer(playerRef);
         scene.remove(scene.getObjectByName("albaSpot"));
         scene.remove(albaSpotRef.current);

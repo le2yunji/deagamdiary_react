@@ -35,6 +35,20 @@ const AppWithStartScreen = () => {
     } else {
       console.error("시작 버튼 또는 시작 화면 요소를 찾을 수 없습니다.");
     }
+// 엔딩 비디오가 시작되면 배경 음악 멈추기
+const endingVideo = document.getElementById('ending-video');
+if (endingVideo) {
+  endingVideo.addEventListener("play", () => {
+    // 엔딩 비디오가 재생되기 시작하면 배경 음악 멈추기
+    if (bgAudio) {
+      bgAudio.pause();
+      bgAudio.currentTime = 0; // 음악을 처음부터 멈추도록 설정
+    }
+  });
+}
+
+
+
   }, []);
 
   

@@ -262,8 +262,6 @@ const startSlideShow = () => {
 // ✅ 클래스룸 인터랙션 끝 완료
 const restorePlayerAfterClass = () => {
 
-
-
   gsap.to(camera,{
     duration: 1, 
     zoom: 30,
@@ -340,7 +338,6 @@ const elapsedTime = clock.getElapsedTime()
 
 
 
-
 const triggered = useRef(false); // ✅ 상태를 즉시 바꾸고 반영되도록
 
 
@@ -362,6 +359,7 @@ useFrame(() => {
 
       gsap.to(classroomRef.current.scale, { x: 5.5, y: 5.5, z: 5.5, duration: 0.3, ease: "power3.inOut" });
 
+
       
       classroomActions.current?.["Scene"].reset().play()
 
@@ -375,7 +373,7 @@ useFrame(() => {
         gsap.to(onionRef.current.position, { y: 0.3, duration: 0.3, ease: "bounce.inOut" });
         gsap.to(onionRef.current.scale, { x: 1, y: 1, z: 1, duration: 0.3, ease: "power3.inOut" });
 
-        onionActions.current?.["Scene"].reset().play()
+        onionActions.current?.["Idle"].reset().play()
 
         gsap.to(camera,{
           duration: 1, 
@@ -395,16 +393,55 @@ useFrame(() => {
         })
       }, 500);
 
+
+      // 양파 교수
+// 1. Idle 관망
+// 2. Nope 절레절레
+// 3. idle 눈썹만
+// 4. NopeFace 눈썹 눈감기
+
+// 감자
+// 1. HeadTurn 양파교수 보기
+// 2. Hello 인사
+// 3. Shiver 떨기
+// 4. Blink 끔뻑끔뻑
+// 5. Closed 눈 감기
+// 6. Closing / \
+
       setTimeout(() => {
         setShowCloudEffect(true);
         gsap.to(classroomGamzaRef.current.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
         classroomGamzaActions.current?.["Shiver"].reset().play()
+        classroomGamzaActions.current?.["Blink"].reset().play()
         setTimeout(() => {
           showArrow(0, elapsedTime); // 🔥 PPT 화살표 표시
         }, 500)
       }, 2000);
 
       setTimeout(() => setShowCloudEffect(false), 2500); // 구름 이펙트
+
+      setTimeout(() => {
+        classroomGamzaActions.current?.["Shiver"].stop()
+        classroomGamzaActions.current?.["HeadTurn"].reset().play()
+
+        onionActions.current?.["Idle"].reset().play()
+        onionActions.current?.["idle"].reset().play()
+      }, 5000)
+
+      setTimeout(() => {
+        classroomGamzaActions.current?.["HeadTurn"].stop()
+        onionActions.current?.["Idle"].stop()
+        classroomGamzaActions.current?.["Shiver"].reset().play()
+
+        onionActions.current?.["Nope"].reset().play()
+        classroomGamzaActions.current?.["Closing"].reset().play()
+      }, 7000)
+      
+      setTimeout(() => {
+        onionActions.current?.["Nope"].stop()
+        onionActions.current?.["NopeFace"].reset().play()
+
+      }, 10000)
 
       // setTimeout(() => restorePlayerAfterClass(), 20000)
     }

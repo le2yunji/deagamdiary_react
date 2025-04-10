@@ -33,21 +33,22 @@ export function NomoneyGamza({ onLoaded, ...props }) {
       }); 
     }
   }, []);
-  
   return (
-    <group ref={group} {...props} dispose={null} scale={[1.5, 1.5, 1.5]}>
+    <group ref={group} {...props} dispose={null}>
       <group name="Scene">
-        <group name="Bone" position={[-0.115, 0, 0]}>
-          <primitive object={nodes.Root} />
-          <primitive object={nodes.HandIKL} />
-          <primitive object={nodes.HandIKR} />
-          <primitive object={nodes.shinL_1} />
-          <primitive object={nodes.shinR_1} />
-          <primitive object={nodes.thighL_1} />
-          <primitive object={nodes.thighR_1} />
-          <primitive object={nodes.ArmpoleL} />
-          <primitive object={nodes.ArmpoleR} />
-          <primitive object={nodes.neutral_bone} />
+        <group name="Empty">
+          <group name="Bone" position={[-0.115, 0, 0]}>
+            <primitive object={nodes.Root} />
+            <primitive object={nodes.HandIKL} />
+            <primitive object={nodes.HandIKR} />
+            <primitive object={nodes.shinL_1} />
+            <primitive object={nodes.shinR_1} />
+            <primitive object={nodes.thighL_1} />
+            <primitive object={nodes.thighR_1} />
+            <primitive object={nodes.ArmpoleL} />
+            <primitive object={nodes.ArmpoleR} />
+            <primitive object={nodes.neutral_bone} />
+          </group>
           <group name="Gamza001">
             <skinnedMesh name="Cube001" geometry={nodes.Cube001.geometry} material={materials['Material.008']} skeleton={nodes.Cube001.skeleton} morphTargetDictionary={nodes.Cube001.morphTargetDictionary} morphTargetInfluences={nodes.Cube001.morphTargetInfluences} />
             <skinnedMesh name="Cube001_1" geometry={nodes.Cube001_1.geometry} material={materials['Material.010']} skeleton={nodes.Cube001_1.skeleton} morphTargetDictionary={nodes.Cube001_1.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_1.morphTargetInfluences} />
@@ -56,10 +57,12 @@ export function NomoneyGamza({ onLoaded, ...props }) {
             <skinnedMesh name="Cube001_4" geometry={nodes.Cube001_4.geometry} material={materials['Material.009']} skeleton={nodes.Cube001_4.skeleton} morphTargetDictionary={nodes.Cube001_4.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_4.morphTargetInfluences} />
             <skinnedMesh name="Cube001_5" geometry={nodes.Cube001_5.geometry} material={materials['Material.044']} skeleton={nodes.Cube001_5.skeleton} morphTargetDictionary={nodes.Cube001_5.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_5.morphTargetInfluences} />
             <skinnedMesh name="Cube001_6" geometry={nodes.Cube001_6.geometry} material={materials['Material.045']} skeleton={nodes.Cube001_6.skeleton} morphTargetDictionary={nodes.Cube001_6.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_6.morphTargetInfluences} />
-            <skinnedMesh name="Cube001_7" geometry={nodes.Cube001_7.geometry} material={materials['Material.014']} skeleton={nodes.Cube001_7.skeleton} morphTargetDictionary={nodes.Cube001_7.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_7.morphTargetInfluences} />
-            <skinnedMesh name="Cube001_8" geometry={nodes.Cube001_8.geometry} material={materials['Material.017']} skeleton={nodes.Cube001_8.skeleton} morphTargetDictionary={nodes.Cube001_8.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_8.morphTargetInfluences} />
-            <skinnedMesh name="Cube001_9" geometry={nodes.Cube001_9.geometry} material={materials['Material.018']} skeleton={nodes.Cube001_9.skeleton} morphTargetDictionary={nodes.Cube001_9.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_9.morphTargetInfluences} />
-            <skinnedMesh name="Cube001_10" geometry={nodes.Cube001_10.geometry} material={materials['Material.019']} skeleton={nodes.Cube001_10.skeleton} morphTargetDictionary={nodes.Cube001_10.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_10.morphTargetInfluences} />
+            <skinnedMesh name="Cube001_7" geometry={nodes.Cube001_7.geometry} material={materials['Material.013']} skeleton={nodes.Cube001_7.skeleton} morphTargetDictionary={nodes.Cube001_7.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_7.morphTargetInfluences} />
+            <skinnedMesh name="Cube001_8" geometry={nodes.Cube001_8.geometry} material={materials['Material.014']} skeleton={nodes.Cube001_8.skeleton} morphTargetDictionary={nodes.Cube001_8.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_8.morphTargetInfluences} />
+            <skinnedMesh name="Cube001_9" geometry={nodes.Cube001_9.geometry} material={materials['Material.017']} skeleton={nodes.Cube001_9.skeleton} morphTargetDictionary={nodes.Cube001_9.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_9.morphTargetInfluences} />
+            <skinnedMesh name="Cube001_10" geometry={nodes.Cube001_10.geometry} material={materials['Material.018']} skeleton={nodes.Cube001_10.skeleton} morphTargetDictionary={nodes.Cube001_10.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_10.morphTargetInfluences} />
+            <skinnedMesh name="Cube001_11" geometry={nodes.Cube001_11.geometry} material={materials['Material.019']} skeleton={nodes.Cube001_11.skeleton} morphTargetDictionary={nodes.Cube001_11.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_11.morphTargetInfluences} />
+            <skinnedMesh name="Cube001_12" geometry={nodes.Cube001_12.geometry} material={materials['Material.032']} skeleton={nodes.Cube001_12.skeleton} morphTargetDictionary={nodes.Cube001_12.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_12.morphTargetInfluences} />
           </group>
         </group>
       </group>
