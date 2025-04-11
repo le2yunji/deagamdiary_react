@@ -58,17 +58,19 @@ export default function SceneContent() {
           // 페이드 인 효과
           endingScreen.classList.add('fade-in');
 
+          if (endingVideo) {
+            endingVideo.muted = false; // 혹시 모르니 재확인
+            endingVideo.play().catch((e) => {
+              console.warn('Ending video playback failed:', e);
+            });
+          }
+
         // 필요하면 일정 시간 후 페이드 아웃
         setTimeout(() => {
           endingScreen.classList.remove('show');
           // endingScreen.style.display = 'none'; // 나중에 완전히 숨기고 싶으면
           // ✅ 영상 재생 시도
-        if (endingVideo) {
-          endingVideo.muted = false; // 혹시 모르니 재확인
-          endingVideo.play().catch((e) => {
-            console.warn('Ending video playback failed:', e);
-          });
-        }
+      
       }, 500);
     }
       // if (z == null) return;
