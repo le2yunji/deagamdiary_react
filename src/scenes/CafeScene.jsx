@@ -116,19 +116,9 @@ export default function CafeScene({
         if (bgAudio) bgAudio.pause(); //📢
         triggerCloudEffect();
         disappearPlayer(playerRef);
-        gsap.to(camera, {
-          duration: 1,
-          zoom: 40,
-          ease: "expo.inOut",
-          onUpdate: () => camera.updateProjectionMatrix(),
-        });
 
-        gsap.to(camera.position, {
-          duration: 1,
-          y: 3,
-          ease: "expo.inOut",
-          onUpdate: () => camera.updateProjectionMatrix(),
-        });
+
+   
 
         setTriggered(true);
         // if (emotionRef.current) emotionRef.current.visible = false;
@@ -157,6 +147,14 @@ export default function CafeScene({
             [cafeRef.current.scale, coffeeRef.current.scale, cafeGamzaRef.current.scale],
             { x: 1.7, y: 1.7, z: 1.7, duration: 0.5, ease: "power3.inOut" }
           );
+
+
+          gsap.to(camera, {
+            duration: 0.5,
+            zoom: 40,
+            ease: "expo.inOut",
+            onUpdate: () => camera.updateProjectionMatrix(),
+          });
 
           const anim1 = cafeActions.current?.["CoffeAnim1"];
           if (anim1) { anim1.reset().play(); anim1.timeScale = 0.6; }
@@ -278,7 +276,7 @@ export default function CafeScene({
         time: 2,
         url: '/assets/audio/DrinkCoffee.mp3',
         duration: 4.5,
-        volume: 5.0,
+        volume: 3.0,
         loop: false,
         refDistance: 6
       }]} />

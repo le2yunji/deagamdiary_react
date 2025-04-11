@@ -7,7 +7,7 @@ import { PositionalAudio } from '@react-three/drei';
 
 const PlayerController = forwardRef(({ destination, cameraRef, disableMovement = false }, ref) => {
   const playerRef = useRef();
-  const cameraOffset = new Vector3(1, 4, 5); // 감자 뒤/왼쪽 위
+  const cameraOffset = new Vector3(1, 3, 5); // 감자 뒤/왼쪽 위
   const speed = 0.25;
   const isMovingRef = useRef(false);
   const currentActionRef = useRef(null);

@@ -191,7 +191,7 @@ export default function ChatGPTScene({
           time: 3.1,
           url: '/assets/audio/Keyboard.mp3',
           duration: 3,
-          volume: 5.0,
+          volume: 3.0,
           loop: false,
           refDistance: 4
         },
