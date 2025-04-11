@@ -35,7 +35,7 @@ body, #root {
     position: absolute; /* relative → absolute 변경 */
     width: 240px;
     height: 160px;
-    top: 580px;
+    top: 640px;
 	background: url('./assets/images/gamza_button_unclick.webp') no-repeat center;
 	background-size: cover;
     border: none;

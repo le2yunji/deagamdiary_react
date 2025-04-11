@@ -69,7 +69,7 @@ export default function SceneContent() {
             console.warn('Ending video playback failed:', e);
           });
         }
-      }, 10000);
+      }, 500);
     }
       // if (z == null) return;
     

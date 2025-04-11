@@ -278,7 +278,7 @@ export default function CafeScene({
         time: 2,
         url: '/assets/audio/DrinkCoffee.mp3',
         duration: 4.5,
-        volume: 10.0,
+        volume: 5.0,
         loop: false,
         refDistance: 6
       }]} />

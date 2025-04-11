@@ -126,6 +126,9 @@ export default function AlbaScene({
           
           const confuse = gamzaActions.current?.["Confuse"];
           if (confuse) {
+
+            confuse.timeScale = 0.63
+
             confuse.setLoop(THREE.LoopRepeat, Infinity);
             confuse.clampWhenFinished = false;
             confuse.reset().play();
@@ -134,6 +137,7 @@ export default function AlbaScene({
           // Aha: 한 번만 재생, 마지막 프레임 유지
           const aha = gamzaActions.current?.["Aha"];
           if (aha) {
+            aha.timeScale = 0.63
             aha.setLoop(THREE.LoopOnce, 1);
             aha.clampWhenFinished = true;
           }

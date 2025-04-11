@@ -27,32 +27,38 @@ export function AudioTimelinePlayer({ mixer, action, timeline = [], position }) 
     return () => camera.remove(listenerRef.current);
   }, [timeline]);
 
-  // 타임라인 따라 시간 체크 후 재생 및 stop 제어
-  useFrame(() => {
-    if (!mixer || !action) return;
-    const currentTime = action.time;
+ // 타임라인 따라 시간 체크 후 재생 및 stop 제어
+useFrame(() => {
+  if (!mixer || !action) return;
+  const currentTime = action.time;
 
-    timeline.forEach(({ time: start, duration }, i) => {
-      const sound = audioRefs.current[i];
-      const end = start + (duration || 999); // duration 없으면 무제한
+  timeline.forEach(({ time: start, duration }, i) => {
+    const sound = audioRefs.current[i];
+    const end = start + (duration || 999); // duration 없으면 무제한
 
-      if (currentTime >= start && currentTime < end && !hasPlayed.current[i] && sound?.buffer) {
-        if (sound.isPlaying) sound.stop();
-        sound.play();
-        hasPlayed.current[i] = true;
-      }
+    if (!sound || !sound.buffer) return;
 
-      // duration 지난 경우 stop
-      if (currentTime >= end && hasPlayed.current[i] && sound?.isPlaying) {
-        sound.stop();
-      }
-    });
+    // 🔊 재생 조건
+    if (currentTime >= start && currentTime < end && !hasPlayed.current[i]) {
+      sound.stop(); // 혹시라도 이미 재생 중이면 멈춤
+      sound.play();
+      hasPlayed.current[i] = true;
+    }
 
-    // 애니메이션 종료 시 재생 상태 초기화
-    if (currentTime >= action.getClip().duration) {
-      hasPlayed.current = timeline.map(() => false);
+    // ⏹️ 정지 조건: 재생 중이면 무조건 stop
+    if (currentTime >= end && hasPlayed.current[i]) {
+      sound.stop();
+      hasPlayed.current[i] = false; // 상태 초기화
     }
   });
+
+  // 🧹 애니메이션 끝나면 전체 상태 초기화
+  if (currentTime >= action.getClip().duration) {
+    audioRefs.current.forEach((sound) => sound?.stop());
+    hasPlayed.current = timeline.map(() => false);
+  }
+});
+
 
   return (
     <>
