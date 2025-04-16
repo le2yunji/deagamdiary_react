@@ -15,18 +15,22 @@ import {
   appearPlayer,
   disableMouseEvents,
   enableMouseEvents,
+  returnCameraY
 } from '../utils/Common';
 
 export default function AlbaScene({
   playerRef,
-  emotionRef,
   setPlayerVisible,
   setCameraTarget,
-  disableMouse,
-  enableMouse,
-  setCameraActive,
-  setAlbaCameraRef,
+  setCameraActive,         // 💡 추가
+  setUseSceneCamera,  
   setDisableMovement,
+  activateSceneCamera,
+  animateCamera,
+  restoreMainCamera,
+  useSceneCamera,
+  setInitialCameraPose,
+
 }) {
   const group = useRef();
   const albaGamzaRef = useRef();
@@ -47,10 +51,17 @@ export default function AlbaScene({
   const gamzaActions = useRef();
   const gamzaMixer = useRef();
 
+  const [selectedPoster, setSelectedPoster] = useState(null);
 
+
+  const triggerCloudEffect = () => {
+    setShowCloudEffect(true);
+    setTimeout(() => setShowCloudEffect(false), 1500);
+  };
+
+  // ✅ 알바 씬 끝 복귀
   const restorePlayerAfterAlba = () => {
     // if (bgAudio) bgAudio.play();
-
     playerRef.current.visible = true;
     playerRef.current.position.set(-39, 0.3, -16);
     playerRef.current.scale.set(0.3, 0.3, 0.3);
@@ -68,8 +79,67 @@ export default function AlbaScene({
     setDisableMovement(false);
   };
 
+  const hasRestoredRef = useRef(false);
 
-
+  useEffect(() => {
+    if (!triggered || !selectedPoster || !gamzaActions.current) return;
+  
+    const idle = gamzaActions.current["Idle"];
+    const aha = gamzaActions.current["Aha"];
+    const confuse = gamzaActions.current["Confuse"];
+  
+    if (confuse) {
+      confuse.timeScale = 0.63;
+      confuse.setLoop(THREE.LoopRepeat, Infinity);
+      confuse.clampWhenFinished = false;
+    }
+  
+    if (aha) {
+      aha.timeScale = 0.63;
+      aha.setLoop(THREE.LoopOnce, 1);
+      aha.clampWhenFinished = true;
+    }
+  
+    if (idle) {
+      idle.timeScale = 0.63;
+      idle.setLoop(THREE.LoopRepeat, Infinity);
+      idle.clampWhenFinished = false;
+    }
+  
+    switch (selectedPoster) {
+      case "BakeryMemo":
+        idle?.stop()
+        confuse?.stop()
+        aha?.reset().play();
+        setTimeout(() => { 
+          aha?.stop()
+          idle?.reset().play(); 
+        }, 1000);
+        break;
+      case "GamzaMemo":
+      case "SushiMemo":
+      case "KidsMemo":
+      case "DokseoMemo":
+        aha?.stop()
+        idle?.stop()
+        confuse?.reset().play();
+        break;
+      case "IwannagoHomeMemo":
+      case "DoNotNakseoMemo":
+      case "WonesoongMemo":
+        aha?.stop()
+        confuse?.reset().play(); 
+        idle?.reset().play(); 
+        break;
+      default:
+        confuse?.stop()
+        aha?.stop()
+        idle?.reset().play();
+        break;
+    }
+  }, [triggered, selectedPoster]);
+  
+  // 🟡 🪧 알바씬 인터랙션 시작
   useFrame(() => {
     if (!triggered && playerRef.current) {
       const dist = new Vector3(
@@ -88,24 +158,23 @@ export default function AlbaScene({
         scene.remove(albaSpotRef.current);
         if (albaSpotRef.current) albaSpotRef.current.visible = false;
 
-        gsap.to(camera, {
-          duration: 1,
-          zoom: 40,
-          ease: "power2.out",
-          onUpdate: () => camera.updateProjectionMatrix(),
-        });
-          gsap.to(camera.position, {
-          duration: 1,
-          x: -35.7,
-          y: 3,
-          z: -16,
-          ease: "power2.out",
-          onUpdate: () => {
-            camera.updateProjectionMatrix()
-            // camera.lookAt(-35, 5, -13)
-          },
-        });
 
+     // 💡 카메라 전환 (씬 전용 카메라 활성화)
+     activateSceneCamera(setCameraActive, setUseSceneCamera);
+
+     setInitialCameraPose({
+      position: [-35, 7, -19],
+      lookAt: [-35, 5, -19],
+      zoom: 55
+    });
+
+     // 💡 카메라 이동 + 시선 애니메이션
+     animateCamera({
+       position: { x: -35, y: 10, z: -10 },
+       lookAt: [-35, 5, -20],
+       zoom: 60,
+       duration: 1.5
+     });
 
         if (albaGamzaRef.current) {
           setShowCloudEffect(true);
@@ -119,33 +188,8 @@ export default function AlbaScene({
           });
         }
 
-          // if (actions) {
-          //   Object.values(actions).forEach((action) => action.play());
-          //   actions["Confuse"]?.reset().play();
-          // }
-          
-          const confuse = gamzaActions.current?.["Confuse"];
-          if (confuse) {
-
-            confuse.timeScale = 0.63
-
-            confuse.setLoop(THREE.LoopRepeat, Infinity);
-            confuse.clampWhenFinished = false;
-            confuse.reset().play();
-          }
-
-          // Aha: 한 번만 재생, 마지막 프레임 유지
-          const aha = gamzaActions.current?.["Aha"];
-          if (aha) {
-            aha.timeScale = 0.63
-            aha.setLoop(THREE.LoopOnce, 1);
-            aha.clampWhenFinished = true;
-          }
-
         setTimeout(() => {    
           if (albaGamzaRef.current) {
-          confuse.stop();
-          aha.reset().play();
 
           gsap.to(albaGamzaRef.current.scale, {
             x: 0,
@@ -156,7 +200,11 @@ export default function AlbaScene({
           });
         }
           setTimeout(() => {
-            restorePlayerAfterAlba();
+            if (!hasRestoredRef.current) {
+              restoreMainCamera(setCameraActive, setUseSceneCamera);
+              restorePlayerAfterAlba();
+              hasRestoredRef.current = true;
+            }
           }, 1000 )
         }, 20000);
       }
@@ -173,6 +221,7 @@ export default function AlbaScene({
       <group ref={group}>
         <AlbaBoard
           position={[-35, 0, -24]}
+          // rotation={[0, THREE.MathUtils.degToRad(10), 0]}
           onLoaded={({ albaBoardRef }) => setAlbaBoardRef(albaBoardRef)}
           onClick={() => {}}
         />
@@ -197,7 +246,10 @@ export default function AlbaScene({
           />
         )}
 
-        <Posters />
+        <Posters 
+          selectedPoster={selectedPoster}
+          setSelectedPoster={setSelectedPoster}
+        />
 
         <mesh
           name="albaSpot"

@@ -10,13 +10,19 @@ import {
   appearPlayer,
   returnCameraY
 } from '../utils/Common';
-import { OrthographicCamera } from '@react-three/drei';
-import useCameraSwitcher from '../hooks/useCameraSwitcher';
+
 
 export default function MetroScene({
   playerRef,
   setDisableMovement,
-  setCameraTarget
+  setCameraTarget,
+  setCameraActive,         // 💡 추가
+  setUseSceneCamera,       // 💡 추가
+  useSceneCamera,
+  activateSceneCamera,
+  animateCamera,
+  restoreMainCamera,
+  setInitialCameraPose
 }) {
   const group = useRef();
   const metroSpotRef = useRef();
@@ -29,16 +35,6 @@ export default function MetroScene({
   const MetroSpotMeshPosition = new Vector3(9, 0.005, -98);
   const { scene, camera } = useThree();
   const bgAudio = document.getElementById("bg-audio");
-  const {
-    sceneCameraRef,
-    activateSceneCamera,
-    restoreMainCamera,
-    animateCamera,
-    setInitialCameraPose, // 💡 추가!
-  } = useCameraSwitcher();
-  const [useSceneCamera, setUseSceneCamera] = useState(false);
-  const [mainCameraActive, setMainCameraActive] = useState(true);
-
 
 // 초기 위치 설정
 // useEffect(() => {
@@ -71,7 +67,7 @@ export default function MetroScene({
 
     gsap.to(camera, {
       duration: 0.5,
-      zoom: 30,
+      zoom: 30,  
       ease: "power2.out",
       onUpdate: () => camera.updateProjectionMatrix(),
     });
@@ -89,30 +85,9 @@ export default function MetroScene({
 
   };
 
-
-  // setTimeout(() => {
-  //   metroCamera = true;
-  // }, 2000)
-
-  // moveModelYPosition(metro, 1.95);
-
-  // setTimeout(() => {
-  //   metro.playAllAnimations();
-  //   scene.add(metroLight)
-
-  //   gsap.to(camera3.position, {
-  //     duration: 12,
-  //     x: -32,
-  //     y: 10,
-  //     z: -57,
-  //     onUpdate: () => {
-  //       camera3.lookAt(8, 1, -105); // ✅ 카메라가 이동하면서 계속 lookAt 유지
-  //     },
-  //   })
-  // }, 1500)
-
   
   // ✅ 씬 시작  
+  const hasRestoredRef = useRef(false);
 
   useFrame(() => {
     if (!triggered && playerRef.current) {
@@ -133,54 +108,44 @@ export default function MetroScene({
 
         setTimeout(() => {
           if (lightRef.current) scene.add(lightRef.current);
-          // activateSceneCamera(setMainCameraActive, setUseSceneCamera);
         }, 1000);
 
         setTimeout(() => {
-          animateCamera({
-            position: { x: -38.5, y: 10, z: -117 },
-            lookAt: [-65, 1, -40],
-            duration: 12,
+          activateSceneCamera(setCameraActive, setUseSceneCamera);
+
+          setInitialCameraPose({
+            position: [-28, 10, -124],
+            lookAt: [-1.5, 3, -120],
+            zoom: 60
           });
 
-        }, 4000);
+          setTimeout(() => {
+            animateCamera({
+              position: { x: -25, y: 8, z: -93 },
+              lookAt: [-10.5, 4, -95.5],
+              zoom: 65,
+              duration: 10,
+            });
+          }, 5000);
+       
+        }, 5000);
       
-        gsap.to(camera, {
-          duration: 0.5,
-          zoom: 25,
-          ease: "power2.out",
-          onUpdate: () => camera.updateProjectionMatrix(),
-        });
-        gsap.to(camera.position, {
-          duration: 0.5,
-          x: 4,
-          y: 3,
-          // z: ,
-          // zoom: 30,
-          ease: "power2.out",
-          onUpdate: () => camera.updateProjectionMatrix(),
-        });
 
         setTimeout(() => {
           const sceneAction = actions['Scene'];
           if (sceneAction) {
-            sceneAction.timeScale = 0.7;
+            sceneAction.timeScale = 0.4;
             sceneAction.reset().play();
           }
-          
         }, 2000);
+    
         setTimeout(() => {
-          gsap.to(camera, {
-            duration: 0.5,
-            zoom: 30,
-            ease: "power2.out",
-            onUpdate: () => camera.updateProjectionMatrix(),
-          });
-        }, 4500);
-        setTimeout(() => {
-          // restoreMainCamera(setMainCameraActive, setUseSceneCamera);
-          restorePlayerAfterMetro();
-        }, 12000);
+          if (!hasRestoredRef.current) {
+            restoreMainCamera(setCameraActive, setUseSceneCamera);
+            restorePlayerAfterMetro();
+            hasRestoredRef.current = true;
+          }
+        }, 20000);
       }
     }
 
@@ -189,15 +154,6 @@ export default function MetroScene({
 
   return (
     <group ref={group}>
-         {/* 🔄 메인 카메라 Active 여부에 따라 SceneCamera 렌더 */}
-         {useSceneCamera && (
-        <OrthographicCamera
-          ref={sceneCameraRef}
-          makeDefault
-          position={[1, 5, 5]}
-          zoom={30}
-        />
-      )}
 
       <Metro
         position={[-7.5, -10, -110]} //  position={[-8, -10, -120]}

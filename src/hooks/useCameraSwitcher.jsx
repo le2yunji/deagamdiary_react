@@ -1,3 +1,4 @@
+// hooks/useCameraSwitcher.jsx
 import { useRef } from 'react';
 import { gsap } from 'gsap';
 import * as THREE from 'three';
@@ -6,17 +7,19 @@ export default function useCameraSwitcher() {
   const sceneCameraRef = useRef(); // 전용 카메라 ref
   const initialPosition = useRef(new THREE.Vector3()); // 초기 위치
   const initialLookAt = useRef(new THREE.Vector3());   // 초기 시선
+  const initialZoom = useRef(30); // ✅ 줌 값도 저장
 
   // 🎥 전용 카메라 초기값 등록
-  const setInitialCameraPose = ({ position, lookAt }) => {
-    initialPosition.current.set(...position);
-    initialLookAt.current.set(...lookAt);
+   const setInitialCameraPose = ({ position, lookAt, zoom }) => {
+    if (position) initialPosition.current.set(...position);
+    if (lookAt) initialLookAt.current.set(...lookAt);
+    if (zoom !== undefined) initialZoom.current = zoom;
 
-    // 바로 적용도 가능 (예: 씬 진입 시 고정된 각도로 보기)
     const camera = sceneCameraRef.current;
     if (camera) {
       camera.position.copy(initialPosition.current);
       camera.lookAt(initialLookAt.current);
+      camera.zoom = initialZoom.current;
       camera.updateProjectionMatrix();
     }
   };
@@ -34,12 +37,12 @@ export default function useCameraSwitcher() {
   };
 
   // 📸 전용 카메라 애니메이션 (이동 + 바라보기)
-  const animateCamera = ({ position, lookAt, duration = 3 }) => {
+  const animateCamera = ({ position, lookAt, zoom, duration = 3 }) => {
     const camera = sceneCameraRef.current;
     if (!camera) return;
-
+  
     const target = new THREE.Vector3(...lookAt);
-
+  
     gsap.to(camera.position, {
       x: position.x,
       y: position.y,
@@ -51,6 +54,17 @@ export default function useCameraSwitcher() {
         camera.updateProjectionMatrix();
       },
     });
+  
+    if (zoom !== undefined && camera.zoom !== undefined) {
+      gsap.to(camera, {
+        zoom,
+        duration,
+        ease: 'power2.inOut',
+        onUpdate: () => {
+          camera.updateProjectionMatrix();
+        }
+      });
+    }
   };
 
   return {

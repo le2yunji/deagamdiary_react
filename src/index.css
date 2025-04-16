@@ -27,29 +27,30 @@ body, #root {
     object-fit: cover;
   }
   
-  
   #start-button {
     margin: 0 auto;
     padding: 10px 10px;
     font-size: 16px;
     position: absolute; /* relative → absolute 변경 */
-    width: 240px;
+    width: 180px;
     height: 160px;
     top: 640px;
-	background: url('./assets/images/gamza_button_unclick.webp') no-repeat center;
-	background-size: cover;
+	  /* background: url('./assets/images/gamza_button_unclick.webp') no-repeat center; */
+    background: url('./assets/images/normalDaegam3.png') no-repeat center;
+	  background-size: cover;
     border: none;
     cursor: pointer;
     left: 50%; /* 가로 정렬을 위해 left: 50% */
     transform: translateX(-50%); /* 가로 중앙 정렬 */
     cursor: pointer;
     z-index: 999;
-	transition: background 0.3s ease-in-out;
-	display: none; /* 기본적으로 버튼 숨김 */
+	  transition: background 0.3s ease-in-out;
+	  display: none; /* 기본적으로 버튼 숨김 */
   }
+
   /* Hover 시 이미지 변경 */
-#start-button:hover {
-    background: url('./assets/images/gamza_button_click.webp') no-repeat center;
+  #start-button:hover {
+    background: url('./assets/images/smileDaegam2.png') no-repeat center;
     background-size: cover;
     }
 

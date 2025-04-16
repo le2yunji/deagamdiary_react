@@ -50,7 +50,7 @@ export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
           <group name="Empty001" position={[1.785, -0.074, -0.19]} rotation={[0, -1.571, 0]} scale={[1.069, 1.018, 0.817]} />
           <group name="Empty004" position={[0.367, 0.046, 0.783]} scale={[0.93, 0.947, 0.993]} />
           <group name="Empty005" position={[0, -0.064, -0.49]} scale={[1, 1.018, 1.069]} />
-          <group name="Chairrim001" position={[-0.317, 0.98, 0.417]} scale={[-0.021, -0.021, -0.023]}>
+          {/* <group name="Chairrim001" position={[-0.317, 0.98, 0.417]} scale={[-0.021, -0.021, -0.023]}>
             <mesh name="Chairrim001_1" geometry={nodes.Chairrim001_1.geometry} material={materials.Legs} />
             <mesh name="Chairrim001_2" geometry={nodes.Chairrim001_2.geometry} material={materials.Cushion} />
             <mesh name="Chairrim001_3" geometry={nodes.Chairrim001_3.geometry} material={materials.Caps} />
@@ -79,8 +79,8 @@ export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
             <mesh name="Chairrim007_5" geometry={nodes.Chairrim007_5.geometry} material={materials.Hook} />
             <mesh name="Chairrim007_6" geometry={nodes.Chairrim007_6.geometry} material={materials['Bolt.001']} />
             <mesh name="Chairrim007_7" geometry={nodes.Chairrim007_7.geometry} material={materials['Material.011']} />
-          </group>
-          <group name="Chairrim004" position={[-0.317, 0.98, 1.148]} scale={[-0.021, -0.021, -0.023]}>
+          </group> */}
+          <group name="Chairrim004" position={[-0.317, 0.98, 1]} scale={[-0.021, -0.021, -0.023]}>
             <mesh name="Chairrim008" geometry={nodes.Chairrim008.geometry} material={materials.Legs} />
             <mesh name="Chairrim008_1" geometry={nodes.Chairrim008_1.geometry} material={materials.Cushion} />
             <mesh name="Chairrim008_2" geometry={nodes.Chairrim008_2.geometry} material={materials.Caps} />
@@ -90,7 +90,7 @@ export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
             <mesh name="Chairrim008_6" geometry={nodes.Chairrim008_6.geometry} material={materials['Bolt.001']} />
             <mesh name="Chairrim008_7" geometry={nodes.Chairrim008_7.geometry} material={materials['Material.011']} />
           </group>
-          <group name="Chairrim005" position={[0.467, 0.98, 1.148]} scale={[-0.021, -0.021, -0.023]}>
+          <group name="Chairrim005" position={[0.467, 0.98, 1]} scale={[-0.021, -0.021, -0.023]}>
             <mesh name="Chairrim009" geometry={nodes.Chairrim009.geometry} material={materials.Legs} />
             <mesh name="Chairrim009_1" geometry={nodes.Chairrim009_1.geometry} material={materials.Cushion} />
             <mesh name="Chairrim009_2" geometry={nodes.Chairrim009_2.geometry} material={materials.Caps} />
@@ -100,7 +100,7 @@ export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
             <mesh name="Chairrim009_6" geometry={nodes.Chairrim009_6.geometry} material={materials['Bolt.001']} />
             <mesh name="Chairrim009_7" geometry={nodes.Chairrim009_7.geometry} material={materials['Material.011']} />
           </group>
-          <group name="Chairrim006" position={[1.25, 0.98, 1.148]} scale={[-0.021, -0.021, -0.023]}>
+          <group name="Chairrim006" position={[1.25, 0.98, 1]} scale={[-0.021, -0.021, -0.023]}>
             <mesh name="Chairrim010" geometry={nodes.Chairrim010.geometry} material={materials.Legs} />
             <mesh name="Chairrim010_1" geometry={nodes.Chairrim010_1.geometry} material={materials.Cushion} />
             <mesh name="Chairrim010_2" geometry={nodes.Chairrim010_2.geometry} material={materials.Caps} />

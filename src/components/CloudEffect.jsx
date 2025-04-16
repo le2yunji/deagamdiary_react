@@ -37,7 +37,7 @@ const CloudEffect = ({ position = [0, 0, 0] }) => {
         ref={cloudRef}
         position-x={0}
         position-z={3}
-        opacity={1.5}
+        opacity={2}
         speed={0.01}
         width={0.1}
         // depth={0.2}

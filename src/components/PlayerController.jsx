@@ -1,136 +1,197 @@
 // PlayerController.jsx
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
-import { Vector3 } from 'three';
+import { Vector3, MathUtils, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh } from 'three';
 import { Player } from './Player';
-import { PositionalAudio } from '@react-three/drei';
+import useKeyboardControls from '../hooks/useKeyboardControls';
+import * as THREE from 'three'
+import { gsap } from 'gsap';
 
-const PlayerController = forwardRef(({ destination, cameraRef, disableMovement = false }, ref) => {
+const textureLoader = new TextureLoader();
+
+const PlayerController = forwardRef(({ destination, cameraRef, disableMovement = false, scene }, ref) => {
   const playerRef = useRef();
-  const cameraOffset = new Vector3(1, 3, 5); // 감자 뒤/왼쪽 위
+  const cameraOffset = new Vector3(1, 3, 5);
   const speed = 0.25;
   const isMovingRef = useRef(false);
   const currentActionRef = useRef(null);
-  const walkAudioRef = useRef();
+  const lastInputRef = useRef("none");
+  const prevDestinationRef = useRef(null);
 
-  // 외부에서 playerRef 접근 가능하도록
+  // 👣 발자국 관련 상태
+  const footprints = useRef([]);
+  const footprintDistanceThreshold = 1.2;
+  const lastFootprintPosition = useRef(new Vector3());
+  const isLeftFoot = useRef(true);
+
   useImperativeHandle(ref, () => playerRef.current);
+
   useEffect(() => {
     if (playerRef.current) {
       playerRef.current.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-        }
+        if (child.isMesh) child.castShadow = true;
       });
     }
   }, []);
 
+  const directionRef = useKeyboardControls((dir) => {
+    const isKeyPressed = Object.values(dir).some(Boolean);
+    if (isKeyPressed) lastInputRef.current = "keyboard";
+  });
+
+  useEffect(() => {
+    const changed = destination && (!prevDestinationRef.current || destination.x !== prevDestinationRef.current.x || destination.z !== prevDestinationRef.current.z);
+    if (changed) {
+      lastInputRef.current = 'mouse';
+      prevDestinationRef.current = destination;
+    }
+  }, [destination]);
+
   useFrame(() => {
     if (!playerRef.current || !cameraRef.current) return;
-
     const player = playerRef.current;
     const playerPos = player.position;
-    cameraRef.current.lookAt(playerPos);
-    // cameraRef.current.rotation.set(-0.6, 0.7, 0);
+    const dir = directionRef.current;
+    const moveVec = new Vector3();
 
-
-    
-    if (disableMovement) {
-      // 감자 이동 막기 (Idle로 고정)
-      if (isMovingRef.current) {
-        isMovingRef.current = false;
-        playAnimation(playerRef.current, 'Idle');
-      }
-      return;
+    if (!disableMovement) {
+      if (dir.forward) moveVec.z -= 1;
+      if (dir.backward) moveVec.z += 1;
+      if (dir.left) moveVec.x -= 1;
+      if (dir.right) moveVec.x += 1;
     }
 
-    // 이동 처리
-    if (destination) {
+    const hasMoved = moveVec.length() > 0;
+
+    if (hasMoved) {
+      moveVec.normalize().multiplyScalar(speed);
+      playerPos.add(moveVec);
+      const angle = Math.atan2(moveVec.z, moveVec.x);
+      player.rotation.y = -angle - Math.PI / 2;
+      leaveFootprint(player);
+      playAnimation(player, "Walk");
+      isMovingRef.current = true;
+    } else if (destination && lastInputRef.current !== "keyboard" && !disableMovement) {
       const dx = destination.x - playerPos.x;
       const dz = destination.z - playerPos.z;
       const distance = Math.sqrt(dx * dx + dz * dz);
-    
-      // 😀😀
-      console.log(destination.x, destination.z)
-
       if (distance < 0.1) {
-        if (isMovingRef.current) {
-          isMovingRef.current = false;
-          playAnimation(player, 'Idle');
-            
-    // // 🔇 걷기 멈추면 소리 정지
-    // if (walkAudioRef.current) {
-    //   walkAudioRef.current.pause();
-    // }
-        }
+        playAnimation(player, "Idle");
+        isMovingRef.current = false;
       } else {
-        if (!isMovingRef.current) {
-          isMovingRef.current = true;
-          playAnimation(player, 'Walk');
-          // 🔊 걷기 시작하면 소리 재생
-            // if (walkAudioRef.current) {
-            //   walkAudioRef.current.setVolume(0.7);
-            //   walkAudioRef.current.play();
-            // }
-        }
-
-        // 🔽 여기에 추가: 너무 가까운 경우 이동 생략
-        if (distance < speed) {
-        playerPos.x = destination.x;
-        playerPos.z = destination.z;
-        return;
-        }
-
         const angle = Math.atan2(dz, dx);
-        playerPos.x += Math.cos(angle) * speed;
-        playerPos.z += Math.sin(angle) * speed;
-
+        if (distance < speed) {
+          playerPos.x = destination.x;
+          playerPos.z = destination.z;
+        } else {
+          playerPos.x += Math.cos(angle) * speed;
+          playerPos.z += Math.sin(angle) * speed;
+        }
         player.rotation.y = -angle - Math.PI / 2;
+        leaveFootprint(player);
+        playAnimation(player, "Walk");
+        isMovingRef.current = true;
+      }
+    } else {
+      if (isMovingRef.current) {
+        playAnimation(player, "Idle");
+        isMovingRef.current = false;
       }
     }
 
-    // ✅ 카메라 위치는 감자 기준 offset으로 따라가기
     const camPos = playerPos.clone().add(cameraOffset);
     cameraRef.current.position.lerp(camPos, 0.1);
+    cameraRef.current.lookAt(playerPos);
 
-    // // 감자 머리 위 이모션 오브젝트 위치도 따라감
-    // const emotion = player.getObjectByName('Emotion');
-    // if (emotion) {
-    //   emotion.position.x = playerPos.x;
-    //   emotion.position.y = 5
-    //   emotion.position.z = playerPos.z;
-    // }
+    // fadeOutFootprints();
   });
 
   const playAnimation = (player, name) => {
     if (!player.animations) return;
     const action = player.animations[name];
     if (!action) return;
-
     if (currentActionRef.current !== action) {
       currentActionRef.current?.fadeOut(0.3);
+      action.timeScale = 2;
       action.reset().fadeIn(0.3).play();
       currentActionRef.current = action;
     }
   };
 
+  const leaveFootprint = (player) => {
+    const currentPosition = player.position.clone();
+    const distance = currentPosition.distanceTo(lastFootprintPosition.current);
+    console.log("footprint distance:", distance); // 👉 추가
 
- 
-  return (
-    <Player ref={playerRef}>
-    {/* <PositionalAudio
-      ref={walkAudioRef}
-      url="/assets/audio/walk_sound.mp3"
-      position={[0,0 ,0]}
-      distance={50}
-      refDistance={1}
-      rolloffFactor={1}
-      loop
-      volume={0.7}
-    /> */}
+    if ( distance > footprintDistanceThreshold) {
+      const footOffset = 0.3;
+      const angle = player.rotation.y;
+      const offsetX = Math.cos(angle) * footOffset * (isLeftFoot.current ? -1 : 1);
+      const offsetZ = Math.sin(angle) * footOffset * (isLeftFoot.current ? 1 : -1);
+      const position = new Vector3(
+        currentPosition.x + offsetX,
+        0.01,
+        currentPosition.z + offsetZ
+      );
 
-    </Player>
-  );;
+      textureLoader.load('/assets/images/footprint.webp', (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.needsUpdate = true;
+        const geo = new PlaneGeometry(0.6, 0.6);
+        const mat = new MeshBasicMaterial({ 
+          map: texture, 
+          transparent: true, 
+          blending: THREE.NormalBlending, // ✅ 부드럽게 섞이게
+          opacity: 0.8,     
+          depthWrite: false // z-fighting 방지용
+      });
+        const mesh = new Mesh(geo, mat);
+        mesh.position.copy(position);
+        mesh.rotation.set(MathUtils.degToRad(-90), 0, 0);
+        scene.add(mesh);
+        footprints.current.push(mesh);
+
+        gsap.to(mat, {
+          opacity: 0,
+          duration: 4,
+          ease: 'power2.out',
+          // ease: 'none',
+          onComplete: () => {
+            scene.remove(mesh);
+            const index = footprints.current.indexOf(mesh);
+            if (index !== -1) footprints.current.splice(index, 1);
+          }
+        });
+      });
+
+      lastFootprintPosition.current.copy(currentPosition);
+      isLeftFoot.current = !isLeftFoot.current;
+
+      if (footprints.current.length > 20) {
+        const oldest = footprints.current.shift();
+        gsap.killTweensOf(oldest.material); // 애니메이션 중단
+        scene.remove(oldest); // 즉시 제거
+      }
+    }
+  };
+
+  // const fadeOutFootprints = () => {
+  //   for (let i = footprints.current.length - 1; i >= 0; i--) {
+  //     const f = footprints.current[i];
+  //     if (f.opacity > 0) {
+  //       f.opacity -= 0.002;
+  //       f.mesh.material.opacity = f.opacity;
+  //     } else if (f.opacity <= -0.1) {
+  //     // ✅ -0.1 아래일 때만 제거
+  //     scene.remove(f.mesh);
+  //     footprints.current.splice(i, 1);
+  //   } else {
+  //     f.mesh.material.opacity = 0; // 최소값 유지
+  //   }
+  //   }
+  // };
+
+  return <Player ref={playerRef} />;
 });
 
 export default PlayerController;

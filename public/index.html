@@ -2,7 +2,7 @@
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/potato.ico" />
+    <link rel="icon" href="%PUBLIC_URL%/daegam.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
@@ -19,8 +19,8 @@
     <!-- ✅ 시작화면 -->
     <div id="start-screen">
       <video autoplay loop muted playsinline id="start-video">
+        <source src="/assets/video/startpage.webm" type="video/webm" />          
         <source src="/assets/video/startpage.mp4" type="video/mp4" />          
-        <source src="/assets/video/startpage.wepm" type="video/wepm" />          
       </video>
       <button id="start-button" style="display: none;"></button>
       <audio id="bg-audio" src="/assets/audio/ending_bgm.mp3" loop />
@@ -35,7 +35,7 @@
 
     <div id="ending-screen">
       <video autoplay muted playsinline id="ending-video" >
-        <source src="/assets/video/ending.wepm" type="video/wepm" />
+        <source src="/assets/video/ending.webm" type="video/webm" />
         <source src="/assets/video/ending.mp4" type="video/mp4" />
       </video>
     </div>

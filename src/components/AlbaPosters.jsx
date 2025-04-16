@@ -8,7 +8,7 @@ const posters = [
   'DokseoMemo', 'DoNotNakseoMemo', 'GamzaMemo', 'IwannagoHomeMemo',
 ];
 
-export function Posters() {
+export function Posters({selectedPoster, setSelectedPoster}) {
   const gltfs = useLoader(
     GLTFLoader,
     posters.map((name) => `/assets/models/${name}.glb`)
@@ -23,7 +23,7 @@ export function Posters() {
   }, [gltfs]);
 
   const [hoveredPoster, setHoveredPoster] = useState(null);
-  const [selectedPoster, setSelectedPoster] = useState(null);
+  // const [selectedPoster, setSelectedPoster] = useState(null);
   const groupRef = useRef();
 
   return (
@@ -36,7 +36,7 @@ export function Posters() {
         position={[-35, 0.9, -24]}
         scale={[1.6, 1.6, 1.6]}
         onClick={() => {
-          console.log('클릭됨:', name);
+          // console.log('클릭됨:', name);
           setSelectedPoster(prev => prev === name ? null : name);
         }}
       />

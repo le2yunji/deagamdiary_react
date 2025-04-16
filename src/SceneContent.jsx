@@ -15,9 +15,10 @@ import MailScene from './scenes/MailScene';
 import NomoneyScene from './scenes/NomoneyScene';
 import ChatGPTScene from './scenes/ChatGPTScene';
 import SceneCameraManager from './components/SceneCameraManager';
+import { OrthographicCamera } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three'
-
+import useCameraSwitcher from './hooks/useCameraSwitcher'; // 경로 맞게 조정
 
 export default function SceneContent() {
   const [destination, setDestination] = useState(null);
@@ -31,17 +32,29 @@ export default function SceneContent() {
   const setIsEntered = useSetRecoilState(IsEnteredAtom);
 
   const [cameraType, setCameraType] = useState("main");
+  const [useSceneCamera, setUseSceneCamera] = useState(false);
+
   const [mainCameraActive, setCameraActive] = useState(true);
+  const { scene } = useThree();
 
   const directionalLightRef = useRef();
   const ambientLightRef = useRef();
   
+  const {
+    sceneCameraRef,
+    activateSceneCamera,
+    restoreMainCamera,
+    animateCamera,
+    setInitialCameraPose
+  } = useCameraSwitcher();
+
 
   useEffect(() => {
     if (destination) {
       requestAnimationFrame(() => setIsEntered(true));
     }
   }, [destination]);
+
 
 
 
@@ -73,32 +86,6 @@ export default function SceneContent() {
       
       }, 500);
     }
-      // if (z == null) return;
-    
-      // const dirLight = directionalLightRef.current;
-      // const ambLight = ambientLightRef.current;
-    
-      // if (!dirLight || !ambLight) return;
-      // if (z < 50) {
-      //   // ✅ 낮: 하얀색 & 고정 밝기
-      //   const dayColor = new THREE.Color('#ffffff');
-      //   dirLight.color.copy(dayColor);
-      //   dirLight.intensity = 2.2;
-      //   return;
-      // }
-      // // z 기준값 (50~100 구간)
-      // const t = Math.min(Math.max((z - 50) / 50, 0), 1); // 0 ~ 1로 보간값 만들기
-    
-      // // 조명 색상 보간: 노을빛 → 밤색
-      // const sunset = new THREE.Color('#fca311');   // 노을색 (밝은 주황)
-      // const night = new THREE.Color('#000000');    // 밤하늘색
-    
-      // const currentColor = sunset.clone().lerp(night, t);
-    
-      // dirLight.color.copy(currentColor);
-    
-      // // 밝기도 줄이기
-      // dirLight.intensity = 2.2 - t * 1.7;  // → 2.2 → 0.5
 
       if (z == null) return;
 
@@ -162,7 +149,11 @@ export default function SceneContent() {
       // ambLight.intensity = 0.0;
 
   });
-
+  // useEffect(() => {
+  //   console.log("▶ useSceneCamera:", useSceneCamera);
+  //   console.log("▶ sceneCameraRef:", sceneCameraRef.current);
+  // }, [useSceneCamera]);
+  
   // 배경음 멈추는 로직
   // useEffect(() => {
   //   if (isEntered) {
@@ -177,6 +168,7 @@ export default function SceneContent() {
       <>
         <StatsGl className='stats' />
 
+        {/* 메인 카메라 */}
         <SceneCameraManager
           position={[1, 5, 5]}
           zoom={30}
@@ -184,6 +176,17 @@ export default function SceneContent() {
           cameraRef={cameraRef}
           playerRef={playerRef}
         />
+
+      {/* 씬 카메라 */}
+      <OrthographicCamera
+        ref={sceneCameraRef}
+        makeDefault={useSceneCamera} // 상태에 따라 전환
+        zoom={35}
+        near={0.1}
+        far={100}
+        position={[1, 5, 5]} // 기본값 (바로 덮어씀)
+        onUpdate={(self) => self.updateProjectionMatrix()}
+      />
 
         <ambientLight intensity={2.2}  ref={ambientLightRef} />
 
@@ -206,6 +209,7 @@ export default function SceneContent() {
         <Ground onClickGround={(point) => setDestination(point)} />
 
         <PlayerController
+          scene={scene}
           ref={playerRef}
           destination={destination}
           cameraRef={cameraRef}
@@ -216,7 +220,16 @@ export default function SceneContent() {
           playerRef={playerRef}
           setPlayerVisible={(v) => (playerRef.current.visible = v)}
           setCameraTarget={(pos) => setDestination(pos)}
+          cameraRef={cameraRef}
+          sceneCameraRef={sceneCameraRef}
           setDisableMovement={setDisableMovement}
+          useSceneCamera={useSceneCamera}
+          setUseSceneCamera={setUseSceneCamera}
+          setCameraActive={setCameraActive}
+          activateSceneCamera={activateSceneCamera}
+          restoreMainCamera={restoreMainCamera}
+          animateCamera={animateCamera}
+          setInitialCameraPose={setInitialCameraPose}
         />
 
         <CafeScene
@@ -224,15 +237,29 @@ export default function SceneContent() {
           setPlayerVisible={(v) => (playerRef.current.visible = v)}
           setCameraTarget={(pos) => setDestination(pos)}
           cameraRef={cameraRef}
+          sceneCameraRef={sceneCameraRef}
           setDisableMovement={setDisableMovement}
+          useSceneCamera={useSceneCamera}
+          setUseSceneCamera={setUseSceneCamera}
+          setCameraActive={setCameraActive}
+          activateSceneCamera={activateSceneCamera}
+          restoreMainCamera={restoreMainCamera}
+          animateCamera={animateCamera}
         />
 
         <ClassroomScene
-          playerRef={playerRef}
-          setPlayerVisible={(v) => (playerRef.current.visible = v)}
-          setCameraTarget={(pos) => setDestination(pos)}
-          cameraRef={cameraRef}
-          setDisableMovement={setDisableMovement}
+           playerRef={playerRef}
+           setPlayerVisible={(v) => (playerRef.current.visible = v)}
+           setCameraTarget={(pos) => setDestination(pos)}
+           cameraRef={cameraRef}
+           sceneCameraRef={sceneCameraRef}
+           setDisableMovement={setDisableMovement}
+           useSceneCamera={useSceneCamera}
+           setUseSceneCamera={setUseSceneCamera}
+           setCameraActive={setCameraActive}
+           activateSceneCamera={activateSceneCamera}
+           restoreMainCamera={restoreMainCamera}
+           animateCamera={animateCamera}
         />
 
         <NomoneyScene
@@ -240,7 +267,14 @@ export default function SceneContent() {
           setPlayerVisible={(v) => (playerRef.current.visible = v)}
           setCameraTarget={(pos) => setDestination(pos)}
           cameraRef={cameraRef}
+          sceneCameraRef={sceneCameraRef}
           setDisableMovement={setDisableMovement}
+          useSceneCamera={useSceneCamera}
+          setUseSceneCamera={setUseSceneCamera}
+          setCameraActive={setCameraActive}
+          activateSceneCamera={activateSceneCamera}
+          restoreMainCamera={restoreMainCamera}
+          animateCamera={animateCamera}
         />
 
         {/* <AlbaScene
@@ -253,14 +287,18 @@ export default function SceneContent() {
 
       <AlbaScene
           playerRef={playerRef}
-          // emotionRef={emotionRef}
           setPlayerVisible={(v) => (playerRef.current.visible = v)}
           setCameraTarget={(pos) => setDestination(pos)}
           cameraRef={cameraRef}
+          sceneCameraRef={sceneCameraRef}
+          setDisableMovement={setDisableMovement}
+          useSceneCamera={useSceneCamera}
+          setUseSceneCamera={setUseSceneCamera}
           setCameraActive={setCameraActive}
-          // mainCameraActive={mainCameraActive}
-          setDisableMovement={setDisableMovement} // ✅ 전달
-
+          activateSceneCamera={activateSceneCamera}
+          restoreMainCamera={restoreMainCamera}
+          animateCamera={animateCamera}
+          setInitialCameraPose={setInitialCameraPose}
       />
 
         <BakeryScene
@@ -280,11 +318,18 @@ export default function SceneContent() {
         />
 
         <MailScene
-          playerRef={playerRef}
-          setPlayerVisible={(v) => (playerRef.current.visible = v)}
-          setCameraTarget={(pos) => setDestination(pos)}
-          cameraRef={cameraRef}
-          setDisableMovement={setDisableMovement}
+           playerRef={playerRef}
+           setPlayerVisible={(v) => (playerRef.current.visible = v)}
+           setCameraTarget={(pos) => setDestination(pos)}
+           cameraRef={cameraRef}
+           sceneCameraRef={sceneCameraRef}
+           setDisableMovement={setDisableMovement}
+           useSceneCamera={useSceneCamera}
+           setUseSceneCamera={setUseSceneCamera}
+           setCameraActive={setCameraActive}
+           activateSceneCamera={activateSceneCamera}
+           restoreMainCamera={restoreMainCamera}
+           animateCamera={animateCamera}
         />
       </>
     );
