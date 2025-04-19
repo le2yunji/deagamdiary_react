@@ -74,6 +74,9 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
     } else if (destination && lastInputRef.current !== "keyboard" && !disableMovement) {
       const dx = destination.x - playerPos.x;
       const dz = destination.z - playerPos.z;
+      console.log(destination.x, destination.z)
+
+      
       const distance = Math.sqrt(dx * dx + dz * dz);
       if (distance < 0.1) {
         playAnimation(player, "Idle");
@@ -103,6 +106,7 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
     cameraRef.current.position.lerp(camPos, 0.1);
     cameraRef.current.lookAt(playerPos);
 
+
     // fadeOutFootprints();
   });
 
@@ -121,7 +125,6 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
   const leaveFootprint = (player) => {
     const currentPosition = player.position.clone();
     const distance = currentPosition.distanceTo(lastFootprintPosition.current);
-    console.log("footprint distance:", distance); // 👉 추가
 
     if ( distance > footprintDistanceThreshold) {
       const footOffset = 0.3;
@@ -174,22 +177,6 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
       }
     }
   };
-
-  // const fadeOutFootprints = () => {
-  //   for (let i = footprints.current.length - 1; i >= 0; i--) {
-  //     const f = footprints.current[i];
-  //     if (f.opacity > 0) {
-  //       f.opacity -= 0.002;
-  //       f.mesh.material.opacity = f.opacity;
-  //     } else if (f.opacity <= -0.1) {
-  //     // ✅ -0.1 아래일 때만 제거
-  //     scene.remove(f.mesh);
-  //     footprints.current.splice(i, 1);
-  //   } else {
-  //     f.mesh.material.opacity = 0; // 최소값 유지
-  //   }
-  //   }
-  // };
 
   return <Player ref={playerRef} />;
 });

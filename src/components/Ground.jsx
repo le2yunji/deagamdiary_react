@@ -12,12 +12,15 @@ import {
 import * as THREE from 'three';
 
 export default function Ground({ onClickGround }) {
-  const texture = useTexture('/assets/images/street.webp');
+  const texture = useTexture('/assets/images/grid_only2.png');
   const isDragging = useRef(false);
-  // texture.wrapS = THREE.RepeatWrapping;
-  // texture.wrapT = THREE.RepeatWrapping;
-  // texture.repeat.x = 30;
-  // texture.repeat.y = 30;
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.needsUpdate = true;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.x = 9;
+  texture.repeat.y = 9;
+  texture.premultiplyAlpha = true;
 
   const handlePointerDown = (event) => {
     isDragging.current = true;
@@ -70,15 +73,37 @@ export default function Ground({ onClickGround }) {
      {/* 🟦 바닥 메쉬 */}
      <mesh
        rotation={[-Math.PI / 2, 0, 0]}
-       position={[0, 0, 0]}
-       receiveShadow
+       position={[0, 0.001, 0]}
+      //  receiveShadow
        onPointerDown={handlePointerDown}
        onPointerMove={handlePointerMove}
        onPointerUp={handlePointerUp}
      >
        <planeGeometry args={[400, 400]} />
-       <meshStandardMaterial map={texture} />
+       <meshBasicMaterial 
+       map={texture}
+       transparent={true}        // ✨ PNG 알파 반영
+      alphaTest={0.01}          // ✨ 경계선 제거용
+      toneMapped={false}        // ✨ 색 왜곡 방지
+      blending={THREE.NormalBlending} // 또는 Additive, CustomBlending 실험 가능
+      side={THREE.DoubleSide}
+      opacity={0.3} // ✅ 실제 투명도 설정은 여기서!
+
+       />
      </mesh>
+
+  {/* 🧱 2. 그림자만 받는 바닥 */}
+  <mesh
+    rotation={[-Math.PI / 2, 0, 0]}
+    position={[0, 0, 0]}
+    receiveShadow
+  >
+    <planeGeometry args={[400, 400]} />
+    <meshStandardMaterial 
+ />
+    {/* <shadowMaterial opacity={0.35} /> */}
+  </mesh>
+
 
      {/* 🖼 이미지 plane 렌더링 */}
      {/* {imagePlanes.map((info, i) => (

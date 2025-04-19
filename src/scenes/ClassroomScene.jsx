@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 
 import {
-  PointLight, DirectionalLight, RectAreaLight,
+  PointLight, DirectionalLight,
   Vector3,
   PlaneGeometry,
   MeshBasicMaterial,
@@ -27,9 +27,10 @@ import {
 
 import CloudEffect from '../components/CloudEffect';
 import { Classroom } from '../components/Classroom';
-import { ClassroomGamza } from '../components/ClassroomGamza';
-import { Onion } from '../components/Onion';
-// import { Classmate } from '../components/Classmate';
+import { Timeline } from 'gsap/gsap-core';
+import { useScroll } from '@react-three/drei';
+
+
 
 const slidePaths = [
   '/assets/images/ppt1.webp',
@@ -50,22 +51,26 @@ const arrowInfos = [
   { x: -89, y: 6.2, z: -65, rotationX: -10, rotationY: 8 } // 감자
 ];
 
-export default function ClassroomScene({ playerRef, emotionRef, setCameraTarget, setDisableMovement }) {
+let timeline;
+
+export default function ClassroomScene({ 
+  playerRef,
+  setDisableMovement,
+  setCameraTarget,
+  setCameraActive,         // 💡 추가
+  setUseSceneCamera,       // 💡 추가
+  useSceneCamera,
+  activateSceneCamera,
+  animateCamera,
+  restoreMainCamera,
+  setInitialCameraPose
+}) {
   const { scene, gl, camera } = useThree();
   const group = useRef();
   const classroomRef = useRef();
-  const classroomGamzaRef = useRef();
-  const onionRef = useRef();
   const classroomSpotRef = useRef();
-
-  const classroomGamzaActions = useRef();
-  const onionActions = useRef();
   const classroomActions = useRef();
-
-  const classroomGamzaMixer = useRef();
-  const onionMixer = useRef();
   const classroomMixer = useRef();
-
 
   const classroomPointLightRef = useRef();
   const classroomDirectionalLightRef = useRef();
@@ -92,21 +97,6 @@ export default function ClassroomScene({ playerRef, emotionRef, setCameraTarget,
           child.castShadow = true;
         }
       });
-      classroomGamzaRef.current.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-        }
-      });
-      onionRef.current.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-        }
-      });
-      // classmateRef.current.traverse((child) => {
-      //   if (child.isMesh) {
-      //     child.castShadow = true;
-      //   }
-      // });
     }
   }, []);
 
@@ -237,7 +227,7 @@ const startSlideShow = () => {
           // showArrow(1); // 🔥 감자 머리 위 화살표
           stopTalkBubbles(); // 말풍선 중지
           // return;
-          classroomGamzaActions.current?.["Hello"].reset().play()
+          // classroomGamzaActions.current?.["Hello"].reset().play()
           setTimeout(() => restorePlayerAfterClass(), 5000)
         }
 
@@ -262,29 +252,18 @@ const startSlideShow = () => {
 // ✅ 클래스룸 인터랙션 끝 완료
 const restorePlayerAfterClass = () => {
 
-  gsap.to(camera,{
-    duration: 1, 
-    zoom: 30,
-    ease: "power3.out",
-    onUpdate: () => camera.updateProjectionMatrix(),
-  })
-  gsap.to(camera.position,{
-    duration: 1, 
-    y: 5,
-    ease: "power3.out",
-    onUpdate: () => camera.updateProjectionMatrix(),
-  })
-
-  setTimeout(() => {
-    if (classroomGamzaRef.current) {
-      gsap.to(classroomGamzaRef.current.position, {
-        y: 3, duration: 1, ease: "expo.inOut"
-      });
-      gsap.to(classroomGamzaRef.current.scale, {
-        x: 0, y: 0, z: 0, duration: 1, ease: "expo.inOut"
-      });
-    }
-  }, 500)
+  // gsap.to(camera,{
+  //   duration: 1, 
+  //   zoom: 30,
+  //   ease: "power3.out",
+  //   onUpdate: () => camera.updateProjectionMatrix(),
+  // })
+  // gsap.to(camera.position,{
+  //   duration: 1, 
+  //   y: 5,
+  //   ease: "power3.out",
+  //   onUpdate: () => camera.updateProjectionMatrix(),
+  // })
 
   playerRef.current.visible = true;
   playerRef.current.position.set(-92, 0.3, -56);
@@ -337,9 +316,14 @@ const elapsedTime = clock.getElapsedTime()
 // const triggered = useRef(false); // 👈 변경 (useRef로 변경)
 
 
+const scroll = useScroll()
+
+
+
+
 
 const triggered = useRef(false); // ✅ 상태를 즉시 바꾸고 반영되도록
-
+const Entered = useRef(false); 
 
 // ✅ 클래스룸 스팟 매쉬 도달 시 / 시작
 useFrame(() => {
@@ -348,6 +332,7 @@ useFrame(() => {
     const dist = playerRef.current.position.clone().setY(0).distanceTo(ClassroomSpotMeshPosition);
     if (dist < 1.5) {
 
+      // Entered.current = true
       if (bgAudio) bgAudio.pause(); //📢
 
       // setTriggered(true)
@@ -358,10 +343,11 @@ useFrame(() => {
       if (classroomSpotRef.current) classroomSpotRef.current.visible = false;
 
       gsap.to(classroomRef.current.scale, { x: 5.5, y: 5.5, z: 5.5, duration: 0.3, ease: "power3.inOut" });
+     
+      const animation = classroomActions.current["Scene"]
 
-
-      
-      classroomActions.current?.["Scene"].reset().play()
+      animation.timeScale = 0.7;
+      animation.reset().play()
 
       setTimeout(() => {
         // 조명 추가
@@ -370,49 +356,54 @@ useFrame(() => {
         if (classroomSunLightRef.current) scene.add(classroomSunLightRef.current);
 
         // onionRef.current.visible = true;
-        gsap.to(onionRef.current.position, { y: 0.3, duration: 0.3, ease: "bounce.inOut" });
-        gsap.to(onionRef.current.scale, { x: 1, y: 1, z: 1, duration: 0.3, ease: "power3.inOut" });
+        // gsap.to(onionRef.current.position, { y: 0.3, duration: 0.3, ease: "bounce.inOut" });
+        // gsap.to(onionRef.current.scale, { x: 1, y: 1, z: 1, duration: 0.3, ease: "power3.inOut" });
 
-        onionActions.current?.["Idle"].reset().play()
+        // onionActions.current?.["Idle"].reset().play()
+        activateSceneCamera(setCameraActive, setUseSceneCamera);
 
-        gsap.to(camera,{
-          duration: 1, 
-          zoom: 45,
-          ease: "power3.out",
-          onUpdate: () => camera.updateProjectionMatrix(),
-        })
-        gsap.to(camera.position,{
-          duration: 1, 
-          // x: -95,
-          y: 3, 
-          // z: 5.5,
-          ease: "expo.inOut",
-          onUpdate: () => {
-            camera.updateProjectionMatrix();
-          },        
-        })
+        setInitialCameraPose({
+          position: [-95, 7, -60],
+          lookAt: [-96.5, 4, -66],
+          zoom: 40
+        });
+
+        animateCamera({
+          position: { x: -95, y: 7, z: -60 },
+          lookAt: [-96.5, 4, -66],
+          zoom: 55,
+          // duration: 10,
+        });
+
+
+
+        // gsap.to(camera,{
+        //   duration: 1, 
+        //   zoom: 45,
+        //   ease: "power3.out",
+        //   onUpdate: () => camera.updateProjectionMatrix(),
+        // })
+        // gsap.to(camera.position,{
+        //   duration: 1, 
+        //   // x: -95,
+        //   y: 3, 
+        //   // z: 5.5,
+        //   ease: "expo.inOut",
+        //   onUpdate: () => {
+        //     camera.updateProjectionMatrix();
+        //   },        
+        // })
+
+        // if(!triggered.current) return
+        // timeline.seek(scroll.offset * timeline.duration())
+
       }, 500);
-
-
-      // 양파 교수
-// 1. Idle 관망
-// 2. Nope 절레절레
-// 3. idle 눈썹만
-// 4. NopeFace 눈썹 눈감기
-
-// 감자
-// 1. HeadTurn 양파교수 보기
-// 2. Hello 인사
-// 3. Shiver 떨기
-// 4. Blink 끔뻑끔뻑
-// 5. Closed 눈 감기
-// 6. Closing / \
 
       setTimeout(() => {
         setShowCloudEffect(true);
-        gsap.to(classroomGamzaRef.current.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
-        classroomGamzaActions.current?.["Shiver"].reset().play()
-        classroomGamzaActions.current?.["Blink"].reset().play()
+        // gsap.to(classroomGamzaRef.current.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
+        // classroomGamzaActions.current?.["Shiver"].reset().play()
+        // classroomGamzaActions.current?.["Blink"].reset().play()
         setTimeout(() => {
           showArrow(0, elapsedTime); // 🔥 PPT 화살표 표시
         }, 500)
@@ -421,47 +412,38 @@ useFrame(() => {
       setTimeout(() => setShowCloudEffect(false), 2500); // 구름 이펙트
 
       setTimeout(() => {
-        classroomGamzaActions.current?.["Shiver"].stop()
-        classroomGamzaActions.current?.["HeadTurn"].reset().play()
+        restoreMainCamera(setCameraActive, setUseSceneCamera);
 
-        onionActions.current?.["Idle"].reset().play()
-        onionActions.current?.["idle"].reset().play()
-      }, 5000)
-
-      setTimeout(() => {
-        classroomGamzaActions.current?.["HeadTurn"].stop()
-        onionActions.current?.["Idle"].stop()
-        classroomGamzaActions.current?.["Shiver"].reset().play()
-
-        onionActions.current?.["Nope"].reset().play()
-        classroomGamzaActions.current?.["Closing"].reset().play()
-      }, 7000)
-      
-      setTimeout(() => {
-        onionActions.current?.["Nope"].stop()
-        onionActions.current?.["NopeFace"].reset().play()
-
-      }, 10000)
-
-      // setTimeout(() => restorePlayerAfterClass(), 20000)
+        restorePlayerAfterClass()
+      }, 20000)
     }
   }
 );
 
 useFrame((_, delta) => {
-  classroomGamzaMixer.current?.update(delta);
   classroomMixer.current?.update(delta);
-  onionMixer.current?.update(delta);
 });
+
+// useEffect(() => {
+//   if (!triggered.current) return;
+//   timeline = gsap.timeline()
+//   timeline.to(camera.position,{
+//     duration: 4,
+//     x: -90.5,
+//     z: -68.5
+//   })
+
+// }, [triggered, camera.position])
+
 
   return (
     <group ref={group}>
-      {showCloudEffect && classroomGamzaRef.current && (
+      {showCloudEffect && playerRef.current && (
         <CloudEffect
           position={[
-            classroomGamzaRef.current.position.x,
-            classroomGamzaRef.current.position.y + 4,
-            classroomGamzaRef.current.position.z,
+            playerRef.current.position.x,
+            playerRef.current.position.y + 4,
+            playerRef.current.position.z,
           ]}
           raycast={() => null} // 이벤트 차단 방지
         />
@@ -487,7 +469,7 @@ useFrame((_, delta) => {
       />
 
       
-      <ClassroomGamza
+      {/* <ClassroomGamza
         ref={classroomGamzaRef}
         position={[-89.5, 0.5, -65]}
         rotation={[0, THREE.MathUtils.degToRad(180), 0]}
@@ -517,9 +499,9 @@ useFrame((_, delta) => {
 
         //   classroomGamzaRef.current.visible = false;
         // }}
-      />
+      /> */}
 
-      <Onion
+      {/* <Onion
         ref={onionRef}
         position={[-99.5, 3, -67.5]}
         rotation={[0, THREE.MathUtils.degToRad(45), 0]}
@@ -528,7 +510,7 @@ useFrame((_, delta) => {
           onionMixer.current = mixer;
           onionActions.current = actions;
         }}      
-      />
+      /> */}
 
       <mesh
         name="classroomSpot"

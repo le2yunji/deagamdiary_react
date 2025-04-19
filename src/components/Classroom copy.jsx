@@ -1,18 +1,12 @@
 // component/Classroom.jsx
-
 import React,{ useEffect, useImperativeHandle, forwardRef }  from 'react'
-import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
-import { SkeletonUtils } from 'three-stdlib'
 import * as THREE from 'three';
 
 export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
   const group = React.useRef()
-  const { scene, animations } = useGLTF('/assets/models/Classroomscene-draco.glb')
-  const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
-  const { nodes, materials } = useGraph(clone)
+  const { nodes, materials, animations } = useGLTF('/assets/models/Classroom2.glb')
   const { actions, mixer } = useAnimations(animations, group)
-
 
   useImperativeHandle(ref, () => group.current); // ✅ 이거 꼭 필요!
  // 외부에서 액션, mixer 접근 가능하게 전달 + 반복 없이 재생 설정
@@ -51,47 +45,12 @@ export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
+        <group name="whiteboardEmpty" position={[-1.131, 0.003, -0.385]} rotation={[0, -0.083, 0]} scale={0.912} />
         <group name="Empty" position={[0, 1.536, 0.458]} scale={[0.1, 0.098, 0.094]}>
-          <group name="Empty002" position={[-0.653, 0.727, 0.035]} scale={0}>
-            <group name="OnionBone" position={[-0.009, 0.336, 0]} scale={2.706}>
-              <primitive object={nodes.Root} />
-              <group name="OnionBody">
-                <skinnedMesh name="Cube001_1" geometry={nodes.Cube001_1.geometry} material={materials['Material.014']} skeleton={nodes.Cube001_1.skeleton} morphTargetDictionary={nodes.Cube001_1.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_1.morphTargetInfluences} />
-                <skinnedMesh name="Cube001_2" geometry={nodes.Cube001_2.geometry} material={materials['Material.015']} skeleton={nodes.Cube001_2.skeleton} morphTargetDictionary={nodes.Cube001_2.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_2.morphTargetInfluences} />
-                <skinnedMesh name="Cube001_3" geometry={nodes.Cube001_3.geometry} material={materials['Material.016']} skeleton={nodes.Cube001_3.skeleton} morphTargetDictionary={nodes.Cube001_3.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_3.morphTargetInfluences} />
-                <skinnedMesh name="Cube001_4" geometry={nodes.Cube001_4.geometry} material={materials['Material.017']} skeleton={nodes.Cube001_4.skeleton} morphTargetDictionary={nodes.Cube001_4.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_4.morphTargetInfluences} />
-                <skinnedMesh name="Cube001_5" geometry={nodes.Cube001_5.geometry} material={materials['Material.023']} skeleton={nodes.Cube001_5.skeleton} morphTargetDictionary={nodes.Cube001_5.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_5.morphTargetInfluences} />
-                <skinnedMesh name="Cube001_6" geometry={nodes.Cube001_6.geometry} material={materials['Material.018']} skeleton={nodes.Cube001_6.skeleton} morphTargetDictionary={nodes.Cube001_6.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_6.morphTargetInfluences} />
-                <skinnedMesh name="Cube001_7" geometry={nodes.Cube001_7.geometry} material={materials['Material.019']} skeleton={nodes.Cube001_7.skeleton} morphTargetDictionary={nodes.Cube001_7.morphTargetDictionary} morphTargetInfluences={nodes.Cube001_7.morphTargetInfluences} />
-              </group>
-            </group>
-          </group>
-          <group name="Empty003" position={[0.951, 0.587, -0.965]} scale={[0.025, 0.021, 0.026]}>
-            <group name="GamzaBone" position={[-0.056, -0.007, -0.002]} rotation={[Math.PI, -0.45, Math.PI]} scale={0.432}>
-              <primitive object={nodes.spine} />
-              <primitive object={nodes.spine003} />
-              <primitive object={nodes.neutral_bone} />
-              <group name="Head_1">
-                <skinnedMesh name="Cube004_1" geometry={nodes.Cube004_1.geometry} material={materials['Material.020']} skeleton={nodes.Cube004_1.skeleton} morphTargetDictionary={nodes.Cube004_1.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_1.morphTargetInfluences} />
-                <skinnedMesh name="Cube004_2" geometry={nodes.Cube004_2.geometry} material={materials['Material.021']} skeleton={nodes.Cube004_2.skeleton} morphTargetDictionary={nodes.Cube004_2.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_2.morphTargetInfluences} />
-                <skinnedMesh name="Cube004_3" geometry={nodes.Cube004_3.geometry} material={materials['Material.024']} skeleton={nodes.Cube004_3.skeleton} morphTargetDictionary={nodes.Cube004_3.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_3.morphTargetInfluences} />
-                <skinnedMesh name="Cube004_4" geometry={nodes.Cube004_4.geometry} material={materials['Material.025']} skeleton={nodes.Cube004_4.skeleton} morphTargetDictionary={nodes.Cube004_4.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_4.morphTargetInfluences} />
-                <skinnedMesh name="Cube004_5" geometry={nodes.Cube004_5.geometry} material={materials['Material.026']} skeleton={nodes.Cube004_5.skeleton} morphTargetDictionary={nodes.Cube004_5.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_5.morphTargetInfluences} />
-                <skinnedMesh name="Cube004_6" geometry={nodes.Cube004_6.geometry} material={materials['Material.028']} skeleton={nodes.Cube004_6.skeleton} morphTargetDictionary={nodes.Cube004_6.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_6.morphTargetInfluences} />
-                <skinnedMesh name="Cube004_7" geometry={nodes.Cube004_7.geometry} material={materials['Material.029']} skeleton={nodes.Cube004_7.skeleton} morphTargetDictionary={nodes.Cube004_7.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_7.morphTargetInfluences} />
-                <skinnedMesh name="Cube004_8" geometry={nodes.Cube004_8.geometry} material={materials['Material.030']} skeleton={nodes.Cube004_8.skeleton} morphTargetDictionary={nodes.Cube004_8.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_8.morphTargetInfluences} />
-                <skinnedMesh name="Cube004_9" geometry={nodes.Cube004_9.geometry} material={materials['Material.032']} skeleton={nodes.Cube004_9.skeleton} morphTargetDictionary={nodes.Cube004_9.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_9.morphTargetInfluences} />
-                <skinnedMesh name="Cube004_10" geometry={nodes.Cube004_10.geometry} material={materials['Material.033']} skeleton={nodes.Cube004_10.skeleton} morphTargetDictionary={nodes.Cube004_10.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_10.morphTargetInfluences} />
-                <skinnedMesh name="Cube004_11" geometry={nodes.Cube004_11.geometry} material={materials['Material.042']} skeleton={nodes.Cube004_11.skeleton} morphTargetDictionary={nodes.Cube004_11.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_11.morphTargetInfluences} />
-                <skinnedMesh name="Cube004_12" geometry={nodes.Cube004_12.geometry} material={materials['Material.043']} skeleton={nodes.Cube004_12.skeleton} morphTargetDictionary={nodes.Cube004_12.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_12.morphTargetInfluences} />
-              </group>
-              <group name="Pad">
-                <skinnedMesh name="Cube010" geometry={nodes.Cube010.geometry} material={materials['Material.022']} skeleton={nodes.Cube010.skeleton} morphTargetDictionary={nodes.Cube010.morphTargetDictionary} morphTargetInfluences={nodes.Cube010.morphTargetInfluences} />
-                <skinnedMesh name="Cube010_1" geometry={nodes.Cube010_1.geometry} material={materials['Material.031']} skeleton={nodes.Cube010_1.skeleton} morphTargetDictionary={nodes.Cube010_1.morphTargetDictionary} morphTargetInfluences={nodes.Cube010_1.morphTargetInfluences} />
-              </group>
-            </group>
-          </group>
-          <group name="Chairrim001" position={[-0.43, 0.98, 1.053]} scale={[-0.021, -0.021, -0.023]}>
+          <group name="Empty001" position={[1.785, -0.074, -0.19]} rotation={[0, -1.571, 0]} scale={[1.069, 1.018, 0.817]} />
+          <group name="Empty004" position={[0.367, 0.046, 0.783]} scale={[0.93, 0.947, 0.993]} />
+          <group name="Empty005" position={[0, -0.064, -0.49]} scale={[1, 1.018, 1.069]} />
+          {/* <group name="Chairrim001" position={[-0.317, 0.98, 0.417]} scale={[-0.021, -0.021, -0.023]}>
             <mesh name="Chairrim001_1" geometry={nodes.Chairrim001_1.geometry} material={materials.Legs} />
             <mesh name="Chairrim001_2" geometry={nodes.Chairrim001_2.geometry} material={materials.Cushion} />
             <mesh name="Chairrim001_3" geometry={nodes.Chairrim001_3.geometry} material={materials.Caps} />
@@ -100,20 +59,18 @@ export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
             <mesh name="Chairrim001_6" geometry={nodes.Chairrim001_6.geometry} material={materials.Hook} />
             <mesh name="Chairrim001_7" geometry={nodes.Chairrim001_7.geometry} material={materials['Bolt.001']} />
             <mesh name="Chairrim001_8" geometry={nodes.Chairrim001_8.geometry} material={materials['Material.011']} />
-            <mesh name="Chairrim001_9" geometry={nodes.Chairrim001_9.geometry} material={materials['Material.012']} />
           </group>
-          <group name="Chairrim002" position={[0.467, 0.98, 1.053]} scale={[-0.021, -0.021, -0.023]}>
-            <mesh name="Chairrim006" geometry={nodes.Chairrim006.geometry} material={materials.Legs} />
-            <mesh name="Chairrim006_1" geometry={nodes.Chairrim006_1.geometry} material={materials.Cushion} />
-            <mesh name="Chairrim006_2" geometry={nodes.Chairrim006_2.geometry} material={materials.Caps} />
-            <mesh name="Chairrim006_3" geometry={nodes.Chairrim006_3.geometry} material={materials['Material.010']} />
-            <mesh name="Chairrim006_4" geometry={nodes.Chairrim006_4.geometry} material={materials.Desk} />
-            <mesh name="Chairrim006_5" geometry={nodes.Chairrim006_5.geometry} material={materials.Hook} />
-            <mesh name="Chairrim006_6" geometry={nodes.Chairrim006_6.geometry} material={materials['Bolt.001']} />
-            <mesh name="Chairrim006_7" geometry={nodes.Chairrim006_7.geometry} material={materials['Material.011']} />
-            <mesh name="Chairrim006_8" geometry={nodes.Chairrim006_8.geometry} material={materials['Material.012']} />
+          <group name="Chairrim002" position={[0.467, 0.98, 0.417]} scale={[-0.021, -0.021, -0.023]}>
+            <mesh name="Chairrim006_1" geometry={nodes.Chairrim006_1.geometry} material={materials.Legs} />
+            <mesh name="Chairrim006_2" geometry={nodes.Chairrim006_2.geometry} material={materials.Cushion} />
+            <mesh name="Chairrim006_3" geometry={nodes.Chairrim006_3.geometry} material={materials.Caps} />
+            <mesh name="Chairrim006_4" geometry={nodes.Chairrim006_4.geometry} material={materials['Material.010']} />
+            <mesh name="Chairrim006_5" geometry={nodes.Chairrim006_5.geometry} material={materials.Desk} />
+            <mesh name="Chairrim006_6" geometry={nodes.Chairrim006_6.geometry} material={materials.Hook} />
+            <mesh name="Chairrim006_7" geometry={nodes.Chairrim006_7.geometry} material={materials['Bolt.001']} />
+            <mesh name="Chairrim006_8" geometry={nodes.Chairrim006_8.geometry} material={materials['Material.011']} />
           </group>
-          <group name="Chairrim003" position={[1.363, 0.98, 1.053]} scale={[-0.021, -0.021, -0.023]}>
+          <group name="Chairrim003" position={[1.25, 0.98, 0.417]} scale={[-0.021, -0.021, -0.023]}>
             <mesh name="Chairrim007" geometry={nodes.Chairrim007.geometry} material={materials.Legs} />
             <mesh name="Chairrim007_1" geometry={nodes.Chairrim007_1.geometry} material={materials.Cushion} />
             <mesh name="Chairrim007_2" geometry={nodes.Chairrim007_2.geometry} material={materials.Caps} />
@@ -122,7 +79,36 @@ export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
             <mesh name="Chairrim007_5" geometry={nodes.Chairrim007_5.geometry} material={materials.Hook} />
             <mesh name="Chairrim007_6" geometry={nodes.Chairrim007_6.geometry} material={materials['Bolt.001']} />
             <mesh name="Chairrim007_7" geometry={nodes.Chairrim007_7.geometry} material={materials['Material.011']} />
-            <mesh name="Chairrim007_8" geometry={nodes.Chairrim007_8.geometry} material={materials['Material.012']} />
+          </group> */}
+          <group name="Chairrim004" position={[-0.317, 0.98, 1]} scale={[-0.021, -0.021, -0.023]}>
+            <mesh name="Chairrim008" geometry={nodes.Chairrim008.geometry} material={materials.Legs} />
+            <mesh name="Chairrim008_1" geometry={nodes.Chairrim008_1.geometry} material={materials.Cushion} />
+            <mesh name="Chairrim008_2" geometry={nodes.Chairrim008_2.geometry} material={materials.Caps} />
+            <mesh name="Chairrim008_3" geometry={nodes.Chairrim008_3.geometry} material={materials['Material.010']} />
+            <mesh name="Chairrim008_4" geometry={nodes.Chairrim008_4.geometry} material={materials.Desk} />
+            <mesh name="Chairrim008_5" geometry={nodes.Chairrim008_5.geometry} material={materials.Hook} />
+            <mesh name="Chairrim008_6" geometry={nodes.Chairrim008_6.geometry} material={materials['Bolt.001']} />
+            <mesh name="Chairrim008_7" geometry={nodes.Chairrim008_7.geometry} material={materials['Material.011']} />
+          </group>
+          <group name="Chairrim005" position={[0.467, 0.98, 1]} scale={[-0.021, -0.021, -0.023]}>
+            <mesh name="Chairrim009" geometry={nodes.Chairrim009.geometry} material={materials.Legs} />
+            <mesh name="Chairrim009_1" geometry={nodes.Chairrim009_1.geometry} material={materials.Cushion} />
+            <mesh name="Chairrim009_2" geometry={nodes.Chairrim009_2.geometry} material={materials.Caps} />
+            <mesh name="Chairrim009_3" geometry={nodes.Chairrim009_3.geometry} material={materials['Material.010']} />
+            <mesh name="Chairrim009_4" geometry={nodes.Chairrim009_4.geometry} material={materials.Desk} />
+            <mesh name="Chairrim009_5" geometry={nodes.Chairrim009_5.geometry} material={materials.Hook} />
+            <mesh name="Chairrim009_6" geometry={nodes.Chairrim009_6.geometry} material={materials['Bolt.001']} />
+            <mesh name="Chairrim009_7" geometry={nodes.Chairrim009_7.geometry} material={materials['Material.011']} />
+          </group>
+          <group name="Chairrim006" position={[1.25, 0.98, 1]} scale={[-0.021, -0.021, -0.023]}>
+            <mesh name="Chairrim010" geometry={nodes.Chairrim010.geometry} material={materials.Legs} />
+            <mesh name="Chairrim010_1" geometry={nodes.Chairrim010_1.geometry} material={materials.Cushion} />
+            <mesh name="Chairrim010_2" geometry={nodes.Chairrim010_2.geometry} material={materials.Caps} />
+            <mesh name="Chairrim010_3" geometry={nodes.Chairrim010_3.geometry} material={materials['Material.010']} />
+            <mesh name="Chairrim010_4" geometry={nodes.Chairrim010_4.geometry} material={materials.Desk} />
+            <mesh name="Chairrim010_5" geometry={nodes.Chairrim010_5.geometry} material={materials.Hook} />
+            <mesh name="Chairrim010_6" geometry={nodes.Chairrim010_6.geometry} material={materials['Bolt.001']} />
+            <mesh name="Chairrim010_7" geometry={nodes.Chairrim010_7.geometry} material={materials['Material.011']} />
           </group>
           <group name="Classroom001" position={[-1.085, 0.523, -0.86]} rotation={[-Math.PI, 0.083, -Math.PI]} scale={[0.101, 0.103, 0.068]}>
             <mesh name="Cube003" geometry={nodes.Cube003.geometry} material={materials.Bolt} />
@@ -200,7 +186,7 @@ export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
             <mesh name="Circle002_1" geometry={nodes.Circle002_1.geometry} material={materials['Umbrella.Bronze']} />
             <mesh name="Circle002_2" geometry={nodes.Circle002_2.geometry} material={materials['Material.006']} />
           </group>
-          <group name="교탁" position={[0.964, -0.044, -0.51]} rotation={[0, 1.571, 0]} scale={[0.175, 0.167, 0.143]}>
+          <group name="교탁" position={[0.964, -0.044, -0.686]} rotation={[0, 1.571, 0]} scale={[0.175, 0.167, 0.143]}>
             <mesh name="Cube008" geometry={nodes.Cube008.geometry} material={materials['light_wood.002']} />
             <mesh name="Cube008_1" geometry={nodes.Cube008_1.geometry} material={materials['Desk.001']} />
             <mesh name="Cube008_2" geometry={nodes.Cube008_2.geometry} material={materials['Black.001']} />
@@ -223,4 +209,4 @@ export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
   )
 })
 
-useGLTF.preload('/assets/models/Classroomscene-draco.glb')
+useGLTF.preload('/assets/models/Classroom2.glb')

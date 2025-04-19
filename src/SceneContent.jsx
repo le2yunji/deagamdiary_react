@@ -101,8 +101,8 @@ export default function SceneContent() {
       if (z <= 40) {
         dirLight.color.copy(dayColor);
         ambLight.color.copy(dayColor);
-        dirLight.intensity = 2.2;
-        ambLight.intensity = 2.0;
+        dirLight.intensity = 2.5;
+        // ambLight.intensity = 2.0;
         return;
       }
     
@@ -144,9 +144,9 @@ export default function SceneContent() {
     
       // 완전 암전
       dirLight.color.copy(blackoutColor);
-      // ambLight.color.copy(blackoutColor);
+      ambLight.color.copy(blackoutColor);
       dirLight.intensity = 0.0;
-      // ambLight.intensity = 0.0;
+      ambLight.intensity = 0.0;
 
   });
   // useEffect(() => {
@@ -260,6 +260,8 @@ export default function SceneContent() {
            activateSceneCamera={activateSceneCamera}
            restoreMainCamera={restoreMainCamera}
            animateCamera={animateCamera}
+           setInitialCameraPose={setInitialCameraPose}
+
         />
 
         <NomoneyScene
