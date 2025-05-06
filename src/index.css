@@ -10,7 +10,28 @@ body, #root {
     overflow: hidden;
     font-family: sans-serif;
   }
+/* src/index.css */
+#root {
+  overflow: visible !important;  /* ✅ 이 줄을 추가 또는 수정하세요 */
+}
 
+/* 소리 버튼 */
+.sound-btn-set {
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+.sound-btn {
+  border: none;
+  background-color: transparent;
+  color: #111111;
+}
+
+
+/* 시작 페이지 */
 #start-screen {
     position: fixed;
     top: 0;
@@ -20,13 +41,33 @@ body, #root {
     z-index: 9999;
     overflow: hidden;
   }
-  
+  /* 시작 안내 페이지 */
+  #start-guide {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9998;
+    overflow: hidden;
+  }
+/* 시작 가이드 이미지  */
+  #start-guide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 비율 유지하며 꽉 채우기 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+  /* 시작 화면 비디오 */
   #start-video {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  
+  /* 시작 버튼 */
   #start-button {
     margin: 0 auto;
     padding: 10px 10px;
@@ -43,7 +84,7 @@ body, #root {
     left: 50%; /* 가로 정렬을 위해 left: 50% */
     transform: translateX(-50%); /* 가로 중앙 정렬 */
     cursor: pointer;
-    z-index: 999;
+    z-index: 9999;
 	  transition: background 0.3s ease-in-out;
 	  display: none; /* 기본적으로 버튼 숨김 */
   }
@@ -53,6 +94,28 @@ body, #root {
     background: url('./assets/images/smileDaegam2.png') no-repeat center;
     background-size: cover;
     }
+
+/* 시작 가이드 확인 버튼 */
+  #start-guide-btn {
+    margin: 0 auto;
+    padding: 10px 10px;
+    font-size: 16px;
+    position: absolute; /* relative → absolute 변경 */
+    width: 220px;
+    height: 160px;
+    top: 640px;
+    /* background: url('./assets/images/gamza_button_unclick.webp') no-repeat center; */
+    background: url('./assets/images/first_guide_btn.png') no-repeat center;
+    background-size: cover;
+    border: none;
+    cursor: pointer;
+    left: 50%; /* 가로 정렬을 위해 left: 50% */
+    transform: translateX(-50%); /* 가로 중앙 정렬 */
+    cursor: pointer;
+    z-index: 2;
+    transition: background 0.3s ease-in-out;
+    display: none; /* 기본적으로 버튼 숨김 */
+  }
 
     #ending-screen {
       position: fixed;

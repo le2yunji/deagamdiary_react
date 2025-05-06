@@ -1,33 +1,42 @@
-// MailBox.jsx
-import React, { useRef, useEffect, forwardRef, useImperativeHandle }  from 'react'
+// component/MailBox.jsx
+
+import React, {
+  useRef,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+  useMemo
+} from 'react';
 import * as THREE from 'three';
-import { useGLTF } from '@react-three/drei'
+import { useGLTF } from '@react-three/drei';
+import { SkeletonUtils } from 'three-stdlib';
 
 export const MailBox = forwardRef(({ onLoaded, ...props }, ref) => {
-  const { nodes, materials } = useGLTF('/assets/models/MailBox.glb')
-  const mailboxRef = useRef();
+  const group = useRef();
+  const { scene } = useGLTF('/assets/models/MailBox.glb');
+  const clonedScene = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+
+  useImperativeHandle(ref, () => group.current);
 
   useEffect(() => {
-    if (mailboxRef.current) {
-      mailboxRef.current.traverse((child) => {
-        if (child.isMesh) {
+    if (group.current) {
+      group.current.traverse((child) => {
+        if (child.isMesh || child.isSkinnedMesh) {
           child.castShadow = true;
           child.receiveShadow = true;
-
+          child.material.side = THREE.FrontSide;
         }
       });
-    }
-  }, []);
-  return (
-    <group {...props} dispose={null} scale={[1.7, 1.7, 1.7]}>
-      <mesh geometry={nodes.Cube020.geometry} material={materials['Material.049']} />
-      <mesh geometry={nodes.Cube020_1.geometry} material={materials['Material.048']} />
-      <mesh geometry={nodes.Cube020_2.geometry} material={materials['Material.050']} />
-      <mesh geometry={nodes.Cube020_3.geometry} material={materials['Material.051']} />
-      <mesh geometry={nodes.Cube020_4.geometry} material={materials['Material.052']} />
-      <mesh geometry={nodes.Cube020_5.geometry} material={materials['Material.053']} />
-    </group>
-  )
-})
 
-useGLTF.preload('/assets/models/MailBox.glb')
+      onLoaded?.(group.current);
+    }
+  }, [onLoaded]);
+
+  return (
+    <group ref={group} {...props} dispose={null} scale={[1.7, 1.7, 1.7]}>
+      <primitive object={clonedScene} />
+    </group>
+  );
+});
+
+useGLTF.preload('/assets/models/MailBox.glb');

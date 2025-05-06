@@ -1,4 +1,4 @@
-// CafeScene.jsx.jsx
+// CafeScene.jsx
 
 import { useRef, useState, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -7,8 +7,16 @@ import { Vector3 } from 'three';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { Cafe } from '../components/Cafe';
+import { CafeGamza } from '../components/CafeGamza';
 import { AudioTimelinePlayer } from '../utils/AudioTimelinePlayer';
 // import useCameraSwitcher from '../hooks/useCameraSwitcher';
+
+import {
+  PlaneGeometry,
+  MeshBasicMaterial,
+  Mesh,
+  TextureLoader,
+} from 'three';
 
 import {
   disappearPlayer,
@@ -25,16 +33,21 @@ export default function CafeScene({
   setDisableMovement,
   setCameraActive,         // 💡 추가
   setUseSceneCamera,       // 💡 추가
-  useSceneCamera,
   activateSceneCamera,
   animateCamera,
-  restoreMainCamera
+  restoreMainCamera,
+  setInitialCameraPose
 }) {
   const group = useRef();
+  const loader = new TextureLoader();
 
   const cafeRef = useRef();
   const cafeActions = useRef();
   const cafeMixer = useRef();
+
+  const cafeGamzaRef = useRef();
+  const cafeGamzaActions = useRef();
+  const cafeGamzaMixer = useRef();
 
   const [triggered, setTriggered] = useState(false);
   const [showCloudEffect, setShowCloudEffect] = useState(false);
@@ -44,17 +57,82 @@ export default function CafeScene({
   const CafeSpotMeshPosition = new Vector3(-37.5, 0.005, -89);
   const { scene, camera } = useThree();
   const cafeSpotRef = useRef();
+  const [coffee, setcoffee] = useState([]);
 
   const bgAudio = document.getElementById("bg-audio");
 
+  const coffeePaths = [
+    '/assets/images/coffee1.webp',
+    '/assets/images/coffee2.webp',
+    '/assets/images/coffee3.webp',
+    '/assets/images/coffee4.webp',
+  ];
+
+
+  // 카페 가이드💬
+  const cafeGuide = useRef();
   useEffect(() => {
-    if (cafeRef.current?.model) {
-      cafeRef.current.model.traverse((child) => {
-        if (child.isMesh) child.castShadow = true;
-      });
-    }
+    const texture = new THREE.TextureLoader().load('/assets/images/cafeGuide.png');
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
+    const geometry = new THREE.PlaneGeometry(10, 10);
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(playerRef.current.position.x, playerRef.current.position.y + 7, playerRef.current.position.z);
+    mesh.rotation.y = THREE.MathUtils.degToRad(5);
+    mesh.scale.set(1, 1, 1); // 아주 작게 시작
+    mesh.visible = false;
+    scene.add(mesh);
+    cafeGuide.current = mesh;
+  }, [scene]);
+
+
+  // 커피 그림
+  useEffect(() => {
+    const geometry = new PlaneGeometry(4, 6);
+    setcoffee(
+      coffeePaths.map((path, i) => {
+        const mat = new MeshBasicMaterial({ transparent: true, alphaTest: 0.5 });
+        const mesh = new Mesh(geometry, mat);
+        mesh.rotation.y = THREE.MathUtils.degToRad(20);
+        mesh.rotation.z = THREE.MathUtils.degToRad(-10);
+        mesh.position.set(-34, 5, -82);
+        // mesh.scale.set(1.3, 1.25, 1.3);
+        mesh.visible = false;
+        loader.load(path, (tex) => {
+          tex.colorSpace = THREE.SRGBColorSpace;
+          mat.map = tex;
+          mat.color.set(0xffffff);
+          mat.opacity = 1;
+          mat.needsUpdate = true; 
+        });
+        scene.add(mesh);
+        return mesh;
+      })
+    );
   }, []);
 
+// 커피 그림 재생 함수
+const animateDrinkCoffee = () => {
+  if (coffee.length === 0) return;
+
+  coffee.forEach((c) => (c.visible = false)); // 초기값 전부 숨김
+
+  coffee.forEach((c, index) => {
+    setTimeout(() => {
+      // 현재 프레임만 visible = true
+      coffee.forEach((c, i) => (c.visible = i === index));
+    }, index * 300);
+  });
+
+  // 마지막 프레임 이후 전부 숨김
+  setTimeout(() => {
+    coffee.forEach((c) => (c.visible = false));
+  }, coffee.length * 300);
+};
+
+
+  // ⚪️ 구름 이펙트
   const triggerCloudEffect = () => {
     setShowCloudEffect(true);
     setTimeout(() => setShowCloudEffect(false), 1500);
@@ -64,6 +142,8 @@ export default function CafeScene({
   // ✅ 씬 복귀  
   const restorePlayerAfterCafe = () => {
     if (coffeeFinished) {
+    setTriggered(true)
+
     playerRef.current.visible = true;
     playerRef.current.position.set(-38.7, 0.3, -86.7);
     playerRef.current.scale.set(0.3, 0.3, 0.3);
@@ -72,14 +152,14 @@ export default function CafeScene({
     appearPlayer(playerRef, 1.2);
 
   
-    returnCameraY(camera);
+    // returnCameraY(camera);
 
-    gsap.to(camera, {
-      duration: 1,
-      zoom: 30,
-      ease: "power2.out",
-      onUpdate: () => camera.updateProjectionMatrix(),
-    });
+    // gsap.to(camera, {
+    //   duration: 1,
+    //   zoom: 30,
+    //   ease: "power2.out",
+    //   onUpdate: () => camera.updateProjectionMatrix(),
+    // });
 
     setCameraTarget(new Vector3(-30, 0, -69.5));
     if (bgAudio) bgAudio.play(); //📢
@@ -96,24 +176,25 @@ export default function CafeScene({
         playerRef.current.position.x, 0, playerRef.current.position.z
       ).distanceTo(new Vector3(CafeSpotMeshPosition.x, 0, CafeSpotMeshPosition.z));
 
+
+      if (dist < 30 && !triggered) {
+        cafeGuide.current.visible = true;
+        cafeGuide.current.position.x = playerRef.current.position.x
+        cafeGuide.current.position.y = playerRef.current.position.y + 7
+        cafeGuide.current.position.z = playerRef.current.position.z
+      }
+
       // 카페 스팟 매쉬 도달시
       if (dist < 1.5) {
+
         if (bgAudio) bgAudio.pause(); //📢
+
+        cafeGuide.current.visible = false;
+
         triggerCloudEffect();
         disappearPlayer(playerRef);
 
         setTriggered(true);
-
-       // 💡 카메라 전환 (씬 전용 카메라 활성화)
-        activateSceneCamera(setCameraActive, setUseSceneCamera);
-
-        // 💡 카메라 이동 + 시선 애니메이션
-        animateCamera({
-          position: { x: -34, y: 10, z: -73 },
-          lookAt: [-38, 5, -86],
-          zoom: 50,
-          duration: 1.5
-        });
 
         scene.remove(scene.getObjectByName('cafeSpot'));
         scene.remove(cafeSpotRef.current);
@@ -125,47 +206,78 @@ export default function CafeScene({
   
         if (lightRef.current) scene.add(lightRef.current);
 
-        if (cafeRef.current.model) {
+        // 카페 등장 및 애니메이션 재생
+        if (cafeRef.current) {
+       
           gsap.to(
-            cafeRef.current.position,
-            { y: 0, duration: 0.5, ease: "bounce.inOut" }
-          );
-          gsap.to(
-            cafeRef.current.model.scale,
+            cafeRef.current.scale,
             { x: 1.8, y: 1.8, z: 1.8, duration: 0.5, ease: "expo.inOut" }
           );
- 
 
-          const scene = cafeActions.current?.["Scene"];
-          if (scene) { scene.reset().play(); scene.timeScale = 0.8; }
+          gsap.to(
+            cafeGamzaRef.current.scale,
+            { x: 1.8, y: 1.8, z: 1.8, duration: 0.5, ease: "expo.inOut" }
+          );
+
+          const cafeAnim = cafeActions.current?.["Scene"];
+          if (cafeAnim) { cafeAnim.reset().play(); cafeAnim.timeScale = 0.7; }
+
+          const cafeGamzaAnim = cafeGamzaActions.current?.["Scene"];
+          if (cafeGamzaAnim) { cafeGamzaAnim.reset().play(); cafeGamzaAnim.timeScale = 0.7; }
+
+          // 커피 2D 애니메이션
+          setTimeout(() => {
+            // animateDrinkCoffee()
+          }, 15000)
         }
+
+        setTimeout(() => {
+          // 💡 카메라 전환 (씬 전용 카메라 활성화)
+          activateSceneCamera(setCameraActive, setUseSceneCamera);
+
+          setInitialCameraPose({
+            position: [-30, 12, -75],
+            lookAt: [-38, 5, -86],
+            zoom: 40
+          });
+
+          // 💡 카메라 이동 + 시선 애니메이션
+          animateCamera({
+            position: { x: -34, y: 10, z: -73 },
+            lookAt: [-38, 5, -86],
+            zoom: 50,
+            duration: 1.5
+          });
+        }, 200)
+
+        setTimeout(() => {
+          // 💡 카메라 이동 + 시선 애니메이션
+          animateCamera({
+            position: { x: -34, y: 8, z: -73 },
+            lookAt: [-43, 5, -81],
+            zoom: 63,
+            duration: 2
+          });
+      }, 17000)
+
   
         setTimeout(() => {
           coffeeFinished = true
           triggerCloudEffect(); 
-          // ✅ scale로 등장
-          gsap.to(cafeRef.current.gamza.scale, {
-            x: 0,
-            y: 0,
-            z: 0,
-            duration: 0.5,
-            ease: "back.out(1.7)"
-          });
-
-          // ✅ position으로 튕기며 등장
-          gsap.fromTo(
-            cafeRef.current.gamza.position,
-            { y: 0 },
-            { y: 2, duration: 0.5, ease: "bounce.out" }
+          // 카페 감자 사라지기
+          gsap.to(
+            cafeGamzaRef.current.scale,
+            { x: 0, y: 0, z: 0, duration: 0.5, ease: "expo.inOut" }
           );
+
           setTimeout(()=>{
             if (!hasRestoredRef.current) {
               restoreMainCamera(setCameraActive, setUseSceneCamera);
               restorePlayerAfterCafe();
               hasRestoredRef.current = true;
             }
-          }, 1500)
-        }, 16000);
+          }, 3000)
+        }, 20000);
         
       }
     }
@@ -173,6 +285,7 @@ export default function CafeScene({
 
   useFrame((_, delta) => {
     cafeMixer.current?.update(delta);
+    cafeGamzaMixer.current?.update(delta);
   });
 
   return (
@@ -190,12 +303,24 @@ export default function CafeScene({
       }}
     />
 
-      {showCloudEffect && playerRef.current && (
+    <CafeGamza 
+      ref={cafeGamzaRef} // ✅ ref 넘기기
+      position={[-39, 0, -87]}
+      rotation={[0, THREE.MathUtils.degToRad(-50), 0]}
+      // scale={[1.5, 1.5, 1.5]}
+      scale={[0, 0, 0]}
+      onLoaded={({ mixer, actions }) => {
+        cafeGamzaMixer.current = mixer;
+        cafeGamzaActions.current = actions;
+      }}
+    />
+
+      {showCloudEffect && cafeGamzaRef.current && (
         <CloudEffect
           position={[
-            playerRef.current.position.x,
-            playerRef.current.position.y + 2,
-            playerRef.current.position.z
+            cafeGamzaRef.current.position.x + 1.5,
+            cafeGamzaRef.current.position.y + 2,
+            cafeGamzaRef.current.position.z
           ]}
         />
       )}
@@ -210,6 +335,19 @@ export default function CafeScene({
         <planeGeometry args={[3, 3]} />
         <meshStandardMaterial color="green" transparent opacity={0.5} />
       </mesh>
+{/* 
+      <mesh
+        name="cafeGuideSpot"
+        ref={cafeSpotRef}
+        position={CafeSpotMeshPosition}
+        rotation={[-Math.PI / 2, 0, 0]}
+        receiveShadow
+      >
+        <planeGeometry args={[6, 6]} />
+        <meshStandardMaterial color="green" transparent opacity={0.5} />
+      </mesh> */}
+
+
     </group>
   );
 }

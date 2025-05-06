@@ -1,4 +1,4 @@
-// ChatGPT.jsx
+// ChatGPTScnee.jsx
 
 import { useRef, useState, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -29,6 +29,7 @@ export default function ChatGPTScene({
   setDisableMovement
 }) {
   const group = useRef();
+  const gamzaRef = useRef();
 
   const chatGptRef = useRef();
   const chatGptActions = useRef();
@@ -37,7 +38,7 @@ export default function ChatGPTScene({
   const [triggered, setTriggered] = useState(false);
   const [showCloudEffect, setShowCloudEffect] = useState(false);
 
-  const lightRef = useRef();
+  // const lightRef = useRef();
   const clock = new THREE.Clock();
   const ChatGPTSpotMeshPosition = new Vector3(91, 0.005, -17.5);  //(92.5, 0.005, -12.5);
   const { scene, camera } = useThree();
@@ -73,13 +74,10 @@ export default function ChatGPTScene({
         ease: "expo.inOut",
       });
     }
-
-    setTimeout(() => {
       playerRef.current.visible = true;
       playerRef.current.position.set(90.8, 0.3, -6.8);
       playerRef.current.scale.set(0.3, 0.3, 0.3);
       appearPlayer(playerRef, 1.2);
-    }, 2000)
 
     setDisableMovement(false);
 
@@ -135,12 +133,12 @@ export default function ChatGPTScene({
         });
         gsap.to(camera.position, {
           duration: 0.5,
-          y: 3,
+          y: 2.5,
           ease: "power3.in",
           onUpdate: () => camera.updateProjectionMatrix(),
         });
 
-        if (lightRef.current) scene.add(lightRef.current);
+        // if (lightRef.current) scene.add(lightRef.current);
 
         if (chatGptRef.current) {
           gsap.to( chatGptRef.current.scale,
@@ -159,7 +157,13 @@ export default function ChatGPTScene({
         //   }, 6000);
 
         setTimeout(() => {
-            chatGptFinished = true
+          chatGptFinished = true
+
+          if (gamzaRef.current) {
+            gsap.to( gamzaRef.current.scale,
+              { x: 0, y: 0, z: 0, duration: 0.5, ease: "expo.inOut" }
+            );
+          }
           restorePlayerAfterChatGPT();
         }, 23000);
       }
@@ -174,8 +178,9 @@ export default function ChatGPTScene({
     <group ref={group}>
     <ChatGPT
         ref={ chatGptRef } // ✅ ref 넘기기
+        onGamzaRef={(ref) => { gamzaRef.current = ref }}
         position={[87, 0, -16]}
-        rotation={[0, THREE.MathUtils.degToRad(50), 0]}
+        rotation={[0, THREE.MathUtils.degToRad(60), 0]}
         scale={[0, 0, 0]}
         onLoaded={({ mixer, actions }) => {
             chatGptMixer.current = mixer;

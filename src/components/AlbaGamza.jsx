@@ -43,8 +43,9 @@ export const AlbaGamza = forwardRef(function AlbaGamza({ onLoaded, ...props }, r
     }
   }, []);
 
+
   return (
-    <group ref={group} {...props} dispose={null} >
+    <group ref={group} {...props} dispose={null}>
       <group name="Scene">
         <group name="Bone" position={[-0.115, 0, 0]}>
           <primitive object={nodes.Root} />
@@ -69,7 +70,8 @@ export const AlbaGamza = forwardRef(function AlbaGamza({ onLoaded, ...props }, r
             <skinnedMesh name="Cube044_8" geometry={nodes.Cube044_8.geometry} material={materials['Material.017']} skeleton={nodes.Cube044_8.skeleton} />
             <skinnedMesh name="Cube044_9" geometry={nodes.Cube044_9.geometry} material={materials['Material.018']} skeleton={nodes.Cube044_9.skeleton} />
             <skinnedMesh name="Cube044_10" geometry={nodes.Cube044_10.geometry} material={materials['Material.019']} skeleton={nodes.Cube044_10.skeleton} />
-            <skinnedMesh name="Cube044_11" geometry={nodes.Cube044_11.geometry} material={materials['Material.032']} skeleton={nodes.Cube044_11.skeleton} />
+            <skinnedMesh name="Cube044_11" geometry={nodes.Cube044_11.geometry} material={materials['Material.023']} skeleton={nodes.Cube044_11.skeleton} />
+            <skinnedMesh name="Cube044_12" geometry={nodes.Cube044_12.geometry} material={materials['Material.039']} skeleton={nodes.Cube044_12.skeleton} />
           </group>
         </group>
       </group>

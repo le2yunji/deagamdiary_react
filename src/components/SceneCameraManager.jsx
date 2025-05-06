@@ -1,8 +1,9 @@
 // src/components/SceneCameraManager.jsx
-import React, { useRef, useEffect } from 'react';
-import { OrthographicCamera } from '@react-three/drei';
+import React, { useRef, useEffect, useLayoutEffect } from 'react';
+import { OrthographicCamera, useScroll } from '@react-three/drei';
 import { useThree, useFrame } from '@react-three/fiber';
-import { useControls } from '@react-three/drei';
+import * as THREE from 'three';
+
 
 export default function SceneCameraManager({
   position = [1, 4, 5],
@@ -15,7 +16,10 @@ export default function SceneCameraManager({
 }) {
   const internalRef = useRef();
   const { set } = useThree();
+  const scroll = useScroll();
+  const currentZoom = useRef(zoom); // 초기 줌 저장
 
+    // 📸 makeActive 시 cameraRef 세팅
   useEffect(() => {
     const camera = internalRef.current;
     if (makeActive && camera) {
@@ -23,13 +27,6 @@ export default function SceneCameraManager({
       set({ camera });
     }
   }, [makeActive]);
-
-  // 👁‍🗨 플레이어를 계속 바라보도록 설정
-  useFrame(() => {
-    if (playerRef?.current && internalRef.current) {
-      // internalRef.current.lookAt(playerRef.current.position);
-    }
-  });
 
   return (
     <OrthographicCamera

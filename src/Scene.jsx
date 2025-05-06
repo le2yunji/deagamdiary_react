@@ -1,9 +1,11 @@
 // src/Scene.jsx
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
+import { PCFSoftShadowMap } from 'three';
 import SceneContent from './SceneContent';
-import  React, { useRef, Suspense, useEffect } from 'react';
+import  React, { useEffect } from 'react';
 import { Loader } from './components/Loader';
-import { useAnimations } from '@react-three/drei';
+import ScrollZoomController from './components/ScrollZoomController';
+import {  ScrollControls, useScroll } from '@react-three/drei';
 import * as THREE from 'three';
 import { GUI } from 'dat.gui'; //
 
@@ -33,15 +35,55 @@ import { GUI } from 'dat.gui'; //
 // }
 
 
-export default function App() {
+// export default function App() {
+//   useEffect(() => {
+//     const handleKeyDown = (e) => {
+//       const keys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' '];
+//       if (keys.includes(e.key)) {
+//         e.preventDefault(); // ⛔️ 키보드 스크롤 막기
+//       }
+//     };
+  
+//     window.addEventListener('keydown', handleKeyDown);
+//     return () => window.removeEventListener('keydown', handleKeyDown);
+//   }, []);
+  
+//   return (
+
+//       <Canvas shadows dpr={[1, 1.5]} gl={{ preserveDrawingBuffer: false, powerPreference: "high-performance" }}>
+//         <color attach="background" args={['white']} />
+//         <ScrollControls pages={1} damping={0} >
+//               <Suspense fallback={<Loader />}>
+//                 <SceneContent />
+//               </Suspense>  
+//               {/* <ScrollZoomController active={true} /> */}
+//         </ScrollControls>
+//       </Canvas>
+//   );
+// }
+
+export const Scene = () => {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const keys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' '];
+      if (keys.includes(e.key)) {
+        e.preventDefault(); // ⛔️ 키보드 스크롤 막기
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+  
   return (
-    <Canvas shadows dpr={[1, 1.5]} gl={{ preserveDrawingBuffer: false, powerPreference: "high-performance" }}>
-      <color attach="background" args={['white']} />
-      <Suspense fallback={<Loader />}>
-          {/* <CameraControl /> */}
-          <SceneContent />
-      </Suspense>
-    </Canvas>
+      <Canvas shadows dpr={[1, 1.5]} gl={{ preserveDrawingBuffer: false, powerPreference: "high-performance"}}>
+        <color attach="background" args={['white']} />
+        {/* <ScrollControls pages={1} damping={0} > */}
+              {/* <Suspense fallback={<Loader />}> */}
+                <SceneContent />
+              {/* </Suspense>   */}
+              {/* <ScrollZoomController active={true} /> */}
+        {/* </ScrollControls> */}
+      </Canvas>
   );
 }
-

@@ -10,19 +10,24 @@ export default function useCameraSwitcher() {
   const initialZoom = useRef(30); // ✅ 줌 값도 저장
 
   // 🎥 전용 카메라 초기값 등록
-   const setInitialCameraPose = ({ position, lookAt, zoom }) => {
+  const setInitialCameraPose = ({ position, lookAt, zoom, near, far }) => {
     if (position) initialPosition.current.set(...position);
     if (lookAt) initialLookAt.current.set(...lookAt);
     if (zoom !== undefined) initialZoom.current = zoom;
-
+  
     const camera = sceneCameraRef.current;
     if (camera) {
       camera.position.copy(initialPosition.current);
       camera.lookAt(initialLookAt.current);
       camera.zoom = initialZoom.current;
+  
+      if (near !== undefined) camera.near = near;   // ✅ 추가
+      if (far !== undefined) camera.far = far;       // ✅ 추가
+  
       camera.updateProjectionMatrix();
     }
   };
+  
 
   // 🎥 전용 카메라 활성화
   const activateSceneCamera = (setCameraActive, setUseSceneCamera) => {
@@ -37,12 +42,13 @@ export default function useCameraSwitcher() {
   };
 
   // 📸 전용 카메라 애니메이션 (이동 + 바라보기)
-  const animateCamera = ({ position, lookAt, zoom, duration = 3 }) => {
+  const animateCamera = ({ position, lookAt, zoom, near, far, duration = 3 }) => {
     const camera = sceneCameraRef.current;
     if (!camera) return;
   
     const target = new THREE.Vector3(...lookAt);
   
+    // position 애니메이션
     gsap.to(camera.position, {
       x: position.x,
       y: position.y,
@@ -55,6 +61,7 @@ export default function useCameraSwitcher() {
       },
     });
   
+    // zoom 애니메이션
     if (zoom !== undefined && camera.zoom !== undefined) {
       gsap.to(camera, {
         zoom,
@@ -62,10 +69,35 @@ export default function useCameraSwitcher() {
         ease: 'power2.inOut',
         onUpdate: () => {
           camera.updateProjectionMatrix();
-        }
+        },
+      });
+    }
+  
+    // near 애니메이션 (추가 ✅)
+    if (near !== undefined && camera.near !== undefined) {
+      gsap.to(camera, {
+        near,
+        duration,
+        ease: 'power2.inOut',
+        onUpdate: () => {
+          camera.updateProjectionMatrix();
+        },
+      });
+    }
+  
+    // far 애니메이션 (추가 ✅)
+    if (far !== undefined && camera.far !== undefined) {
+      gsap.to(camera, {
+        far,
+        duration,
+        ease: 'power2.inOut',
+        onUpdate: () => {
+          camera.updateProjectionMatrix();
+        },
       });
     }
   };
+  
 
   return {
     sceneCameraRef,

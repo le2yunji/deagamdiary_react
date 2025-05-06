@@ -1,6 +1,6 @@
 // components/Ground.jsx
 import { useTexture } from '@react-three/drei';
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   PlaneGeometry,
   MeshBasicMaterial,
@@ -10,16 +10,20 @@ import {
   SRGBColorSpace
 } from 'three';
 import * as THREE from 'three';
+import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
 
 export default function Ground({ onClickGround }) {
-  const texture = useTexture('/assets/images/grid_only2.png');
+  const groupRef = useRef();
+
+  // const texture = useTexture('/assets/images/grid_only2.png');
+  const texture = useTexture('/assets/images/street.svg');
   const isDragging = useRef(false);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.needsUpdate = true;
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.x = 9;
-  texture.repeat.y = 9;
+  texture.repeat.x = 14;
+  texture.repeat.y = 14;
   texture.premultiplyAlpha = true;
 
   const handlePointerDown = (event) => {
@@ -68,6 +72,39 @@ export default function Ground({ onClickGround }) {
    },
  ];
 
+// ✅ SVG를 geometry로 변환
+useEffect(() => {
+  const svgLoader = new SVGLoader();
+  svgLoader.load('/assets/images/street.svg', (data) => {
+    const paths = data.paths;
+    const svgGroup = new THREE.Group();
+
+    for (const path of paths) {
+      const material = new THREE.MeshBasicMaterial({
+        color: path.color || '#000000',
+        side: THREE.DoubleSide,
+        toneMapped: false,
+        depthWrite: false,
+      });
+
+      const shapes = SVGLoader.createShapes(path);
+      for (const shape of shapes) {
+        const geometry = new THREE.ShapeGeometry(shape);
+        const mesh = new THREE.Mesh(geometry, material);
+        svgGroup.add(mesh);
+      }
+    }
+
+    svgGroup.scale.set(0.1, 0.1, 0.1);       // 사이즈 조정
+    svgGroup.rotation.x = -Math.PI / 2;      // 바닥에 눕히기
+    svgGroup.position.set(0, 0.01, 0);        // 살짝 띄우기
+    groupRef.current.add(svgGroup);
+  });
+}, []);
+
+
+
+
  return (
    <group>
      {/* 🟦 바닥 메쉬 */}
@@ -83,11 +120,11 @@ export default function Ground({ onClickGround }) {
        <meshBasicMaterial 
        map={texture}
        transparent={true}        // ✨ PNG 알파 반영
-      alphaTest={0.01}          // ✨ 경계선 제거용
-      toneMapped={false}        // ✨ 색 왜곡 방지
-      blending={THREE.NormalBlending} // 또는 Additive, CustomBlending 실험 가능
-      side={THREE.DoubleSide}
-      opacity={0.3} // ✅ 실제 투명도 설정은 여기서!
+        alphaTest={0.01}          // ✨ 경계선 제거용
+        toneMapped={false}        // ✨ 색 왜곡 방지
+        blending={THREE.NormalBlending} // 또는 Additive, CustomBlending 실험 가능
+        side={THREE.DoubleSide}
+        opacity={0.2} // ✅ 실제 투명도 설정은 여기서!
 
        />
      </mesh>

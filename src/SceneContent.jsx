@@ -1,5 +1,5 @@
 // src/SceneContent.jsx
-import { StatsGl } from '@react-three/drei';
+import { StatsGl, useScroll, OrthographicCamera } from '@react-three/drei';
 import Ground from './components/Ground';
 import PlayerController from './components/PlayerController';
 import { useState, useRef, useEffect } from 'react';
@@ -15,12 +15,15 @@ import MailScene from './scenes/MailScene';
 import NomoneyScene from './scenes/NomoneyScene';
 import ChatGPTScene from './scenes/ChatGPTScene';
 import SceneCameraManager from './components/SceneCameraManager';
-import { OrthographicCamera } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three'
 import useCameraSwitcher from './hooks/useCameraSwitcher'; // 경로 맞게 조정
+import gsap from 'gsap';
+
 
 export default function SceneContent() {
+  // const isEntered = useRecoilValue(IsEnteredAtom)
+
   const [destination, setDestination] = useState(null);
   const [disableMovement, setDisableMovement] = useState(false);
 
@@ -28,7 +31,6 @@ export default function SceneContent() {
   const playerRef = useRef();
   const hasEnded = useRef(false); // ✅ 한 번만 실행
 
-  const isEntered = useRecoilValue(IsEnteredAtom);
   const setIsEntered = useSetRecoilState(IsEnteredAtom);
 
   const [cameraType, setCameraType] = useState("main");
@@ -39,7 +41,8 @@ export default function SceneContent() {
 
   const directionalLightRef = useRef();
   const ambientLightRef = useRef();
-  
+
+
   const {
     sceneCameraRef,
     activateSceneCamera,
@@ -60,6 +63,7 @@ export default function SceneContent() {
 
   // ✅ z 위치 감지 및 ending-screen 표시
   useFrame(() => {
+
     const z = playerRef.current?.position.z;
     const endingScreen = document.getElementById('ending-screen');
     const endingVideo = document.getElementById('ending-video'); // ✅ 여기에 선언 추가!
@@ -163,7 +167,7 @@ export default function SceneContent() {
   // }, [isEntered]);
   
 
-  if (isEntered) {
+  // if (isEntered) {
     return (
       <>
         <StatsGl className='stats' />
@@ -171,8 +175,8 @@ export default function SceneContent() {
         {/* 메인 카메라 */}
         <SceneCameraManager
           position={[1, 5, 5]}
-          zoom={30}
-          makeActive={cameraType === "main"}
+          zoom={25}
+          makeActive={cameraType === "main"} // <- 무조건 메인 카메라로
           cameraRef={cameraRef}
           playerRef={playerRef}
         />
@@ -245,6 +249,7 @@ export default function SceneContent() {
           activateSceneCamera={activateSceneCamera}
           restoreMainCamera={restoreMainCamera}
           animateCamera={animateCamera}
+          setInitialCameraPose={setInitialCameraPose}
         />
 
         <ClassroomScene
@@ -277,6 +282,8 @@ export default function SceneContent() {
           activateSceneCamera={activateSceneCamera}
           restoreMainCamera={restoreMainCamera}
           animateCamera={animateCamera}
+          setInitialCameraPose={setInitialCameraPose}
+
         />
 
         {/* <AlbaScene
@@ -304,19 +311,37 @@ export default function SceneContent() {
       />
 
         <BakeryScene
-          playerRef={playerRef}
-          setPlayerVisible={(v) => (playerRef.current.visible = v)}
-          setCameraTarget={(pos) => setDestination(pos)}
-          cameraRef={cameraRef}
-          setDisableMovement={setDisableMovement}
+    playerRef={playerRef}
+    setPlayerVisible={(v) => (playerRef.current.visible = v)}
+    setCameraTarget={(pos) => setDestination(pos)}
+    cameraRef={cameraRef}
+    sceneCameraRef={sceneCameraRef}
+    setDisableMovement={setDisableMovement}
+    useSceneCamera={useSceneCamera}
+    setUseSceneCamera={setUseSceneCamera}
+    setCameraActive={setCameraActive}
+    activateSceneCamera={activateSceneCamera}
+    restoreMainCamera={restoreMainCamera}
+    animateCamera={animateCamera}
+    setInitialCameraPose={setInitialCameraPose}
+
         />
 
         <ChatGPTScene
-          playerRef={playerRef}
-          setPlayerVisible={(v) => (playerRef.current.visible = v)}
-          setCameraTarget={(pos) => setDestination(pos)}
-          cameraRef={cameraRef}
-          setDisableMovement={setDisableMovement}
+       playerRef={playerRef}
+       setPlayerVisible={(v) => (playerRef.current.visible = v)}
+       setCameraTarget={(pos) => setDestination(pos)}
+       cameraRef={cameraRef}
+       sceneCameraRef={sceneCameraRef}
+       setDisableMovement={setDisableMovement}
+       useSceneCamera={useSceneCamera}
+       setUseSceneCamera={setUseSceneCamera}
+       setCameraActive={setCameraActive}
+       activateSceneCamera={activateSceneCamera}
+       restoreMainCamera={restoreMainCamera}
+       animateCamera={animateCamera}
+       setInitialCameraPose={setInitialCameraPose}
+
         />
 
         <MailScene
@@ -332,10 +357,12 @@ export default function SceneContent() {
            activateSceneCamera={activateSceneCamera}
            restoreMainCamera={restoreMainCamera}
            animateCamera={animateCamera}
+           setInitialCameraPose={setInitialCameraPose}
+
         />
       </>
     );
   }
 
-  return <Loader isCompleted />;
-}
+  // return <Loader isCompleted />;
+// }

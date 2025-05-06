@@ -42,7 +42,7 @@ export default function AlbaScene({
   const [triggered, setTriggered] = useState(false);
   const [showCloudEffect, setShowCloudEffect] = useState(false);
 
-  const AlbaSpotMeshPosition = new Vector3(-36, 0.005, -21);
+  const AlbaSpotMeshPosition = new Vector3(-26, 0.005, -11);
   const clock = new THREE.Clock();
   const { scene, camera } = useThree();
 
@@ -63,7 +63,7 @@ export default function AlbaScene({
   const restorePlayerAfterAlba = () => {
     // if (bgAudio) bgAudio.play();
     playerRef.current.visible = true;
-    playerRef.current.position.set(-39, 0.3, -16);
+    playerRef.current.position.set(-29, 0.3, -6);
     playerRef.current.scale.set(0.3, 0.3, 0.3);
 
     gsap.to(camera, {
@@ -75,7 +75,7 @@ export default function AlbaScene({
 
 
     appearPlayer(playerRef, 1.2);
-    setCameraTarget(new Vector3(-43, 0, -9));
+    setCameraTarget(new Vector3(-33, 0, 1));
     setDisableMovement(false);
   };
 
@@ -86,7 +86,7 @@ export default function AlbaScene({
   
     const idle = gamzaActions.current["Idle"];
     const aha = gamzaActions.current["Aha"];
-    const confuse = gamzaActions.current["Confuse"];
+    const confuse = gamzaActions.current["Scene"];
   
     if (confuse) {
       confuse.timeScale = 0.63;
@@ -159,22 +159,23 @@ export default function AlbaScene({
         if (albaSpotRef.current) albaSpotRef.current.visible = false;
 
 
-     // 💡 카메라 전환 (씬 전용 카메라 활성화)
-     activateSceneCamera(setCameraActive, setUseSceneCamera);
+        // 💡 카메라 전환 (씬 전용 카메라 활성화)
+        activateSceneCamera(setCameraActive, setUseSceneCamera);
 
-     setInitialCameraPose({
-      position: [-35, 7, -19],
-      lookAt: [-35, 5, -19],
-      zoom: 55
-    });
+        setInitialCameraPose({
+          position: [-25, 7, -9],
+          lookAt: [-25, 5, -9],
+          zoom: 50
+        });
 
-     // 💡 카메라 이동 + 시선 애니메이션
-     animateCamera({
-       position: { x: -35, y: 10, z: -10 },
-       lookAt: [-35, 5, -20],
-       zoom: 60,
-       duration: 1.5
-     });
+        // 💡 카메라 이동 + 시선 애니메이션
+        animateCamera({
+          position: { x: -25, y: 10, z: 5 },
+          lookAt: [-25, 5, -10],
+          zoom: 55,
+          duration: 1.5
+        });
+
 
         if (albaGamzaRef.current) {
           setShowCloudEffect(true);
@@ -220,7 +221,8 @@ export default function AlbaScene({
 
       <group ref={group}>
         <AlbaBoard
-          position={[-35, 0, -24]}
+          position={[-25, 0, -7.7]} 
+          scale={[3, 3, 3]}
           // rotation={[0, THREE.MathUtils.degToRad(10), 0]}
           onLoaded={({ albaBoardRef }) => setAlbaBoardRef(albaBoardRef)}
           onClick={() => {}}
@@ -228,7 +230,7 @@ export default function AlbaScene({
 
         <AlbaGamza
           ref={albaGamzaRef}
-          position={[-35, 0.5, -20]}
+          position={[-25, 0, -10]}
           scale={[0, 0, 0]}
           onLoaded={({ mixer, actions }) => {
             gamzaMixer.current = mixer;

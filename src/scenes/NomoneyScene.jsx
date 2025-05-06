@@ -5,7 +5,6 @@ import CloudEffect from '../components/CloudEffect';
 import { Vector3 } from 'three';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
-import { NomoneyBank } from '../components/NomoneyBank';
 import { NomoneyGamza } from '../components/NomoneyGamza';
 
 import {
@@ -22,29 +21,21 @@ import {
 // 지하철 씬을 담당하는 컴포넌트입니다.
 // 플레이어가 특정 위치(스팟)에 도달하면 지하철이 등장하고 애니메이션이 실행됩니다.
 export default function NomoneyScene({
-  playerRef,        // 감자 모델 참조
-  emotionRef,       // 감자 머리 위 이모션 참조
-  setPlayerVisible, // 감자 보임 여부 변경 함수 (사용 안됨)
-  setCameraTarget,  // 카메라가 다시 따라가야 할 타겟
-  disableMouse,     // 마우스 이벤트 제거
-  enableMouse,      // 마우스 이벤트 복원
-  setDisableMovement
+  playerRef,
+  setCameraTarget,
+  setDisableMovement,
+  setCameraActive,         // 💡 추가
+  setUseSceneCamera,       // 💡 추가
+  useSceneCamera,
+  activateSceneCamera,
+  animateCamera,
+  restoreMainCamera,
+  setInitialCameraPose
 }) {
   const group = useRef();
 
-  // const [nomoneyBankRef, setNomoneyBankRef] = useState(null);
-  // const [nomoneyGamzaRef, setNomoneyGamzaRef] = useState(null);
-  const lightRef = useRef();
-
-  const nomoneyBankRef = useRef()
   const nomoneyGamzaRef = useRef()
-
-
-  // 각각 별도의 mixer와 actions 관리
-  const nomoneyBankActions = useRef();
   const nomoneyGamzaActions = useRef();
-
-  const nomoneyBankMixer = useRef();
   const nomoneyGamzaMixer = useRef();
 
   const [triggered, setTriggered] = useState(false); // 씬 시작됐는지 여부
@@ -62,11 +53,11 @@ export default function NomoneyScene({
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
-    const geometry = new THREE.PlaneGeometry(1, 1);
+    const geometry = new THREE.PlaneGeometry(1.2, 0.7);
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(-92, 1.6, -9.1);
+    mesh.position.set(-92, 2, -7.6);
     mesh.rotation.y = THREE.MathUtils.degToRad(5);
-    mesh.scale.set(0.01, 0.01, 0.01); // 아주 작게 시작
+    mesh.scale.set(1, 1, 1); // 아주 작게 시작
     mesh.visible = false;
     scene.add(mesh);
     noMoneyText.current = mesh;
@@ -79,30 +70,28 @@ export default function NomoneyScene({
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
-    const geometry = new THREE.PlaneGeometry(2, 2);
+    const geometry = new THREE.PlaneGeometry(3.5, 2.5);
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(-89, 4.5, -10);
+    mesh.position.set(-89, 4, -10);
     mesh.rotation.y = THREE.MathUtils.degToRad(10);
     mesh.visible = false;
     scene.add(mesh);
     nomoneyTalk.current = mesh;
   }, [scene]);
 
-  // const showGIFOverlay = () => {
-  //   const overlay = document.getElementById('gifOverlay2');
-  //   if (overlay) {
-  //     overlay.style.display = 'flex';
-  //     setTimeout(() => (overlay.style.display = 'none'), 3000);
-  //   }
-  // };
-  
+  const showGIFOverlay = () => {
+    const overlay = document.getElementById('gifOverlay2');
+    if (overlay) {
+      overlay.style.display = 'flex';
+      setTimeout(() => (overlay.style.display = 'none'), 3000);
+    }
+  };
 
   // ⚪️ 구름 이펙트
   const triggerCloudEffect = () => {
     setShowCloudEffect(true);
-    setTimeout(() => setShowCloudEffect(false), 1500);
+    setTimeout(() => setShowCloudEffect(false), 1000);
   };
-
 
   // ✅ 노머니 이벤트 완료 후 감자 복귀
   const restorePlayerAfterNomoney = () => {
@@ -112,29 +101,25 @@ export default function NomoneyScene({
     setDisableMovement(false);
 
     triggerCloudEffect();
+    appearPlayer(playerRef, 1.2); // 부드럽게 다시 나타남
 
-      appearPlayer(playerRef, 1.2); // 부드럽게 다시 나타남
-
-
-    // 카메라 복귀
-    returnCameraY(camera)
-    gsap.to(camera, {
-      duration: 1,  
-      zoom: 30,    // ✅ 목표 zoom 값
-      ease: "expo.inOut", // ✅ 부드러운 감속 애니메이션
-      onUpdate: () => {
-        camera.updateProjectionMatrix(); // ✅ 변경 사항 반영
-      }
-    });
-
-    setTimeout(() => {
-      if (noMoneyText.current) noMoneyText.current.visible = false;
-      if (nomoneyTalk.current) nomoneyTalk.current.visible = false;
-    }, 600);
+    // // 카메라 복귀
+    // returnCameraY(camera)
+    // gsap.to(camera, {
+    //   duration: 1,  
+    //   zoom: 30,    // ✅ 목표 zoom 값
+    //   ease: "expo.inOut", // ✅ 부드러운 감속 애니메이션
+    //   onUpdate: () => {
+    //     camera.updateProjectionMatrix(); // ✅ 변경 사항 반영
+    //   }
+    // });
     
+    setTimeout(() => {
     // 카메라가 다시 감자를 따라가도록 플레이어 타겟 위치 설정
     setCameraTarget(new Vector3(-83.4, 0, -6.5));  
     enableMouseEvents();      // 마우스 이벤트 복원
+    }, 1000)
+
   };
 
 
@@ -149,7 +134,6 @@ export default function NomoneyScene({
       // 일정 거리 이내에 도달하면 이벤트 트리거
       if (dist < 2) {
         setTriggered(true);
-        triggerCloudEffect();
         setDisableMovement(true);
         disappearPlayer(playerRef); // 감자 작아지며 사라짐
         scene.remove(scene.getObjectByName('nomoneySpot'));
@@ -158,125 +142,102 @@ export default function NomoneyScene({
 
         disableMouseEvents(); 
 
-        // 카메라 설정
-        gsap.to(camera.position, {
-          duration: 0.5,  
-          // x: -90,  
-          y: 2,   
-          ease: "power2.out", // ✅ 부드러운 감속 애니메이션
-          onUpdate: () => {
-            camera.updateProjectionMatrix(); // ✅ 변경 사항 반영
-          }
-        });
-        gsap.to(camera, {
-          duration: 1,  
-          zoom: 50,    // ✅ 목표 zoom 값
-          ease: "expo.inOut", // ✅ 부드러운 감속 애니메이션
-          onUpdate: () => {
-            camera.updateProjectionMatrix(); // ✅ 변경 사항 반영
-          }
-        });
+        triggerCloudEffect();
 
-        // 노머니 모델들
-        gsap.to(nomoneyGamzaRef.current.position , {
-          y: 0,
+        // 노머니감자 등장
+        gsap.to(nomoneyGamzaRef.current.scale, {
+          x: 1.7,
+          y: 1.7,
+          z: 1.7,
           duration: 0.5,
           ease: "expo.inOut"
         });
-        gsap.to(nomoneyBankRef.current.position , {
-          y: 0.3,
-          duration: 0.5,
-          ease: "expo.inOut"
-        });
-        // gsap.to(nomoneyGamzaRef.current.position , {
-        //   y: 0,
-        //   duration: 1,
-        //   ease: "bounce.inOut"
-        // });
-        // setTimeout(() => {
-        //   gsap.to(nomoneyBankRef.current.scale, {
-        //     x: 1.8,
-        //     y: 1.8,
-        //     x: 1.5,
-        //     duration: 0.5,
-        //     ease: "expo.in"
-        //   });
-        // }, 2000)
-        nomoneyBankRef.current.visible = false
 
-
-        // 노머니💵💸 통장 animations:  ['Anim2', 'Bank', 'NoMoney', 'Pocket', 'Walk_Bone.002']
-        // 노머니💵💸 감자🥔 animations:  ['Anim2', 'Bank', 'NoMoney', 'Pocket', 'Walk_Bone.002', 'ahew']
-
-        // 🚊 애니메이션 및 카메라 연출
         setTimeout(() => {
-          if (nomoneyBankActions.current && nomoneyGamzaActions.current) {
-            nomoneyBankRef.current.visible = true
+          // 카메라 설정
 
-            const bankAction = nomoneyBankActions.current["Bank"];
-            const noMoneyAction = nomoneyGamzaActions.current["NoMoney"];
-            const ahewAction = nomoneyGamzaActions.current["ahew"];
-            
-            if (bankAction) {
-              bankAction.timeScale = 0.4;
-              bankAction.reset().play();
-            }
-        
-            if (noMoneyAction) {
-              noMoneyAction.timeScale = 0.4;
-              noMoneyAction.reset().play();
-            }
-        
-            if (ahewAction) {
-              ahewAction.timeScale = 0.4;
-              ahewAction.reset().play();
-            }
+          activateSceneCamera(setCameraActive, setUseSceneCamera);
+
+          setInitialCameraPose({
+            position: [-90, 12, 3],
+            lookAt: [-92, 3, -9.5],
+            zoom: 30
+          });
+
+          // 💡 카메라 이동 + 시선 애니메이션
+          animateCamera({
+            position: { x: -90, y: 8, z: 3},
+            lookAt: [-92, 3, -9.5],
+            zoom: 50,
+            duration: 1.5
+          });
+          // gsap.to(camera.position, {
+          //   duration: 0.5,  
+          //   // x: -90,  
+          //   y: 3,   
+          //   ease: "power2.out", // ✅ 부드러운 감속 애니메이션
+          //   onUpdate: () => {
+          //     camera.updateProjectionMatrix(); // ✅ 변경 사항 반영
+          //   }
+          // });
+          // gsap.to(camera, {
+          //   duration: 1,  
+          //   zoom: 50,    // ✅ 목표 zoom 값
+          //   ease: "expo.inOut", // ✅ 부드러운 감속 애니메이션
+          //   onUpdate: () => {
+          //     camera.updateProjectionMatrix(); // ✅ 변경 사항 반영
+          //   }
+          // });
+        }, 200)
+       
+  
+          if (nomoneyGamzaActions.current) {
+            const noMoneyGamzaAction = nomoneyGamzaActions.current["Scene"];
+            noMoneyGamzaAction.timeScale = 0.4;
+            noMoneyGamzaAction.reset().play();
           }
-        }, 500);
 
-        // 텍스트 등장
+
+        // 말풍선 & gif 표시
         setTimeout(() => {
-          if (noMoneyText.current) {
-            noMoneyText.current.visible = true;
-          }
-        }, 6000);
+          noMoneyText.current.visible = true;
+          showGIFOverlay();
+        }, 5500)
 
         // 텍스트 확대 & 이동
         setTimeout(() => {
+          nomoneyTalk.current.visible = true;
           if (noMoneyText.current) {
             gsap.to(noMoneyText.current.scale, {
-              duration: 1,
-              x: 6,
-              y: 6,
-              z: 6,
-              ease:'bounce.out',
+              duration: 0.5,
+              x: 7,
+              y: 7,
+              z: 7,
+              ease:'expo.inOut',
             });
             gsap.to(noMoneyText.current.position, {
-              duration: 1,
+              duration: 0.5,
               x: -98,
               y: 5,
               ease: 'none',
             });
             gsap.to(noMoneyText.current.rotation, {
-              duration: 2,
+              duration: 0.5,
               y: THREE.MathUtils.degToRad(10),
             });
           }
         }, 6000);
 
-        // 말풍선 & gif 표시
         setTimeout(() => {
-          if (nomoneyTalk.current) nomoneyTalk.current.visible = true;
-          // showGIFOverlay();
-        }, 6500);
-
-        setTimeout(() => {
-
+          noMoneyText.current.visible = false;
+          nomoneyTalk.current.visible = false;
           gsap.to(nomoneyGamzaRef.current.position,{
             y: 2,
             duration: 0.3,
             ease: "expo.inOut"
           })
+          triggerCloudEffect();
+
           gsap.to(nomoneyGamzaRef.current.scale,{
             x: 0,
             y: 0,
@@ -284,55 +245,48 @@ export default function NomoneyScene({
             duration: 0.3,
             ease: "expo.inOut"
           })
-          setTimeout(() => {
-            restorePlayerAfterNomoney();
-          }, 1000)
+          restoreMainCamera(setCameraActive, setUseSceneCamera);
+
         }, 11000);
-      
+
+        setTimeout(() => {
+          restorePlayerAfterNomoney();
+        }, 13000);
+
       } 
     }
-
   });
 
     // 믹서 업데이트도 각각 따로
     useFrame((_, delta) => {
-      nomoneyBankMixer.current?.update(delta);
       nomoneyGamzaMixer.current?.update(delta);
     });
 
   return (
     <group ref={group}>
-      <NomoneyBank
-        position={[-91.9, -9.3, -10.1]}
-        rotation={[0, THREE.MathUtils.degToRad(-60), 0]}
-        scale={[1.8, 1.5, 1.8]}
-        onLoaded={({ ref, mixer, actions }) => {
-            (nomoneyBankRef.current = ref)
-            nomoneyBankMixer.current = mixer;
-            nomoneyBankActions.current = actions;
-        }}
-    />
-    {/* mesh.position.set(-98.7, 1.3, -17); */}
+
+   {showCloudEffect && playerRef.current && (
+      <CloudEffect 
+        position={[
+          playerRef.current.position.x + 0.5, 
+          playerRef.current.position.y + 3,
+          playerRef.current.position.z 
+        ]}
+      />
+    )}
+
     <NomoneyGamza 
-      position={[-92, -10, -10.5]}   // -96, -15   -> +4 , +4.5
+      ref={nomoneyGamzaRef}
+      position={[-92, 0, -10.5]}  
       rotation={[0, THREE.MathUtils.degToRad(-70), 0]}
-      scale={[1.7, 1.7, 1.7]}
-      onLoaded={({ ref, mixer, actions }) => {
-        (nomoneyGamzaRef.current = ref)
+      scale={[0, 0, 0]}
+      onLoaded={({ mixer, actions }) => {
         nomoneyGamzaMixer.current = mixer;
         nomoneyGamzaActions.current = actions; 
       }}
     />
 
-{showCloudEffect && playerRef.current && (
-  <CloudEffect 
-    position={[
-      playerRef.current.position.x, 
-      playerRef.current.position.y + 2,  // 위로 2 정도 올려보기
-      playerRef.current.position.z
-    ]}
-  />
-)}
+ 
 
       {/* ✅ 바닥 클릭 지점 */}
       <mesh

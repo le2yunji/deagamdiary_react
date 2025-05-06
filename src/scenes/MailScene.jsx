@@ -64,6 +64,14 @@ import {
       setShowCloudEffect(true);
       setTimeout(() => setShowCloudEffect(false), 1500);
 
+
+      gsap.to(camera, {
+        duration: 1,
+        zoom: 35,
+        ease: "power2.out",
+        onUpdate: () => camera.updateProjectionMatrix(),
+      });
+
       if (mailGamzaRef.current) {
         gsap.to(mailGamzaRef.current.position, {
           y: 2,
@@ -73,6 +81,7 @@ import {
         gsap.to(mailGamzaRef.current.scale, {
           x: 0, y: 0, z: 0, duration: 0.7, ease: "expo.inOut",
         });
+        
       }
 
       playerRef.current.visible = true;
@@ -122,7 +131,7 @@ import {
 
             gsap.to(camera, {
               duration: 1,
-              zoom: 55,
+              zoom: 45,
               ease: "power2.out",
               onUpdate: () => camera.updateProjectionMatrix(),
             });
@@ -155,6 +164,7 @@ import {
               duration: 1,
               ease: "back.out"
             });
+          
             gsap.to(fileRef.current.scale, {
               x: 1.7,
               y: 1.7,
@@ -162,15 +172,32 @@ import {
               duration: 1,
               ease: "power3.inOut"
             });
-            
+
             setTimeout(() => {
-                mailgamzaActions.current?.["Anim2"].reset().play()
+              const mailGamzaAnim =  mailgamzaActions.current?.["Bone"]
+                mailGamzaAnim.timeScale = 0.6
+                mailGamzaAnim.reset().play()
                 // mailgamza.actions[0].play();
-                fileActions.current?.["Folder"].reset().play()
+
+                const fileAnim = fileActions.current?.["Folder"]
+                fileAnim.timeScale = 0.6
+                fileAnim.reset().play()
                 // 🔥 Three.js 이벤트에서 GIF 오버레이 실행
+
                 setTimeout(() => {
                   // showGIFOverlay(); // GIF 화면 전체 표시
-                }, 4000);
+                  gsap.to(fileRef.current.position, {
+                    x: 114, 
+                    y: -3,
+                    z: 23,
+                    duration: 0.5,
+                    ease: "power3.inOut"
+                  });
+                  gsap.to(fileRef.current.scale, {
+                    x: 0, y: 0, z: 0, duration: 0.5, ease: "expo.inOut",
+                  });
+                }, 3000);
+
             }, 500);
 
 
@@ -194,6 +221,7 @@ import {
   
           // 감자 다시 등장
           setTimeout(() => {    
+            
             restorePlayerAfterMail();
           }, 8000);
         }
@@ -207,7 +235,6 @@ import {
       <>
 
       <group ref={group}>
-        {/* ✅ 알바 게시판 모델 */}
         <MailBox
           ref={mailBoxRef}
           position={[114, 0, 23.5]}
@@ -218,8 +245,8 @@ import {
 
         <MailGamza
           ref={mailGamzaRef}
-          position={[112, 0.5, 24.7]}
-          rotation={[0, THREE.MathUtils.degToRad(20), 0]}
+          position={[111, 0.5, 24.7]}
+          rotation={[0, THREE.MathUtils.degToRad(-20), 0]}
           scale={[0, 0, 0]}
           onLoaded={({ actions, mixer }) => {
             mailgamzaActions.current = actions;
@@ -229,7 +256,7 @@ import {
 
       <File
         ref={fileRef}
-        position={[112, 0.5, 24.7]}
+        position={[111, 0.5, 24.7]}
         rotation={[0, THREE.MathUtils.degToRad(20), 0]}
         scale={[0, 0, 0]}
         onLoaded={({ actions, mixer }) => {

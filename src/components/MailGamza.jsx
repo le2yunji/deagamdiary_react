@@ -1,49 +1,46 @@
-// MailGamza.jsx
-import React, { useEffect, forwardRef, useImperativeHandle }  from 'react'
-import { useGraph } from '@react-three/fiber'
-import { useGLTF, useAnimations } from '@react-three/drei'
-import { SkeletonUtils } from 'three-stdlib'
+// components/MailGamza.jsx
+import React, {
+  useRef,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+} from 'react';
+import { useGLTF, useAnimations } from '@react-three/drei';
+import { SkeletonUtils } from 'three-stdlib';
 import * as THREE from 'three';
+import { useGraph } from '@react-three/fiber'
 
 export const MailGamza = forwardRef(({ onLoaded, ...props }, ref) => {
   const group = React.useRef()
   const { scene, animations } = useGLTF('/assets/models/Gamza_Post.glb')
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
-  const { actions, mixer } = useAnimations(animations, group)
+  const { actions, mixer } = useAnimations(animations, group);
 
-  useImperativeHandle(ref, () => group.current); // ✅ 외부에서 ref 접근 허용
+  useImperativeHandle(ref, () => group.current);
 
-  // 외부에서 액션, mixer 접근 가능하게 전달 + 반복 없이 재생 설정
   useEffect(() => {
-    if (onLoaded && group.current) {
+    if (group.current) {
+      group.current.traverse((child) => {
+        if (child.isMesh || child.isSkinnedMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+          child.material.side = THREE.FrontSide;
+        }
+      });
+
       Object.values(actions).forEach((action) => {
         action.setLoop(THREE.LoopOnce, 1);
         action.clampWhenFinished = true;
       });
 
-      // ref 전달
-      if (ref) {
-        if (typeof ref === 'function') {
-          ref(group.current)
-        } else {
-          ref.current = group.current
-        }
-      }
-      onLoaded({ ref: group.current, mixer, actions }); // ✅ ref 전달
+      onLoaded?.({ ref: group.current, mixer, actions });
     }
-  }, [onLoaded, mixer, actions, ref]);
-
-  useEffect(() => {
-    if (group.current) {
-      group.current.traverse((child) => {
-        if (child.isMesh) child.castShadow = true;
-      });
-    }
-  }, []);
-
+  }, [actions, mixer, onLoaded]);
+  
   return (
-    <group ref={group} {...props} dispose={null} >
+    <group ref={group} {...props} dispose={null}>
       <group name="Scene">
         <group name="Bone" position={[-0.115, 0, 0]}>
           <primitive object={nodes.Root} />
@@ -68,6 +65,7 @@ export const MailGamza = forwardRef(({ onLoaded, ...props }, ref) => {
             <skinnedMesh name="Cube044_8" geometry={nodes.Cube044_8.geometry} material={materials['Material.017']} skeleton={nodes.Cube044_8.skeleton} />
             <skinnedMesh name="Cube044_9" geometry={nodes.Cube044_9.geometry} material={materials['Material.018']} skeleton={nodes.Cube044_9.skeleton} />
             <skinnedMesh name="Cube044_10" geometry={nodes.Cube044_10.geometry} material={materials['Material.019']} skeleton={nodes.Cube044_10.skeleton} />
+            <skinnedMesh name="Cube044_11" geometry={nodes.Cube044_11.geometry} material={materials.Material} skeleton={nodes.Cube044_11.skeleton} />
           </group>
         </group>
       </group>

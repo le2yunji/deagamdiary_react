@@ -1,11 +1,11 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { useLoader } from '@react-three/fiber';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import { Html } from '@react-three/drei';
 
 const posters = [
-  'SushiMemo', 'WonesoongMemo', 'KidsMemo', 'BakeryMemo',
-  'DokseoMemo', 'DoNotNakseoMemo', 'GamzaMemo', 'IwannagoHomeMemo',
+  'SushiMemo', 'KidsMemo', 'BakeryMemo',
+  'DokseoMemo',  'GamzaMemo'
 ];
 
 export function Posters({selectedPoster, setSelectedPoster}) {
@@ -26,6 +26,7 @@ export function Posters({selectedPoster, setSelectedPoster}) {
   // const [selectedPoster, setSelectedPoster] = useState(null);
   const groupRef = useRef();
 
+
   return (
     <group ref={groupRef}>
       {posters.map((name, i) => (
@@ -33,56 +34,48 @@ export function Posters({selectedPoster, setSelectedPoster}) {
         key={name}
         name={name}
         object={models[name]?.scene}
-        position={[-35, 0.9, -24]}
-        scale={[1.6, 1.6, 1.6]}
+        position={[-25, 0.5, -13.5]}
+        scale={[1.3, 1.3, 1.3]}
         onClick={() => {
           // console.log('클릭됨:', name);
           setSelectedPoster(prev => prev === name ? null : name);
         }}
-      />
-      
+      /> 
       ))}
 
-      {hoveredPoster && (
-        <Html fullscreen>
-        <div
-          style={{
-            position: 'absolute',
-            top: 50,
-            left: '90%',
-            transform: 'translateX(-50%)',
-            zIndex: 9999,
-            background: 'white',
-            padding: '20px',
-            borderRadius: '12px',
-          }}
-        >
-          <p style={{ marginBottom: '10px' }}>이미지 표시 중: {selectedPoster}</p>
-          <img
-            src={`/assets/images/${selectedPoster}.webp`}
-            style={{ width: '300px', height: 'auto' }}
-            alt={selectedPoster}
-          />
-        </div>
-      </Html>
-   
-      )}
-
-    {selectedPoster && (
-      <Html position={[-30, 5, -20]}>
-      <div style={{ background: 'white', padding: '20px', zIndex: 9999 }}
-                onClick={() => setSelectedPoster(null)} // 바깥 클릭 시 닫기
-                >
-        {/* <p>{selectedPoster}</p> */}
-        <img
-          src={`/assets/images/${selectedPoster}.webp`}
-          style={{ width: '300px' }}
-          alt={selectedPoster}
-          onClick={() => setSelectedPoster(null)} // 바깥 클릭 시 닫기
-        />
-      </div>
-    </Html>
-    )}
+{selectedPoster && (
+  <Html
+    fullscreen
+    transform={false}
+    portal={{ current: document.body }}  // ✔ 반드시 추가
+  >
+    <div
+      onClick={() => setSelectedPoster(null)}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 9999,
+      }}
+    >
+      <img
+        src={`/assets/images/${selectedPoster}.webp`}
+        alt={selectedPoster}
+        style={{
+          width: '300px',
+          height: 'auto',
+          borderRadius: '12px',
+        }}
+      />
+    </div>
+  </Html>
+)}
 
 
     </group>

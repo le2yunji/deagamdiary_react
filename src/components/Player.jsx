@@ -3,13 +3,12 @@ import React, { forwardRef, useEffect, useState, useMemo } from 'react'
 import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
-// import Emotion from './Emotion';
 
 export const Player = forwardRef((props, ref) => {
+  const group = React.useRef()
   const { scene, animations } = useGLTF('/assets/models/Gamza_cycle.glb')
-  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
+  const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
-  const [currentAnimation, setCurrentAnimation] = useState("walk")
   const { actions } = useAnimations(animations, ref)
 
   useEffect(() => {
@@ -32,7 +31,6 @@ export const Player = forwardRef((props, ref) => {
         <group name="Bone" position={[-0.115, 0, 0]}>
           <primitive object={nodes.spine} />
           <primitive object={nodes.spine003} />
-          <primitive object={nodes.neutral_bone} />
           <group name="Head">
             <skinnedMesh name="Cube008" geometry={nodes.Cube008.geometry} material={materials['Material.008']} skeleton={nodes.Cube008.skeleton} />
             <skinnedMesh name="Cube008_1" geometry={nodes.Cube008_1.geometry} material={materials['Material.010']} skeleton={nodes.Cube008_1.skeleton} />
@@ -49,9 +47,8 @@ export const Player = forwardRef((props, ref) => {
           <skinnedMesh name="Head003" geometry={nodes.Head003.geometry} material={materials['Material.010']} skeleton={nodes.Head003.skeleton} morphTargetDictionary={nodes.Head003.morphTargetDictionary} morphTargetInfluences={nodes.Head003.morphTargetInfluences} />
         </group>
       </group>
-      {/* <Emotion texturePath="/assets/images/happy.webp" /> */}
     </group>
   )
-});
+})
 
-useGLTF.preload('/assets/models/Gamza_cycle.glb');
+useGLTF.preload('/assets/models/Gamza_cycle.glb')

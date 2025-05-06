@@ -82,10 +82,8 @@ export default function MetroScene({
       ease: "power1.in",
     });
     // if (bgAudio) bgAudio.play(); //📢
-
   };
-
-  
+ 
   // ✅ 씬 시작  
   const hasRestoredRef = useRef(false);
 
@@ -114,21 +112,32 @@ export default function MetroScene({
           activateSceneCamera(setCameraActive, setUseSceneCamera);
 
           setInitialCameraPose({
+            position: [2, 10, -65],
+            lookAt: [-2, 2, -96],
+            zoom: 40
+          });
+
+        }, 300)
+      
+        setTimeout(() => {
+          // activateSceneCamera(setCameraActive, setUseSceneCamera);
+
+          setInitialCameraPose({
             position: [-28, 10, -124],
             lookAt: [-1.5, 3, -120],
             zoom: 60
           });
-
+    
           setTimeout(() => {
             animateCamera({
-              position: { x: -25, y: 8, z: -93 },
+              position: { x: -25, y: 10, z: -93 },
               lookAt: [-10.5, 4, -95.5],
               zoom: 65,
               duration: 10,
             });
           }, 5000);
        
-        }, 5000);
+        }, 6000);
       
 
         setTimeout(() => {
@@ -145,7 +154,7 @@ export default function MetroScene({
             restorePlayerAfterMetro();
             hasRestoredRef.current = true;
           }
-        }, 20000);
+        }, 22000);
       }
     }
 
@@ -174,7 +183,7 @@ export default function MetroScene({
         receiveShadow
       >
         <planeGeometry args={[3, 3]} />
-        <meshStandardMaterial color="green" transparent opacity={0.5} />
+        <meshStandardMaterial color="hotpink" transparent opacity={0.5} />
       </mesh>
     </group>
   );

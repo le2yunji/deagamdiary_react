@@ -40,7 +40,8 @@ const CloudEffect = ({ position = [0, 0, 0] }) => {
         opacity={2}
         speed={0.01}
         width={0.1}
-        // depth={0.2}
+        height={0.1}
+        depth={0.2}
         segments={1}
         color="white"
         depthWrite={false}

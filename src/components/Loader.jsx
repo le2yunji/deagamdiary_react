@@ -17,6 +17,17 @@ export const Loader = ({isCompleted}) => {
                 </ProgressBar>
                 <EnterBtn onClick={()=>{
                     setIsEntered(true)
+                     // 👉 start-guide UI를 띄움
+                    const startGuide = document.getElementById('start-guide');
+                    const startGuideBtn = document.getElementById('start-guide-btn');
+                    if (startGuide && startGuideBtn) {
+                        startGuide.style.display = 'block';
+                        startGuideBtn.style.display = 'block';
+                    }
+                    startGuideBtn.addEventListener("click", () => {
+                        startGuide.style.display = "none";
+                        startGuideBtn.style.display = "none";
+                      })
                 }}>
                     Enter
                 </EnterBtn>
