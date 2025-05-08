@@ -47,8 +47,8 @@ const talkPaths = [
 ];
 // 화살표 위치
 const arrowInfos = [
-  { x: -91.5, y: 12, z: -66, rotationX: -10, rotationY: 8 }, // 슬라이드
-  { x: -89, y: 6.2, z: -65, rotationX: -10, rotationY: 8 } // 감자
+  { x: -93, y: 3, z: -69, rotationX: -40, rotationY: 0 , rotationZ: 30,}, // 슬라이드
+  // { x: -89, y: 6.2, z: -65, rotationX: -10, rotationY: 8 } // 감자
 ];
 
 let timeline;
@@ -132,7 +132,7 @@ export default function ClassroomScene({
   // 구름 이펙트
   const triggerCloudEffect = () => {
     setShowCloudEffect(true);
-    setTimeout(() => setShowCloudEffect(false), 1500);
+    setTimeout(() => setShowCloudEffect(false), 1000);
   };
 
   useEffect(() => {
@@ -252,13 +252,13 @@ export default function ClassroomScene({
             delay: 3,
             duration: 0.5,
             onComplete: () => {
-              index++;
-              if (index >= slides.length) {
-                setShowGamzaArrow(true);
-                hideAllArrows();
+              index++; //
+              if(index == 4) {
                 stopTalkBubbles();
+              }
+              if (index >= slides.length) {
+                hideAllArrows();
                 triggerCloudEffect()
-
                 gsap.to(classroomGamzaRef.current.position, { 
                   x: -90,
                   y: 2,
@@ -272,35 +272,39 @@ export default function ClassroomScene({
                   duration: 0.3,
                   ease: "power3.inOut"
                 });
-                
-                
-                // setTimeout(() => {
 
+                const onionAnimation = onionActions.current["Scene"]
+                onionAnimation.timeScale = 0.65;
+                onionAnimation.play()
+                
+                setTimeout(() => {
                   animateCamera({
                     position: { x: -95, y: 8, z: -60},
                     lookAt: [-99, 4, -68],
-                    zoom: 65,
+                    zoom: 68,
                     duration: 1,
                     near: -100,
                     far: 50,
                   });
-                    // animateCamera({
-                    //   position: { x: -95, y: 6, z: -50},
-                    //   lookAt: [-96.5, 3, -66],
-                    //   zoom: 30,
-                    //   duration: 1,
-                    //   near: -100,
-                    //   far: 50,
-                    // });
+                  setTimeout(() => {
+                    animateCamera({
+                      position: { x: -95, y: 7, z: -60},
+                      lookAt: [-99, 4, -68],
+                      zoom: 76,
+                      duration: 3,
+                      near: -100,
+                      far: 50,
+                    });
+                  }, 1000) 
+                }, 500)
+             
 
                   restorePlayerAfterClass()
 
                   setTimeout(() => {
                     restoreMainCamera(setCameraActive, setUseSceneCamera);
-                  }, 5000)
+                  }, 5000)    
 
-                // }, 3000);
-              
                 return; // ✅ 종료
               }
               animateSlide(); // 다음 슬라이드 호출
@@ -317,10 +321,10 @@ export default function ClassroomScene({
   const restorePlayerAfterClass = () => {
 
     playerRef.current.visible = true;
-    playerRef.current.position.set(-92, 1, -56);
+    playerRef.current.position.set(-82, 0, -33);
     playerRef.current.scale.set(0.3, 0.3, 0.3);
     appearPlayer(playerRef, 1.2);
-    setCameraTarget(new Vector3(-85, 0, -42));
+    setCameraTarget(new Vector3(-82, 0, -25.3));
     setDisableMovement(false);
 
     if (bgAudio) bgAudio.play(); //📢
@@ -464,7 +468,7 @@ export default function ClassroomScene({
           position={[
             -90,
             gamzaCloudPosition.current.y + 2,
-            -67,
+            -67.5,
           ]}
           raycast={() => null}
         />
@@ -484,7 +488,7 @@ export default function ClassroomScene({
 
       <ClassroomGamza
         ref={classroomGamzaRef}
-        position={[-95.5, 0.8, -66.7]}
+        position={[-95.5, 0.8, -66.3]}
         rotation={[0, THREE.MathUtils.degToRad(-30), 0]}
         scale={[0, 0, 0]}
         onLoaded={({ mixer, actions }) => {

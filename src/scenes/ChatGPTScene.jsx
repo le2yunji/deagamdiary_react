@@ -22,11 +22,14 @@ import {
 
 export default function ChatGPTScene({
   playerRef,
-  emotionRef,
   setCameraTarget,
-  disableMouse,
-  enableMouse,
-  setDisableMovement
+  setDisableMovement,
+  setCameraActive,         // 💡 추가
+  setUseSceneCamera,       // 💡 추가
+  activateSceneCamera,
+  animateCamera,
+  restoreMainCamera,
+  setInitialCameraPose
 }) {
   const group = useRef();
   const gamzaRef = useRef();
@@ -63,7 +66,7 @@ export default function ChatGPTScene({
 
   const restorePlayerAfterChatGPT = () => {
     if (chatGptFinished) {
-         // ✅ 감자만 scale 줄이기
+    // ✅ 감자만 scale 줄이기
     const gamzaInChat = chatGptRef.current?.getObjectByName("Gamza");
     triggerCloudEffect();
 
@@ -74,10 +77,14 @@ export default function ChatGPTScene({
         ease: "expo.inOut",
       });
     }
+
+    setTimeout(() => {
       playerRef.current.visible = true;
       playerRef.current.position.set(90.8, 0.3, -6.8);
       playerRef.current.scale.set(0.3, 0.3, 0.3);
       appearPlayer(playerRef, 1.2);
+      restoreMainCamera(setCameraActive, setUseSceneCamera);
+    }, 1000)
 
     setDisableMovement(false);
 
@@ -91,13 +98,13 @@ export default function ChatGPTScene({
     // }
 
     // if (emotionRef.current) emotionRef.current.visible = true;
-    returnCameraY(camera);  
-    gsap.to(camera, {
-      duration: 1,
-      zoom: 30,
-      ease: "power2.out",
-      onUpdate: () => camera.updateProjectionMatrix(),
-    });
+    // returnCameraY(camera);  
+    // gsap.to(camera, {
+    //   duration: 1,
+    //   zoom: 30,
+    //   ease: "power2.out",
+    //   onUpdate: () => camera.updateProjectionMatrix(),
+    // });
 
     setCameraTarget(new Vector3(87.5, 0, 3));
     enableMouseEvents();
@@ -125,18 +132,35 @@ export default function ChatGPTScene({
 
         disableMouseEvents();
         // downCameraY(camera);
-        gsap.to(camera, {
-          duration: 1,
-          zoom: 45,
-          ease: "power3.in",
-          onUpdate: () => camera.updateProjectionMatrix(),
-        });
-        gsap.to(camera.position, {
-          duration: 0.5,
-          y: 2.5,
-          ease: "power3.in",
-          onUpdate: () => camera.updateProjectionMatrix(),
-        });
+        // gsap.to(camera, {
+        //   duration: 1,
+        //   zoom: 45,
+        //   ease: "power3.in",
+        //   onUpdate: () => camera.updateProjectionMatrix(),
+        // });
+        // gsap.to(camera.position, {
+        //   duration: 0.5,
+        //   y: 2.5,
+        //   ease: "power3.in",
+        //   onUpdate: () => camera.updateProjectionMatrix(),
+        // });
+
+       // 💡 카메라 전환 (씬 전용 카메라 활성화)
+       activateSceneCamera(setCameraActive, setUseSceneCamera);
+
+       setInitialCameraPose({
+         position: [93, 12, 16],
+         lookAt: [89, 3, -14],
+         zoom: 40
+       });
+
+       // 💡 카메라 이동 + 시선 애니메이션
+       animateCamera({
+         position: { x: 93, y: 12, z: 18 },
+         lookAt: [89, 3, -14],
+         zoom: 50,
+         duration: 1.5
+       });
 
         // if (lightRef.current) scene.add(lightRef.current);
 
@@ -164,6 +188,7 @@ export default function ChatGPTScene({
               { x: 0, y: 0, z: 0, duration: 0.5, ease: "expo.inOut" }
             );
           }
+
           restorePlayerAfterChatGPT();
         }, 23000);
       }
@@ -221,12 +246,12 @@ export default function ChatGPTScene({
 
 
 
-      {showCloudEffect && chatGptRef.current && (
+      {showCloudEffect && gamzaRef.current && (
         <CloudEffect
             position={[
-            chatGptRef.current.position.x,
-            chatGptRef.current.position.y + 2,
-            chatGptRef.current.position.z
+              gamzaRef.current.position.x,
+              gamzaRef.current.position.y + 2,
+              gamzaRef.current.position.z
             ]}
         />
       )}

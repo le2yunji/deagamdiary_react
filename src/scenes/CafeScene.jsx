@@ -151,16 +151,6 @@ const animateDrinkCoffee = () => {
 
     appearPlayer(playerRef, 1.2);
 
-  
-    // returnCameraY(camera);
-
-    // gsap.to(camera, {
-    //   duration: 1,
-    //   zoom: 30,
-    //   ease: "power2.out",
-    //   onUpdate: () => camera.updateProjectionMatrix(),
-    // });
-
     setCameraTarget(new Vector3(-30, 0, -69.5));
     if (bgAudio) bgAudio.play(); //📢
   }

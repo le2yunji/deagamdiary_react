@@ -178,6 +178,7 @@ export function createArrows(scene, arrowInfos) {
     );
     mesh.visible = false;
     mesh.originalY = info.y;
+    mesh.originalZ = info.z;
     scene.add(mesh);
     return mesh;
   });
@@ -188,6 +189,7 @@ export function showArrow(index, elapsedTime) {
     arrow.visible = i === index;
     if (arrow.visible) {
       arrow.position.y = arrow.originalY + Math.sin(elapsedTime * 3) * 0.5;
+      arrow.position.z = arrow.originalZ - Math.sin(elapsedTime * 3) * 0.5;
     }
   });
 }
