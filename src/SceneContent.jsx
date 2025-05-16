@@ -5,7 +5,6 @@ import PlayerController from './components/PlayerController';
 import { useState, useRef, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { IsEnteredAtom } from './stores';
-import { Loader } from './components/Loader';
 import MetroScene from './scenes/MetroScene';
 import CafeScene from './scenes/CafeScene';
 import ClassroomScene from './scenes/ClassroomScene';
@@ -21,13 +20,6 @@ import useCameraSwitcher from './hooks/useCameraSwitcher'; // 경로 맞게 조�
 import gsap from 'gsap';
 import { useControls } from 'leva';
 import EscalatorScene from './scenes/EscalatorScene';
-
-
-import {
-  disableMouseEvents,
-  enableMouseEvents,
-} from './utils/Common';
-
 
 export default function SceneContent({ 
   playerRef,
@@ -79,10 +71,10 @@ export default function SceneContent({
 
   // 🩶
   useEffect(() => {
-    console.log("🔍 lockCamera =", lockCamera);
+    // console.log("🔍 lockCamera =", lockCamera);
     if (!lockCamera) return;
-  
-    console.log("🔧 Activating scene camera");
+
+
     activateSceneCamera(setCameraActive, setUseSceneCamera);
   
     setInitialCameraPose({
@@ -96,7 +88,7 @@ export default function SceneContent({
  // 감자가 목적지에 도달하면 콜백 실행
  useEffect(() => {
   if (!destination || !playerRef.current) return;
-  disableMouseEvents()
+  // disableMouseEvents()
   const checkArrival = () => {
     if (hasArrived.current) return;
 
@@ -110,13 +102,12 @@ export default function SceneContent({
     if (distance < 0.3) {
       hasArrived.current = true;
 
-
       const startGuideBtn2 = document.getElementById('start-guide-btn2');
 
       if (startGuideBtn2) {
 
         startGuideBtn2.addEventListener("click", () => {
-          enableMouseEvents()
+
         restoreMainCamera(setCameraActive, setUseSceneCamera);
 
         // // ✅ 카메라가 감자를 바라보게 설정
@@ -140,13 +131,6 @@ export default function SceneContent({
   const interval = setInterval(checkArrival, 200);
   return () => clearInterval(interval);
 }, [destination]);
-
-
-
-// useEffect(() => {
-//   // 시작 시 자동 이동
-//   setDestination(new THREE.Vector3(8, 0, -109));
-// }, []);
 
 
   const lightGradient = [
@@ -362,14 +346,6 @@ useFrame(() => {
 
         />
 
-        {/* <AlbaScene
-          playerRef={playerRef}
-          setPlayerVisible={(v) => (playerRef.current.visible = v)}
-          setCameraTarget={(pos) => setDestination(pos)}
-          cameraRef={cameraRef}
-          setDisableMovement={setDisableMovement}
-        /> */}
-
       <AlbaScene
           playerRef={playerRef}
           setPlayerVisible={(v) => (playerRef.current.visible = v)}
@@ -417,7 +393,6 @@ useFrame(() => {
           restoreMainCamera={restoreMainCamera}
           animateCamera={animateCamera}
           setInitialCameraPose={setInitialCameraPose}
-
         />
 
         <MailScene
@@ -454,6 +429,3 @@ useFrame(() => {
       </>
     );
   }
-
-  // return <Loader isCompleted />;
-// }

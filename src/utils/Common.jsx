@@ -106,20 +106,6 @@ export function disableMouseEvents() {
   }
 }
 
-  
-  // 내부 이벤트 핸들러 (예시)
-  function handleMouseDown(e) {
-    // 구현 필요 시 여기에 콜백 연결
-    console.log('🖱 Mouse down:', e.clientX, e.clientY);
-  }
-  
-  function handleTouchStart(e) {
-    if (e.touches.length > 0) {
-      console.log('👆 Touch start:', e.touches[0].clientX, e.touches[0].clientY);
-    }
-  }
-
-
   //////////////////
   
   // 감자 이동만 막기 위한 이벤트 제거
@@ -147,53 +133,54 @@ function handleTouchMove(e) {
   console.log('감자 터치 이동', e.touches[0].clientX, e.touches[0].clientY);
 }
 
-// ⬇️⬇️⬇️ 화살표 인터랙션
-/**
- * 🧭 사용자 인터랙션 유도 화살표 생성 유틸
- */
+// // ⬇️⬇️⬇️ 화살표 인터랙션
+// /**
+//  * 🧭 사용자 인터랙션 유도 화살표 생성 유틸
+//  */
 
-// ✅ utils/Common.js (추가된 부분)
 
-let arrowMeshInstances = [];
+// // ✅ utils/Common.js (추가된 부분)
 
-export function createArrows(scene, arrowInfos) {
-  const texture = new THREE.TextureLoader().load('/assets/images/arrow.webp');
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.needsUpdate = true;
+// let arrowMeshInstances = [];
 
-  const geometry = new THREE.PlaneGeometry(2, 2);
-  const material = new THREE.MeshBasicMaterial({
-    map: texture,
-    transparent: true,
-    alphaTest: 0.5,
-  });
+// export function createArrows(scene, arrowInfos) {
+//   const texture = new THREE.TextureLoader().load('/assets/images/arrow.webp');
+//   texture.colorSpace = THREE.SRGBColorSpace;
+//   texture.needsUpdate = true;
 
-  arrowMeshInstances = arrowInfos.map(info => {
-    const mesh = new THREE.Mesh(geometry, material.clone());
-    mesh.position.set(info.x, info.y, info.z);
-    mesh.rotation.set(
-      THREE.MathUtils.degToRad(info.rotationX),
-      THREE.MathUtils.degToRad(info.rotationY),
-      0
-    );
-    mesh.visible = false;
-    mesh.originalY = info.y;
-    mesh.originalZ = info.z;
-    scene.add(mesh);
-    return mesh;
-  });
-}
+//   const geometry = new THREE.PlaneGeometry(2, 2);
+//   const material = new THREE.MeshBasicMaterial({
+//     map: texture,
+//     transparent: true,
+//     alphaTest: 0.5,
+//   });
 
-export function showArrow(index, elapsedTime) {
-  arrowMeshInstances.forEach((arrow, i) => {
-    arrow.visible = i === index;
-    if (arrow.visible) {
-      arrow.position.y = arrow.originalY + Math.sin(elapsedTime * 3) * 0.5;
-      arrow.position.z = arrow.originalZ - Math.sin(elapsedTime * 3) * 0.5;
-    }
-  });
-}
+//   arrowMeshInstances = arrowInfos.map(info => {
+//     const mesh = new THREE.Mesh(geometry, material.clone());
+//     mesh.position.set(info.x, info.y, info.z);
+//     mesh.rotation.set(
+//       THREE.MathUtils.degToRad(info.rotationX),
+//       THREE.MathUtils.degToRad(info.rotationY),
+//       0
+//     );
+//     mesh.visible = false;
+//     mesh.originalY = info.y;
+//     mesh.originalZ = info.z;
+//     scene.add(mesh);
+//     return mesh;
+//   });
+// }
 
-export function hideAllArrows() {
-  arrowMeshInstances.forEach(arrow => (arrow.visible = false));
-}
+// export function showArrow(index, elapsedTime) {
+//   arrowMeshInstances.forEach((arrow, i) => {
+//     arrow.visible = i === index;
+//     if (arrow.visible) {
+//       arrow.position.y = arrow.originalY + Math.sin(elapsedTime * 3) * 0.5;
+//       arrow.position.z = arrow.originalZ - Math.sin(elapsedTime * 3) * 0.5;
+//     }
+//   });
+// }
+
+// export function hideAllArrows() {
+//   arrowMeshInstances.forEach(arrow => (arrow.visible = false));
+// }

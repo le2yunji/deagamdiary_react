@@ -15,15 +15,15 @@ import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 
 import {
   disappearPlayer,
-  appearPlayer,
-  disableMouseEvents,
+//   appearPlayer,
+//   disableMouseEvents,
   disablePlayerControlEvents,
-  enableMouseEvents,
-  downCameraY,
-  returnCameraY,
-  showArrow,
-  hideAllArrows,
-  createArrows,
+//   enableMouseEvents,
+//   downCameraY,
+//   returnCameraY,
+//   showArrow,
+//   hideAllArrows,
+//   createArrows,
 } from '../utils/Common';
 
 export default function EscalatorScene({

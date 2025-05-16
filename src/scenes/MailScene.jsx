@@ -8,18 +8,19 @@ import { gsap } from 'gsap';
 import { OrthographicCamera } from '@react-three/drei';
 import SceneCameraManager from '../components/SceneCameraManager';
 import { useTexture } from '@react-three/drei';
+import { Html } from '@react-three/drei';
 
 import { MailBox } from '../components/MailBox';
 import { MailGamza } from '../components/MailGamza';
 import { File } from '../components/File';
 
 import {
-    downCameraY,
+    // downCameraY,
     returnCameraY,
     disappearPlayer,
     appearPlayer,
-    disableMouseEvents,
-    enableMouseEvents
+    // disableMouseEvents,
+    // enableMouseEvents
   } from '../utils/Common';
 
   export default function MailScene({
@@ -62,6 +63,9 @@ import {
     const mailSpotMeshPosition = new Vector3(111, 0.005, 25); // 감자가 도달해야 할 스팟 위치
     const mailTexture = useTexture('/assets/images/mailTrigger.png');
 
+    const [showGif, setShowGif] = useState(false);
+
+
     useEffect(() => {
       if (mailTexture) {
         mailTexture.colorSpace = THREE.SRGBColorSpace;
@@ -96,7 +100,7 @@ import {
       returnCameraY()
       // 카메라가 다시 감자를 따라가도록 플레이어 타겟 위치 설정
       setCameraTarget(new Vector3(99, 0, 25));  
-      enableMouseEvents();      // 마우스 이벤트 복원
+      // enableMouseEvents();      // 마우스 이벤트 복원
       setDisableMovement(false)
       // if (bgAudio) bgAudio.play(); //📢
 
@@ -119,7 +123,6 @@ import {
         if (dist < 1.5) {
           // if (bgAudio) bgAudio.pause(); //📢
           setTriggered(true);
-          disableMouseEvents();
           setDisableMovement(true)
           triggerCloudEffect()
           disappearPlayer(playerRef); // 감자 작아지며 사라짐
@@ -191,6 +194,9 @@ import {
 
                 setTimeout(() => {
                   // showGIFOverlay(); // GIF 화면 전체 표시
+                  setShowGif(true);
+                  setTimeout(() => setShowGif(false), 3000);
+
                   gsap.to(fileRef.current.position, {
                     x: 114, 
                     y: -3,
@@ -205,25 +211,10 @@ import {
 
             }, 500);
 
-
-
               // setTimeout(() => setShowCloudEffect(false), 1000); // 구름 이펙트
             
           }
-          // 감자 애니메이션
-          // [Anim2, Idle, Pocket, PostAnim, Walk_Bone.002]
 
-          // 파일 애니메이션
-          // [Folder]
-
-          // 🚊 애니메이션 및 카메라 연출
-          // setTimeout(() => {
-          //     if (actions) {
-          //       Object.values(actions).forEach((action) => action.play());
-          //       actions["Scene"]?.reset().play();  // ✅ 도달 후 실행
-          //     }
-          // }, 1500);
-  
           // 감자 다시 등장
           setTimeout(() => {     
             triggerCloudEffect()
@@ -250,7 +241,18 @@ import {
   
     return (
       <>
-
+      {showGif && (
+        <Html position={[113, 6, 24]} transform occlude>
+          <img
+            src="/assets/images/firecracker.gif"
+            alt="과제 제출 완료 폭죽"
+            style={{
+              width: '400px',
+              pointerEvents: 'none',
+            }}
+          />
+        </Html>
+      )}
       <group ref={group}>
         <MailBox
           ref={mailBoxRef}

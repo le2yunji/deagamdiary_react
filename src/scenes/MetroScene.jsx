@@ -10,15 +10,15 @@ import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 
 import {
   disappearPlayer,
-  appearPlayer,
-  disableMouseEvents,
+  // appearPlayer,
+  // disableMouseEvents,
   disablePlayerControlEvents,
-  enableMouseEvents,
-  downCameraY,
+  // enableMouseEvents,
+  // downCameraY,
   returnCameraY,
-  showArrow,
-  hideAllArrows,
-  createArrows,
+  // showArrow,
+  // hideAllArrows,
+  // createArrows,
 } from '../utils/Common';
 
 

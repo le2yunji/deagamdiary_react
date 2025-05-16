@@ -16,10 +16,10 @@ import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 import {
   disappearPlayer,
   appearPlayer,
-  disableMouseEvents,
-  enableMouseEvents,
-  downCameraY,
-  returnCameraY
+  // disableMouseEvents,
+  // enableMouseEvents,
+  // downCameraY,
+  // returnCameraY
 } from '../utils/Common';
 
 export default function ChatGPTScene({
@@ -107,7 +107,7 @@ export default function ChatGPTScene({
     if (bgAudio) bgAudio.play(); //📢
 
     setCameraTarget(new Vector3(87.5, 0, 3));
-    enableMouseEvents();
+    // enableMouseEvents();
   }
   };
 
@@ -134,7 +134,7 @@ export default function ChatGPTScene({
         scene.remove(chatGptSpotRef.current);
         if (chatGptSpotRef.current) chatGptSpotRef.current.visible = false;
 
-        disableMouseEvents();
+        // disableMouseEvents();
 
        // 💡 카메라 전환 (씬 전용 카메라 활성화)
        activateSceneCamera(setCameraActive, setUseSceneCamera);

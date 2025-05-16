@@ -23,10 +23,10 @@ import {
 import {
   disappearPlayer,
   appearPlayer,
-  disableMouseEvents,
-  enableMouseEvents,
-  downCameraY,
-  returnCameraY
+  // disableMouseEvents,
+  // enableMouseEvents,
+  // downCameraY,
+  // returnCameraY
 } from '../utils/Common';
 
 export default function CafeScene({

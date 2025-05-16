@@ -22,8 +22,8 @@ import {
   // createArrows,
   // showArrow,
   // hideAllArrows,
-  animateArrows,
-  setDisableMovement,
+  // animateArrows,
+  // setDisableMovement,
 } from '../utils/Common';
 
 import CloudEffect from '../components/CloudEffect';

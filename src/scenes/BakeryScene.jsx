@@ -14,14 +14,14 @@ import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 import {
   disappearPlayer,
   appearPlayer,
-  disableMouseEvents,
-  disablePlayerControlEvents,
-  enableMouseEvents,
-  downCameraY,
-  returnCameraY,
-  showArrow,
-  hideAllArrows,
-  createArrows,
+  // disableMouseEvents,
+  // disablePlayerControlEvents,
+  // enableMouseEvents,
+  // downCameraY,
+  // returnCameraY,
+  // showArrow,
+  // hideAllArrows,
+  // createArrows,
 } from '../utils/Common';
 
 export default function BakeryScene({
@@ -83,7 +83,7 @@ export default function BakeryScene({
     playerRef.current.scale.set(0.3, 0.3, 0.3);
     appearPlayer(playerRef, 1.2);
     setDisableMovement(false);
-    enableMouseEvents();
+    // enableMouseEvents();
 
     if (bgAudio) bgAudio.play(); //📢
     bakeryAudioRef.current?.stop();

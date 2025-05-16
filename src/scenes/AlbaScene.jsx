@@ -15,9 +15,9 @@ import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 import {
   disappearPlayer,
   appearPlayer,
-  disableMouseEvents,
-  enableMouseEvents,
-  returnCameraY
+  // disableMouseEvents,
+  // enableMouseEvents,
+  // returnCameraY
 } from '../utils/Common';
 
 export default function AlbaScene({

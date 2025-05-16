@@ -13,10 +13,10 @@ import {
   disappearPlayer,
   appearPlayer,
   disableMouseEvents,
-  enableMouseEvents,
+  // enableMouseEvents,
   moveModelYPosition,
-  downCameraY,
-  returnCameraY,
+  // downCameraY,
+  // returnCameraY,
   setDisableMovement
 } from '../utils/Common';
 
@@ -135,7 +135,7 @@ export default function NomoneyScene({
     setTimeout(() => {
     // 카메라가 다시 감자를 따라가도록 플레이어 타겟 위치 설정
     setCameraTarget(new Vector3(-83.4, 0, -9.5));  
-    enableMouseEvents();      // 마우스 이벤트 복원
+    // enableMouseEvents();      // 마우스 이벤트 복원
     }, 1000)
 
   };
@@ -158,7 +158,7 @@ export default function NomoneyScene({
         scene.remove(nomoneySpotRef.current); // ✅ 정확하게 제거됨
         nomoneySpotRef.current.visible = false
 
-        disableMouseEvents(); 
+        // disableMouseEvents(); 
 
         triggerCloudEffect();
 
