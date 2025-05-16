@@ -14,10 +14,15 @@ export const Player = forwardRef((props, ref) => {
   useEffect(() => {
     scene.traverse((obj) => {
       if (obj.isMesh) {
-        obj.castShadow = true
+        obj.castShadow = true;
+        if (obj.material && obj.material.isMeshStandardMaterial) {
+          obj.material.emissive = obj.material.color.clone();     // 기존 색상과 같은 톤으로 발광
+          obj.material.emissiveIntensity = 0.05;                   // 발광 정도 (0~1)
+        }
       }
-    })
-  }, [scene])
+    });
+  }, [scene]);
+  
 
   useEffect(() => {
     if (ref.current) {
@@ -26,7 +31,7 @@ export const Player = forwardRef((props, ref) => {
   }, [actions]);
 
   return (
-    <group ref={ref} {...props} dispose={null} position={[7.5, 0, -109] }  scale={[1.2, 1.2, 1.2]} rotation={[0, Math.PI, 0]} > 
+    <group ref={ref} {...props} dispose={null} position={[8, 0, -162]}  scale={[1.2, 1.2, 1.2]} rotation={[0, Math.PI, 0]} > 
       <group name="Scene">
         <group name="Bone" position={[-0.115, 0, 0]}>
           <primitive object={nodes.spine} />

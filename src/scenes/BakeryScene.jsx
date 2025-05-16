@@ -8,6 +8,8 @@ import CloudEffect from '../components/CloudEffect';
 import { Bakery } from '../components/Bakery';
 import { BakeryGamza } from '../components/BakeryGamza';
 import { BamGoguma } from '../components/BamGoguma';
+import { useTexture } from '@react-three/drei';
+import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 
 import {
   disappearPlayer,
@@ -52,40 +54,27 @@ export default function BakeryScene({
 
 
   const bakerySpotRef = useRef();
-  const BakerySpotMeshPosition = new Vector3(31, 0.005, -38);
 
   const [triggered, setTriggered] = useState(false);
   const [ovenInteractionReady, setOvenInteractionReady] = useState(false);
   const [showCloudEffect, setShowCloudEffect] = useState(false);
   const light = new PointLight('white', 3, 200, 1);
 
-//   light.position.set(30, 8, -38);
-//   light.castShadow = true;
-//     // ✅ 그림자 품질 설정
-//   light.shadow.mapSize.width = 1024; // 기본: 512
-//   light.shadow.mapSize.height = 1024;
-//   light.shadow.radius = 10; // 부드럽게 (PCF 필터 기반)
-//   light.shadow.bias = -0.002; // 셰도우 아티팩트 제거용 미세 조정
+  const BakerySpotMeshPosition = new Vector3(31, 0.005, -38);
+  const bakeryTexture = useTexture('/assets/images/bakeryTrigger.png');
 
-//   const light2 = new PointLight('white', 2, 300, 2);
-//   light2.position.set(30, 3, -42);
-//   light2.castShadow = true;
-//   // ✅ 그림자 품질 설정
-//   light2.shadow.mapSize.width = 1024; // 기본: 512
-//   light2.shadow.mapSize.height = 1024;
-//   light2.shadow.radius = 10; // 부드럽게 (PCF 필터 기반)
-//   light2.shadow.bias = -0.002; // 셰도우 아티팩트 제거용 미세 조정
+  useEffect(() => {
+    if (bakeryTexture) {
+      bakeryTexture.colorSpace = THREE.SRGBColorSpace;
+      bakeryTexture.anisotropy = 16;
+      bakeryTexture.flipY = false;
+      bakeryTexture.needsUpdate = true;
+    }
+  }, [bakeryTexture]);
 
-//   // 💡 조명
-// const addLight = () => {
-//   scene.add(light, light2)
-// }
-  // // ⬇️ 화살표 생성
-  // const arrowInfos = [{ x: 37, y: 8, z: -36, rotationX: -10, rotationY: 8 }];
-  // useEffect(() => {
-  //   createArrows(scene, arrowInfos);
-  //   hideAllArrows();
-  // }, []);
+
+  const bgAudio = document.getElementById("bg-audio");
+  const bakeryAudioRef = useRef();
 
   // ✅ 씬 복귀
   const restorePlayerAfterBakery = () => {
@@ -95,6 +84,9 @@ export default function BakeryScene({
     appearPlayer(playerRef, 1.2);
     setDisableMovement(false);
     enableMouseEvents();
+
+    if (bgAudio) bgAudio.play(); //📢
+    bakeryAudioRef.current?.stop();
 
     setCameraTarget(new Vector3(20, 0, -23.5));
   };        
@@ -116,10 +108,14 @@ export default function BakeryScene({
     if (!triggered && playerRef.current) {
       const dist = playerRef.current.position.clone().setY(0).distanceTo(BakerySpotMeshPosition);
 
-      if (dist < 1.5) {
+      if (dist < 3.5) {
         setTriggered(true);
         disappearPlayer(playerRef);
         setDisableMovement(true);
+
+        if (bgAudio) bgAudio.pause(); // 혹은 bgAudio.volume = 0;
+
+        bakeryAudioRef.current?.play();
 
         setTimeout(() => {
           activateSceneCamera(setCameraActive, setUseSceneCamera);
@@ -194,12 +190,12 @@ export default function BakeryScene({
             duration: 0.5,
             ease: "power3.inOut",
           });
-        }, 22000);
+        }, 30000);
 
         setTimeout(() => {
           restoreMainCamera(setCameraActive, setUseSceneCamera);
           restorePlayerAfterBakery();
-        }, 25000);
+        }, 35000);
 
       }
     }
@@ -242,6 +238,15 @@ export default function BakeryScene({
         }}
       />
 
+      <ManualAudioPlayer
+        ref={bakeryAudioRef}
+        url="/assets/audio/bakeryScene.mp3"
+        volume={3}
+        loop={false}
+        position={[30, 2, -38]}
+      />
+
+
       {showCloudEffect && bakeryGamzaRef.current && (
         <CloudEffect
           position={[
@@ -255,11 +260,17 @@ export default function BakeryScene({
         name="bakerySpot"
         ref={bakerySpotRef}
         position={BakerySpotMeshPosition}
-        rotation={[-Math.PI / 2, 0, 0]}
+        rotation={[-Math.PI / 2, 0, Math.PI]}
         receiveShadow
       >
-        <planeGeometry args={[3, 3]} />
-        <meshStandardMaterial color="brown" transparent opacity={0.5} />
+        <planeGeometry args={[7, 7]} />
+        <meshStandardMaterial  
+          map={bakeryTexture}
+          transparent={true}
+          alphaTest={0.5}
+          depthWrite={true}
+          premultipliedAlpha={true} // ✅ 핵심 옵션!
+          />
       </mesh>
     </group>
   );

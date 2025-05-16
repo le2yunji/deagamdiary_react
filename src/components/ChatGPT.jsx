@@ -44,6 +44,7 @@ export const ChatGPT = forwardRef(({ onLoaded, onGamzaRef, ...props }, ref) => {
       if (onGamzaRef && gamzaRef.current) {
         onGamzaRef(gamzaRef.current);
       }
+      
     }
   }, [actions, mixer, onLoaded, onGamzaRef]);
 

@@ -10,6 +10,8 @@ import { PositionalAudio } from '@react-three/drei';
 import { ChatGPT } from '../components/ChatGPT';
 import { AudioPlayer } from '../utils/AudioPlayer';
 import { AudioTimelinePlayer } from '../utils/AudioTimelinePlayer';
+import { useTexture } from '@react-three/drei';
+import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 
 import {
   disappearPlayer,
@@ -43,10 +45,22 @@ export default function ChatGPTScene({
 
   // const lightRef = useRef();
   const clock = new THREE.Clock();
-  const ChatGPTSpotMeshPosition = new Vector3(91, 0.005, -17.5);  //(92.5, 0.005, -12.5);
   const { scene, camera } = useThree();
   const chatGptSpotRef = useRef();
   const bgAudio = document.getElementById("bg-audio");
+  const gptAudioRef = useRef();
+
+  const ChatGPTSpotMeshPosition = new Vector3(91, 0.005, -17.5);  //(92.5, 0.005, -12.5);
+  const gptTexture = useTexture('/assets/images/gptTrigger.png');
+
+  useEffect(() => {
+    if (gptTexture) {
+      gptTexture.colorSpace = THREE.SRGBColorSpace;
+      gptTexture.anisotropy = 16;
+      gptTexture.flipY = false;
+      gptTexture.needsUpdate = true;
+    }
+  }, [gptTexture]);
 
 
   useEffect(() => {
@@ -64,6 +78,7 @@ export default function ChatGPTScene({
     setTimeout(() => setShowCloudEffect(false), 1500);
   };
 
+  // 씬 완료 
   const restorePlayerAfterChatGPT = () => {
     if (chatGptFinished) {
     // ✅ 감자만 scale 줄이기
@@ -88,23 +103,8 @@ export default function ChatGPTScene({
 
     setDisableMovement(false);
 
+    gptAudioRef.current?.stop();
     if (bgAudio) bgAudio.play(); //📢
-
-
-    // if (cafeGamzaRef.current) {
-    //   gsap.to(cafeGamzaRef.current.scale, {
-    //     x: 0, y: 0, z: 0, duration: 1, ease: "bounce.inOut"
-    //   });
-    // }
-
-    // if (emotionRef.current) emotionRef.current.visible = true;
-    // returnCameraY(camera);  
-    // gsap.to(camera, {
-    //   duration: 1,
-    //   zoom: 30,
-    //   ease: "power2.out",
-    //   onUpdate: () => camera.updateProjectionMatrix(),
-    // });
 
     setCameraTarget(new Vector3(87.5, 0, 3));
     enableMouseEvents();
@@ -119,31 +119,22 @@ export default function ChatGPTScene({
         playerRef.current.position.x, 0, playerRef.current.position.z
       ).distanceTo(new Vector3(ChatGPTSpotMeshPosition.x, 0, ChatGPTSpotMeshPosition.z));
 
-      if (dist < 1.5) {
+      if (dist < 3) {
         setTriggered(true);
         // if (emotionRef.current) emotionRef.current.visible = false;
         disappearPlayer(playerRef);
         setDisableMovement(true);
         if (bgAudio) bgAudio.pause(); // 혹은 bgAudio.volume = 0;
 
+        setTimeout(() => {
+          gptAudioRef.current?.play();
+        }, 1000)
+
         scene.remove(scene.getObjectByName('chatGptSpot'));
         scene.remove(chatGptSpotRef.current);
         if (chatGptSpotRef.current) chatGptSpotRef.current.visible = false;
 
         disableMouseEvents();
-        // downCameraY(camera);
-        // gsap.to(camera, {
-        //   duration: 1,
-        //   zoom: 45,
-        //   ease: "power3.in",
-        //   onUpdate: () => camera.updateProjectionMatrix(),
-        // });
-        // gsap.to(camera.position, {
-        //   duration: 0.5,
-        //   y: 2.5,
-        //   ease: "power3.in",
-        //   onUpdate: () => camera.updateProjectionMatrix(),
-        // });
 
        // 💡 카메라 전환 (씬 전용 카메라 활성화)
        activateSceneCamera(setCameraActive, setUseSceneCamera);
@@ -212,46 +203,22 @@ export default function ChatGPTScene({
             chatGptActions.current = actions;
         }}
     />
-    <AudioTimelinePlayer
-      mixer={chatGptMixer.current}
-      action={chatGptActions.current?.["Scene"]}
-      position={[93.5, 2, -10.7]}
-      timeline={[
-        {
-          time: 3.1,
-          url: '/assets/audio/Keyboard.mp3',
-          duration: 3,
-          volume: 3.0,
-          loop: false,
-          refDistance: 4
-        },
-      // {
-      //   time: 5.0,
-      //   url: '/assets/audio/Keyboard.mp3',
-      //   duration: 2.5,
-      //   volume: 1.0,
-      //   loop: false,
-      //   refDistance: 6
-      // },
-    // {
-    //   time: 4.8,
-    //   url: '/assets/audio/Keyboard.mp3',
-    //   duration: 1.0,
-    //   volume: 0.6,
-    //   loop: false,
-    //   refDistance: 5
-    // }
-  ]}
-/>
+     <ManualAudioPlayer
+        ref={gptAudioRef}
+        url="/assets/audio/gptScene.mp3"
+        volume={3}
+        loop={false}
+        position={[87, 2, -16]}
+      />
 
 
 
       {showCloudEffect && gamzaRef.current && (
         <CloudEffect
             position={[
-              gamzaRef.current.position.x,
+              92,
               gamzaRef.current.position.y + 2,
-              gamzaRef.current.position.z
+              -9.5
             ]}
         />
       )}
@@ -260,12 +227,22 @@ export default function ChatGPTScene({
         name="chatGptSpot"
         ref={chatGptSpotRef}
         position={ChatGPTSpotMeshPosition}
-        rotation={[-Math.PI / 2, 0, 0]}
+        rotation={[-Math.PI / 2, 0, Math.PI]}
         receiveShadow
       >
-        <planeGeometry args={[3, 3]} />
-        <meshStandardMaterial color="royalblue" transparent opacity={0.5} />
+        <planeGeometry args={[6, 6]} />
+        <meshStandardMaterial 
+          map={gptTexture}
+          transparent={true} 
+          alphaTest={0.5}
+          depthWrite={true}
+          premultipliedAlpha={true} // ✅ 핵심 옵션!
+          />
       </mesh>
+
+ 
+
+
     </group>
   );
 }

@@ -62,7 +62,16 @@ import { GUI } from 'dat.gui'; //
 //   );
 // }
 
-export const Scene = () => {
+export const Scene = ({ 
+  playerRef, 
+  destination, 
+  onPlayerArrived, 
+  setDestination ,
+  lockCamera,
+  setCameraActive,
+  setUseSceneCamera, 
+
+}) => {
   useEffect(() => {
     const handleKeyDown = (e) => {
       const keys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' '];
@@ -80,7 +89,15 @@ export const Scene = () => {
         <color attach="background" args={['white']} />
         {/* <ScrollControls pages={1} damping={0} > */}
               {/* <Suspense fallback={<Loader />}> */}
-                <SceneContent />
+                <SceneContent 
+                playerRef={playerRef} 
+                destination={destination}
+                setCameraActive={setCameraActive}
+                setUseSceneCamera={setUseSceneCamera}
+                setDestination={setDestination}
+                onPlayerArrived={onPlayerArrived}
+                lockCamera={lockCamera} // ✅ 전달!
+                />
               {/* </Suspense>   */}
               {/* <ScrollZoomController active={true} /> */}
         {/* </ScrollControls> */}

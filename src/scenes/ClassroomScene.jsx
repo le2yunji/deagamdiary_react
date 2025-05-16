@@ -1,6 +1,7 @@
 // 생략된 import 포함
 import { useRef, useState, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
+import { useTexture } from '@react-three/drei';
 
 import {
   PointLight, DirectionalLight,
@@ -18,9 +19,9 @@ import { gsap } from 'gsap';
 import {
   disappearPlayer,
   appearPlayer,
-  createArrows,
-  showArrow,
-  hideAllArrows,
+  // createArrows,
+  // showArrow,
+  // hideAllArrows,
   animateArrows,
   setDisableMovement,
 } from '../utils/Common';
@@ -31,6 +32,7 @@ import { Timeline } from 'gsap/gsap-core';
 import { useScroll } from '@react-three/drei';
 import { Onion } from '../components/Onion';
 import { ClassroomGamza } from '../components/ClassroomGamza';
+import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 
 const slidePaths = [
   '/assets/images/ppt1.webp',
@@ -44,11 +46,6 @@ const talkPaths = [
   '/assets/images/talk2.webp',
   '/assets/images/talk3.webp',
   '/assets/images/talk4.webp',
-];
-// 화살표 위치
-const arrowInfos = [
-  { x: -93, y: 3, z: -69, rotationX: -40, rotationY: 0 , rotationZ: 30,}, // 슬라이드
-  // { x: -89, y: 6.2, z: -65, rotationX: -10, rotationY: 8 } // 감자
 ];
 
 let timeline;
@@ -81,13 +78,7 @@ export default function ClassroomScene({
   const onionActions = useRef();
   const onionMixer = useRef();
 
-
-  const classroomPointLightRef = useRef();
-  const classroomDirectionalLightRef = useRef();
-  const classroomSunLightRef = useRef();
-
   const loader = new TextureLoader();
-  const ClassroomSpotMeshPosition = new Vector3(-99, 0.005, -70);
   const talkInterval = useRef(null);
   const [showCloudEffect, setShowCloudEffect] = useState(false);
   // const [triggered, setTriggered] = useState(false);
@@ -98,9 +89,32 @@ export default function ClassroomScene({
   const [showGamzaArrow, setShowGamzaArrow] = useState(false);
   const slideStarted = useRef(false)
   const bgAudio = document.getElementById("bg-audio");
-
-
+  const classAudioRef = useRef();
   const cloudRef = useRef()
+
+  const ClassroomSpotMeshPosition = new Vector3(-99, 0.005, -70);
+  const classTexture = useTexture('/assets/images/classTrigger.png');
+
+  const pptClickRef = useRef();
+  const pptClickMeshPosition = new Vector3(-92.1, 6.8, -69.5);
+  const pptClickTexture = useTexture('/assets/images/ppt_click.png');
+
+  useEffect(() => {
+    if (classTexture) {
+      classTexture.colorSpace = THREE.SRGBColorSpace;
+      classTexture.anisotropy = 16;
+      classTexture.flipY = false;
+      classTexture.needsUpdate = true;
+    }
+    if (pptClickTexture) {
+      pptClickTexture.colorSpace = THREE.SRGBColorSpace;
+      pptClickTexture.anisotropy = 16;
+      pptClickTexture.flipY = false;
+      pptClickTexture.needsUpdate = true;
+    }
+  }, [classTexture, pptClickTexture]);
+
+
 
   useEffect(() => {
     if (cloudRef.current) {
@@ -126,20 +140,17 @@ export default function ClassroomScene({
     }
   }, [])
 
-
-
-
   // 구름 이펙트
   const triggerCloudEffect = () => {
     setShowCloudEffect(true);
     setTimeout(() => setShowCloudEffect(false), 1000);
   };
 
-  useEffect(() => {
-    createArrows(scene, arrowInfos);
-    hideAllArrows()
-    // showArrow(0); // ppt 위 화살표 표시
-  }, []);
+  // useEffect(() => {
+  //   createArrows(scene, arrowInfos);
+  //   hideAllArrows()
+  //   // showArrow(0); // ppt 위 화살표 표시
+  // }, []);
 
   // 피피티, 슬라이드 
     useEffect(() => {
@@ -221,9 +232,9 @@ export default function ClassroomScene({
   // 🌈 🪧 슬라이드 쇼 시작 
   const startSlideShow = () => {
     if (!slides.length) return;
+    pptClickRef.current.visible = false
     animateTalkBubbles();
     let index = 0;
-    hideAllArrows();
 
     const animateSlide = () => {
 
@@ -257,7 +268,6 @@ export default function ClassroomScene({
                 stopTalkBubbles();
               }
               if (index >= slides.length) {
-                hideAllArrows();
                 triggerCloudEffect()
                 gsap.to(classroomGamzaRef.current.position, { 
                   x: -90,
@@ -279,7 +289,7 @@ export default function ClassroomScene({
                 
                 setTimeout(() => {
                   animateCamera({
-                    position: { x: -95, y: 8, z: -60},
+                    position: { x: -95, y: 8, z: -61},
                     lookAt: [-99, 4, -68],
                     zoom: 68,
                     duration: 1,
@@ -288,7 +298,7 @@ export default function ClassroomScene({
                   });
                   setTimeout(() => {
                     animateCamera({
-                      position: { x: -95, y: 7, z: -60},
+                      position: { x: -95, y: 7, z: -61},
                       lookAt: [-99, 4, -68],
                       zoom: 76,
                       duration: 3,
@@ -296,14 +306,17 @@ export default function ClassroomScene({
                       far: 50,
                     });
                   }, 1000) 
-                }, 500)
-             
-
+                }, 1000)
+                playerRef.current.visible = false;
+                playerRef.current.position.set(-94, 0, -48);
+                playerRef.current.scale.set(0.3, 0.3, 0.3);
+            
+                setTimeout(() => {
                   restorePlayerAfterClass()
+                }, 4000)
+      
 
-                  setTimeout(() => {
-                    restoreMainCamera(setCameraActive, setUseSceneCamera);
-                  }, 5000)    
+                
 
                 return; // ✅ 종료
               }
@@ -320,11 +333,12 @@ export default function ClassroomScene({
   // ✅ 클래스룸 인터랙션 끝 완료
   const restorePlayerAfterClass = () => {
 
+
+    restoreMainCamera(setCameraActive, setUseSceneCamera);
     playerRef.current.visible = true;
-    playerRef.current.position.set(-82, 0, -33);
-    playerRef.current.scale.set(0.3, 0.3, 0.3);
+
     appearPlayer(playerRef, 1.2);
-    setCameraTarget(new Vector3(-82, 0, -25.3));
+    setCameraTarget(new Vector3(-99.5, 0, -35.5));
     setDisableMovement(false);
 
     if (bgAudio) bgAudio.play(); //📢
@@ -342,7 +356,7 @@ export default function ClassroomScene({
     if (!playerRef.current || triggered.current) return;
     
       const dist = playerRef.current.position.clone().setY(0).distanceTo(ClassroomSpotMeshPosition);
-      if (dist < 1.5 && !triggered.current) {
+      if (dist < 3 && !triggered.current) {
 
         // Entered.current = true
         if (bgAudio) bgAudio.pause(); //📢
@@ -427,7 +441,29 @@ export default function ClassroomScene({
 
         setTimeout(() => {
           setTimeout(() => {
-            showArrow(0, elapsedTime); // 🔥 PPT 화살표 표시
+            // 2. 등장 애니메이션 (0 → 1)
+            gsap.to(pptClickRef.current.scale, {
+              duration: 0.5,
+              x: 1,
+              y: 1,
+              z: 1,
+              ease: 'expo.out',
+              onComplete: () => {
+                // 3. 깜빡임 애니메이션 (0.8 ↔ 1.1 반복)
+                gsap.to(pptClickRef.current.scale, {
+                  duration: 0.6,
+                  x: 0.8,
+                  y: 0.8,
+                  z: 0.8,
+                  ease: 'sine.inOut',
+                  yoyo: true,
+                  repeat: -1,
+                  repeatDelay: 0.1
+                });
+                // → 처음 값을 0.8로 낮추는 트릭
+                pptClickRef.current.scale.set(1.1, 1.1, 1.1);
+              }
+            });
           }, 500)
         }, 2000);
       
@@ -443,7 +479,6 @@ export default function ClassroomScene({
 
   // ✅ 클래스룸 클릭 이벤트 
   function handleClassroomClick() {
-    hideAllArrows();
     startSlideShow();
 
     // 애니메이션 이어서 재생
@@ -468,7 +503,7 @@ export default function ClassroomScene({
           position={[
             -90,
             gamzaCloudPosition.current.y + 2,
-            -67.5,
+            -67.8,
           ]}
           raycast={() => null}
         />
@@ -517,7 +552,7 @@ export default function ClassroomScene({
         //   classroomGamzaRef.current.visible = false;
         // }}
       />
-   <Classroom
+      <Classroom
         ref={classroomRef}
         position={[-96, 0.8, -66]}
         rotation={[0, THREE.MathUtils.degToRad(-30), 0]}
@@ -528,17 +563,48 @@ export default function ClassroomScene({
         }}        
         onClick={ handleClassroomClick }
       />
-
+      <ManualAudioPlayer
+        ref={classAudioRef}
+        url="/assets/audio/classroomScene.mp3"
+        volume={1}
+        loop={false}
+        position={[-96, 2, -66]}
+      />
       <mesh
         name="classroomSpot"
         ref={classroomSpotRef}
         position={ClassroomSpotMeshPosition}
-        rotation={[-Math.PI / 2, 0, 0]}
+        rotation={[-Math.PI / 2, 0, Math.PI]}
+        receiveShadow
+      >
+        <planeGeometry args={[6, 6]} />
+        <meshStandardMaterial 
+          map={classTexture}
+          transparent={true}
+          alphaTest={0.5}
+          depthWrite={true}
+          premultipliedAlpha={true} // ✅ 핵심 옵션!
+           />
+      </mesh>
+
+      <mesh
+        name="pptClick"
+        ref={pptClickRef}
+        scale={[0, 0, 0]}
+        position={pptClickMeshPosition}
+        rotation={[0, -Math.PI/13, Math.PI]}
         receiveShadow
       >
         <planeGeometry args={[3, 3]} />
-        <meshStandardMaterial color="skyblue" transparent opacity={0.5} depthWrite={false} />
+        <meshStandardMaterial 
+          map={pptClickTexture}
+          transparent={true}
+          alphaTest={0.5}
+          depthWrite={true}
+          premultipliedAlpha={true} // ✅ 핵심 옵션!
+           />
       </mesh>
+
     </group>
   );
 }

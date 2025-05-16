@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { OrthographicCamera } from '@react-three/drei';
 import SceneCameraManager from '../components/SceneCameraManager';
+import { useTexture } from '@react-three/drei';
 
 import { MailBox } from '../components/MailBox';
 import { MailGamza } from '../components/MailGamza';
@@ -51,20 +52,33 @@ import {
     const fileActions = useRef();
 
     const clock = new THREE.Clock(); // 애니메이션용 시간
-    const mailSpotMeshPosition = new Vector3(112, 0.005, 25); // 감자가 도달해야 할 스팟 위치
+
     const { scene, gl, camera } = useThree();
     const mailSpotRef = useRef(); // ✅ 메쉬 ref 추가
   
     const [showCloudEffect, setShowCloudEffect] = useState(false);
     const bgAudio = document.getElementById("bg-audio");
 
+    const mailSpotMeshPosition = new Vector3(111, 0.005, 25); // 감자가 도달해야 할 스팟 위치
+    const mailTexture = useTexture('/assets/images/mailTrigger.png');
+
+    useEffect(() => {
+      if (mailTexture) {
+        mailTexture.colorSpace = THREE.SRGBColorSpace;
+        mailTexture.anisotropy = 16;
+        mailTexture.flipY = false;
+        mailTexture.needsUpdate = true;
+      }
+    }, [mailTexture]);
+  
+ // ⚪️ 구름 이펙트
+ const triggerCloudEffect = () => {
+  setShowCloudEffect(true);
+  setTimeout(() => setShowCloudEffect(false), 1500);
+};
 
     // 알바 구하기 이벤트 완료 후 감자 복귀
     const restorePlayerAfterMail = () => {
-      setShowCloudEffect(true);
-      setTimeout(() => setShowCloudEffect(false), 1500);
-
-
       gsap.to(camera, {
         duration: 1,
         zoom: 35,
@@ -72,23 +86,13 @@ import {
         onUpdate: () => camera.updateProjectionMatrix(),
       });
 
-      if (mailGamzaRef.current) {
-        gsap.to(mailGamzaRef.current.position, {
-          y: 2,
-          duration: 0.7,
-          ease: "expo.inOut"
-        });
-        gsap.to(mailGamzaRef.current.scale, {
-          x: 0, y: 0, z: 0, duration: 0.7, ease: "expo.inOut",
-        });
-        
-      }
+
 
       playerRef.current.visible = true;
       playerRef.current.position.set(107, 0.3, 26);
       playerRef.current.scale.set(0.3, 0.3, 0.3);
   
-      appearPlayer(playerRef, 0.8); // 부드럽게 다시 나타남
+      appearPlayer(playerRef, 1.2); // 부드럽게 다시 나타남
       returnCameraY()
       // 카메라가 다시 감자를 따라가도록 플레이어 타겟 위치 설정
       setCameraTarget(new Vector3(99, 0, 25));  
@@ -117,7 +121,7 @@ import {
           setTriggered(true);
           disableMouseEvents();
           setDisableMovement(true)
-          setShowCloudEffect(true);
+          triggerCloudEffect()
           disappearPlayer(playerRef); // 감자 작아지며 사라짐
           scene.remove(scene.getObjectByName('mailSpot'));
           scene.remove(mailSpotRef.current); // ✅ 정확하게 제거됨
@@ -157,6 +161,7 @@ import {
                 camera.updateProjectionMatrix();
               },
             });
+
             gsap.to(mailGamzaRef.current.scale, {
               x: 1.7,
               y: 1.7,
@@ -220,10 +225,22 @@ import {
           // }, 1500);
   
           // 감자 다시 등장
-          setTimeout(() => {    
-            
-            restorePlayerAfterMail();
-          }, 8000);
+          setTimeout(() => {     
+            triggerCloudEffect()
+            if (mailGamzaRef.current) {
+              gsap.to(mailGamzaRef.current.position, {
+                y: 2,
+                duration: 0.7,
+                ease: "expo.inOut"
+              });
+              gsap.to(mailGamzaRef.current.scale, {
+                x: 0, y: 0, z: 0, duration: 0.7, ease: "expo.inOut",
+              });
+            }
+            setTimeout(() => {
+              restorePlayerAfterMail();
+            }, 1000)   
+          }, 6000);
         }
       }
   
@@ -281,13 +298,18 @@ import {
           name="albaSpot"
           ref={mailSpotRef} // ✅ ref 연결
           position={mailSpotMeshPosition}
-          rotation={[-Math.PI / 2, 0, 0]}
+          rotation={[-Math.PI / 2, 0, Math.PI]}
           receiveShadow
         >
           <planeGeometry args={[3, 3]} />
-          <meshStandardMaterial color="royalblue" transparent opacity={0.5} />
+          <meshStandardMaterial   
+            map={mailTexture}
+            transparent={true} 
+            alphaTest={0.5}
+            depthWrite={true}
+            premultipliedAlpha={true} // ✅ 핵심 옵션!
+            />        
         </mesh>
-  
       </group>
       </>
     );

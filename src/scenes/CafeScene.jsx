@@ -10,6 +10,8 @@ import { Cafe } from '../components/Cafe';
 import { CafeGamza } from '../components/CafeGamza';
 import { AudioTimelinePlayer } from '../utils/AudioTimelinePlayer';
 // import useCameraSwitcher from '../hooks/useCameraSwitcher';
+import ManualAudioPlayer from '../utils/ManualAudioPlayer';
+import { useTexture } from '@react-three/drei';
 
 import {
   PlaneGeometry,
@@ -54,12 +56,26 @@ export default function CafeScene({
 
   const lightRef = useRef();
   const clock = new THREE.Clock();
-  const CafeSpotMeshPosition = new Vector3(-37.5, 0.005, -89);
+
   const { scene, camera } = useThree();
   const cafeSpotRef = useRef();
   const [coffee, setcoffee] = useState([]);
 
   const bgAudio = document.getElementById("bg-audio");
+  const cafeAudioRef = useRef();
+
+
+  const CafeSpotMeshPosition = new Vector3(-37.5, 0.005, -89);
+  const cafeTexture = useTexture('/assets/images/cafeTrigger.png');
+
+  useEffect(() => {
+    if (cafeTexture) {
+      cafeTexture.colorSpace = THREE.SRGBColorSpace;
+      cafeTexture.anisotropy = 16;
+      cafeTexture.flipY = false;
+      cafeTexture.needsUpdate = true;
+    }
+  }, [cafeTexture]);
 
   const coffeePaths = [
     '/assets/images/coffee1.webp',
@@ -67,6 +83,7 @@ export default function CafeScene({
     '/assets/images/coffee3.webp',
     '/assets/images/coffee4.webp',
   ];
+
 
 
   // 카페 가이드💬
@@ -152,6 +169,7 @@ const animateDrinkCoffee = () => {
     appearPlayer(playerRef, 1.2);
 
     setCameraTarget(new Vector3(-30, 0, -69.5));
+    cafeAudioRef.current?.stop();
     if (bgAudio) bgAudio.play(); //📢
   }
   };
@@ -175,9 +193,10 @@ const animateDrinkCoffee = () => {
       }
 
       // 카페 스팟 매쉬 도달시
-      if (dist < 1.5) {
+      if (dist < 3) {
 
         if (bgAudio) bgAudio.pause(); //📢
+        cafeAudioRef.current?.play();
 
         cafeGuide.current.visible = false;
 
@@ -319,12 +338,29 @@ const animateDrinkCoffee = () => {
         name="cafeSpot"
         ref={cafeSpotRef}
         position={CafeSpotMeshPosition}
-        rotation={[-Math.PI / 2, 0, 0]}
+        rotation={[ -Math.PI/2, 0,  Math.PI]}
         receiveShadow
       >
-        <planeGeometry args={[3, 3]} />
-        <meshStandardMaterial color="green" transparent opacity={0.5} />
+        <planeGeometry args={[6, 6]} />
+        <meshStandardMaterial   
+        map={cafeTexture}
+        transparent={true} 
+        alphaTest={0.5}
+        depthWrite={true}
+        premultipliedAlpha={true} // ✅ 핵심 옵션!
+        />
       </mesh>
+
+      <ManualAudioPlayer
+        ref={cafeAudioRef}
+        url="/assets/audio/cafeScene.mp3"
+        volume={2}
+        loop={false}
+        position={[-38, 2, -86]}
+      />
+
+
+
 {/* 
       <mesh
         name="cafeGuideSpot"

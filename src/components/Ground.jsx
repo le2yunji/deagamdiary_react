@@ -16,15 +16,21 @@ export default function Ground({ onClickGround }) {
   const groupRef = useRef();
 
   // const texture = useTexture('/assets/images/grid_only2.png');
-  const texture = useTexture('/assets/images/street.svg');
+  const texture = useTexture('/assets/images/floor.svg');
   const isDragging = useRef(false);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.needsUpdate = true;
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.x = 14;
-  texture.repeat.y = 14;
+  texture.repeat.x = 60;
+  texture.repeat.y = 60;
   texture.premultiplyAlpha = true;
+
+  const texture2 = useTexture('/assets/images/road.png');
+  // texture2.colorSpace = THREE.SRGBColorSpace;
+  // texture2.needsUpdate = true;
+  // texture2.premultiplyAlpha = true;
+
 
   const handlePointerDown = (event) => {
     isDragging.current = true;
@@ -118,14 +124,34 @@ useEffect(() => {
      >
        <planeGeometry args={[400, 400]} />
        <meshBasicMaterial 
-       map={texture}
-       transparent={true}        // ✨ PNG 알파 반영
-        alphaTest={0.01}          // ✨ 경계선 제거용
+        map={texture}
+        transparent={true}        // ✨ PNG 알파 반영
+        depthWrite={false}          // ✅ 테두리 겹침 방지
         toneMapped={false}        // ✨ 색 왜곡 방지
         blending={THREE.NormalBlending} // 또는 Additive, CustomBlending 실험 가능
         side={THREE.DoubleSide}
         opacity={0.2} // ✅ 실제 투명도 설정은 여기서!
+        color={'#edd3bb'}
+       />
+     </mesh>
 
+     <mesh
+       rotation={[-Math.PI / 2, 0, 0]}
+       position={[3, 0.002, 0]}
+      //  receiveShadow
+       onPointerDown={handlePointerDown}
+       onPointerMove={handlePointerMove}
+       onPointerUp={handlePointerUp}
+     >
+       <planeGeometry args={[400, 400]} />
+       <meshBasicMaterial 
+       map={texture2}
+       transparent={true}        // ✨ PNG 알파 반영
+       depthWrite={false}          // ✅ 테두리 겹침 방지
+       toneMapped={false}        // ✨ 색 왜곡 방지
+       blending={THREE.NormalBlending}
+       side={THREE.DoubleSide}
+        opacity={1} // ✅ 실제 투명도 설정은 여기서!
        />
      </mesh>
 

@@ -6,6 +6,8 @@ import { Vector3 } from 'three';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { NomoneyGamza } from '../components/NomoneyGamza';
+import { useTexture } from '@react-three/drei';
+import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 
 import {
   disappearPlayer,
@@ -42,10 +44,24 @@ export default function NomoneyScene({
   const [showCloudEffect, setShowCloudEffect] = useState(false);
 
   const clock = new THREE.Clock(); // 애니메이션용 시간
-  const NomoneySpotMeshPosition = new Vector3(-92, 0.005, -10.5); // 감자가 도달해야 할 스팟 위치
+  
+  const NomoneySpotMeshPosition = new Vector3(-92, 0.005, -15); // -10.5  
   const { scene, camera } = useThree();
   const nomoneySpotRef = useRef(); // ✅ 메쉬 ref 추가
+  const bgAudio = document.getElementById("bg-audio");
+  const nomoneyAudioRef = useRef();
 
+  const nomoneyTexture = useTexture('/assets/images/noMoneyTrigger.png');
+
+  useEffect(() => {
+    if (nomoneyTexture) {
+      nomoneyTexture.colorSpace = THREE.SRGBColorSpace;
+      nomoneyTexture.anisotropy = 16;
+      nomoneyTexture.flipY = false;
+      nomoneyTexture.needsUpdate = true;
+    }
+  }, [nomoneyTexture]);
+  
   // 텅장 텍스트 💬
   const noMoneyText = useRef();
   useEffect(() => {
@@ -55,7 +71,7 @@ export default function NomoneyScene({
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
     const geometry = new THREE.PlaneGeometry(1.2, 0.7);
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(-92, 2, -7.6);
+    mesh.position.set(-92, 2.2, -12.5); 
     mesh.rotation.y = THREE.MathUtils.degToRad(5);
     mesh.scale.set(1, 1, 1); // 아주 작게 시작
     mesh.visible = false;
@@ -70,9 +86,9 @@ export default function NomoneyScene({
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
-    const geometry = new THREE.PlaneGeometry(3.5, 2.5);
+    const geometry = new THREE.PlaneGeometry(8, 5.5);
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(-89, 4, -10);
+    mesh.position.set(-88, 5, -14.5);
     mesh.rotation.y = THREE.MathUtils.degToRad(10);
     mesh.visible = false;
     scene.add(mesh);
@@ -96,12 +112,14 @@ export default function NomoneyScene({
   // ✅ 노머니 이벤트 완료 후 감자 복귀
   const restorePlayerAfterNomoney = () => {
     playerRef.current.visible = true;
-    playerRef.current.position.set(-92, 0.3, -10);
+    playerRef.current.position.set(-92, 0.3, -13);
     playerRef.current.scale.set(0.3, 0.3, 0.3);
     setDisableMovement(false);
-
+    
     triggerCloudEffect();
     appearPlayer(playerRef, 1.2); // 부드럽게 다시 나타남
+    nomoneyAudioRef.current?.stop();
+    if (bgAudio) bgAudio.volume = 0.2;
 
     // // 카메라 복귀
     // returnCameraY(camera)
@@ -116,7 +134,7 @@ export default function NomoneyScene({
     
     setTimeout(() => {
     // 카메라가 다시 감자를 따라가도록 플레이어 타겟 위치 설정
-    setCameraTarget(new Vector3(-83.4, 0, -6.5));  
+    setCameraTarget(new Vector3(-83.4, 0, -9.5));  
     enableMouseEvents();      // 마우스 이벤트 복원
     }, 1000)
 
@@ -132,7 +150,7 @@ export default function NomoneyScene({
       const spotPosXZ = new Vector3(NomoneySpotMeshPosition.x, 0, NomoneySpotMeshPosition.z);
       const dist = playerPosXZ.distanceTo(spotPosXZ);
       // 일정 거리 이내에 도달하면 이벤트 트리거
-      if (dist < 2) {
+      if (dist < 3) {
         setTriggered(true);
         setDisableMovement(true);
         disappearPlayer(playerRef); // 감자 작아지며 사라짐
@@ -143,6 +161,13 @@ export default function NomoneyScene({
         disableMouseEvents(); 
 
         triggerCloudEffect();
+
+
+        if (bgAudio) bgAudio.volume = 0.03;
+
+        setTimeout(() => {
+          nomoneyAudioRef.current?.play();
+        }, 7000)
 
         // 노머니감자 등장
         gsap.to(nomoneyGamzaRef.current.scale, {
@@ -159,16 +184,16 @@ export default function NomoneyScene({
           activateSceneCamera(setCameraActive, setUseSceneCamera);
 
           setInitialCameraPose({
-            position: [-90, 12, 3],
-            lookAt: [-92, 3, -9.5],
+            position: [-90, 12, -1.5],
+            lookAt: [-92, 3, -11],
             zoom: 30
           });
 
           // 💡 카메라 이동 + 시선 애니메이션
           animateCamera({
-            position: { x: -90, y: 8, z: 3},
-            lookAt: [-92, 3, -9.5],
-            zoom: 50,
+            position: { x: -90, y: 8, z: -1.5},
+            lookAt: [-92, 3, -11],
+            zoom: 60,
             duration: 1.5
           });
           // gsap.to(camera.position, {
@@ -268,16 +293,22 @@ export default function NomoneyScene({
    {showCloudEffect && playerRef.current && (
       <CloudEffect 
         position={[
-          playerRef.current.position.x + 0.5, 
+          playerRef.current.position.x + 0.3, 
           playerRef.current.position.y + 3,
-          playerRef.current.position.z 
+          playerRef.current.position.z + 0.8
         ]}
       />
     )}
-
+     <ManualAudioPlayer
+        ref={nomoneyAudioRef}
+        url="/assets/audio/nomoneyScene.mp3"
+        volume={3}
+        loop={false}
+        position={[-92, 2, -15]}
+      />
     <NomoneyGamza 
       ref={nomoneyGamzaRef}
-      position={[-92, 0, -10.5]}  
+      position={[-92, 0, -15]}  
       rotation={[0, THREE.MathUtils.degToRad(-70), 0]}
       scale={[0, 0, 0]}
       onLoaded={({ mixer, actions }) => {
@@ -286,19 +317,23 @@ export default function NomoneyScene({
       }}
     />
 
- 
-
       {/* ✅ 바닥 클릭 지점 */}
       <mesh
         name="nomoneySpot"
         ref={nomoneySpotRef} // ✅ ref 연결
         position={NomoneySpotMeshPosition}
-        rotation={[-Math.PI / 2, 0, 0]}
+        rotation={[ -Math.PI/2, 0,  Math.PI]}
         receiveShadow
       >
-        <planeGeometry args={[4, 4]} />
-        <meshStandardMaterial color="red" transparent opacity={0.5} />
-      </mesh>
+        <planeGeometry args={[6, 6]} />
+        <meshStandardMaterial
+        map={nomoneyTexture}
+        transparent={true}
+        alphaTest={0.5}
+        depthWrite={true}
+        premultipliedAlpha={true} // ✅ 핵심 옵션!
+      />
+        </mesh>
     </group>
   );
 }

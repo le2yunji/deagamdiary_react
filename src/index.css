@@ -30,6 +30,37 @@ body, #root {
   color: #111111;
 }
 
+#start-screen-btn {
+  /* margin: 0 auto; */
+  padding: 10px 10px;
+  font-size: 16px;
+  position: absolute; /* relative → absolute 변경 */
+  width: 300px;
+  height: 300px;
+  top: 30vh;
+  /* background: url('./assets/images/gamza_button_unclick.webp') no-repeat center; */
+  background: url('./assets/images/start_button.png') no-repeat center;
+  background-size: cover;
+  border: none;
+  cursor: pointer;
+  cursor: pointer;
+  z-index: 9999;
+  transition: background 0.3s ease-in-out;
+  display: none; /* 기본적으로 버튼 숨김 */
+
+  left: 50%; 
+  /* 가로 정렬을 위해 left: 50% */
+  transform: translateX(-50%); 
+  /* 가로 중앙 정렬 */
+
+}
+#start-screen-btn:hover {
+  background: url('./assets/images/start_button_hover.png') no-repeat center;
+  background-size: cover;
+}
+
+
+
 
 /* 시작 페이지 */
 #start-screen {
@@ -38,29 +69,10 @@ body, #root {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 9999;
-    overflow: hidden;
-  }
-  /* 시작 안내 페이지 */
-  #start-guide {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     z-index: 9998;
     overflow: hidden;
   }
-/* 시작 가이드 이미지  */
-  #start-guide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* 비율 유지하며 꽉 채우기 */
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-  }
+
   /* 시작 화면 비디오 */
   #start-video {
     width: 100%;
@@ -69,53 +81,143 @@ body, #root {
   }
   /* 시작 버튼 */
   #start-button {
-    margin: 0 auto;
+    /* margin: 0 auto; */
     padding: 10px 10px;
     font-size: 16px;
     position: absolute; /* relative → absolute 변경 */
-    width: 180px;
-    height: 160px;
-    top: 640px;
+    width: 165px;
+    height: 165px;
+    top: 10px;
+    right: 30px;
 	  /* background: url('./assets/images/gamza_button_unclick.webp') no-repeat center; */
-    background: url('./assets/images/normalDaegam3.png') no-repeat center;
+    background: url('./assets/images/yellowsun.png') no-repeat center;
 	  background-size: cover;
     border: none;
     cursor: pointer;
-    left: 50%; /* 가로 정렬을 위해 left: 50% */
-    transform: translateX(-50%); /* 가로 중앙 정렬 */
     cursor: pointer;
     z-index: 9999;
 	  transition: background 0.3s ease-in-out;
 	  display: none; /* 기본적으로 버튼 숨김 */
+
+    /* left: 50%;  */
+    /* 가로 정렬을 위해 left: 50% */
+    /* transform: translateX(-50%);  */
+    /* 가로 중앙 정렬 */
+
   }
 
-  /* Hover 시 이미지 변경 */
-  #start-button:hover {
-    background: url('./assets/images/smileDaegam2.png') no-repeat center;
-    background-size: cover;
+  @keyframes blinkSun {
+    0%, 100% {
+      background-image: url('./assets/images/yellowsun.png');
     }
+    50% {
+      background-image: url('./assets/images/redsun.png');
+    }
+  }
+  
+  #start-button.blinking {
+    animation: blinkSun 1s infinite; 
+  }
+  
+  /* Hover 시 이미지 변경 */
+  #start-button.blinking:hover {
+    animation: none;
+    background: url('./assets/images/redsun.png') no-repeat center;
+    background-size: cover;
+  }
+
+
+  /* 시작 안내 페이지 */
+  #start-guide1,  #start-guide2  {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #11111190;
+    z-index: 9998;
+    overflow: hidden;
+    display: flex;
+  }
+/* 시작 가이드 이미지  */
+  #start-guide1 img, #start-guide2 img  {
+    width: 700px;
+    height: auto;
+    object-fit: cover; /* 비율 유지하며 꽉 채우기 */
+    position: absolute;
+    /* top: 10vh; */
+    left: 50%; 
+    /* 가로 정렬을 위해 left: 50% */
+    transform: translateX(-50%); 
+    /* 가로 중앙 정렬 */
+    z-index: 1;
+  }
 
 /* 시작 가이드 확인 버튼 */
-  #start-guide-btn {
+  #start-guide-btn1 {
     margin: 0 auto;
     padding: 10px 10px;
     font-size: 16px;
     position: absolute; /* relative → absolute 변경 */
-    width: 220px;
-    height: 160px;
-    top: 640px;
+    width: 70px;
+    height: 70px;
     /* background: url('./assets/images/gamza_button_unclick.webp') no-repeat center; */
-    background: url('./assets/images/first_guide_btn.png') no-repeat center;
+    background: url('./assets/images/guide_btn1.png') no-repeat center;
     background-size: cover;
     border: none;
     cursor: pointer;
     left: 50%; /* 가로 정렬을 위해 left: 50% */
+    top: 78vh;
     transform: translateX(-50%); /* 가로 중앙 정렬 */
     cursor: pointer;
     z-index: 2;
     transition: background 0.3s ease-in-out;
     display: none; /* 기본적으로 버튼 숨김 */
   }
+  #start-guide-btn2 {
+    margin: 0 auto;
+    padding: 10px 10px;
+    font-size: 16px;
+    position: absolute; /* relative → absolute 변경 */
+    width: 70px;
+    height: 70px;
+    /* background: url('./assets/images/gamza_button_unclick.webp') no-repeat center; */
+    background: url('./assets/images/guide_btn2.png') no-repeat center;
+    background-size: cover;
+    border: none;
+    cursor: pointer;
+    left: 50%; /* 가로 정렬을 위해 left: 50% */
+    top: 78vh;
+    transform: translateX(-50%); /* 가로 중앙 정렬 */
+    cursor: pointer;
+    z-index: 2;
+    transition: background 0.3s ease-in-out;
+    display: none; /* 기본적으로 버튼 숨김 */
+  }
+  
+  .alba-poster {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    cursor: pointer;
+  }
+  .alba-poster img{
+
+    width: 100%;
+    height: 100%;
+
+
+
+  }
+
+
 
     #ending-screen {
       position: fixed;

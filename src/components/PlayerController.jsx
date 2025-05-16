@@ -1,7 +1,7 @@
 // PlayerController.jsx
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
-import { Vector3, MathUtils, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh } from 'three';
+import { Vector3, MathUtils, TextureLoader, PlaneGeometry, MeshBasicMaterial, Mesh, AudioListener, Audio, AudioLoader  } from 'three';
 import { Player } from './Player';
 import useKeyboardControls from '../hooks/useKeyboardControls';
 import * as THREE from 'three'
@@ -9,7 +9,8 @@ import { gsap } from 'gsap';
 
 const textureLoader = new TextureLoader();
 
-const PlayerController = forwardRef(({ destination, cameraRef, disableMovement = false, scene }, ref) => {
+
+const PlayerController = forwardRef(({  lockCamera, destination, cameraRef, disableMovement = false, scene }, ref) => {
   const playerRef = useRef();
   const cameraOffset = new Vector3(1, 3, 5);
   const speed = 0.25;
@@ -17,6 +18,8 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
   const currentActionRef = useRef(null);
   const lastInputRef = useRef("none");
   const prevDestinationRef = useRef(null);
+  const audioListenerRef = useRef(new AudioListener());
+  const audioLoaderRef = useRef(new AudioLoader());
 
   // 👣 발자국 관련 상태
   const footprints = useRef([]);
@@ -34,6 +37,12 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
     }
   }, []);
 
+  useEffect(() => {
+    if (cameraRef.current) {
+      cameraRef.current.add(audioListenerRef.current);
+    }
+  }, [cameraRef]);
+  
   const directionRef = useKeyboardControls((dir) => {
     const isKeyPressed = Object.values(dir).some(Boolean);
     if (isKeyPressed) lastInputRef.current = "keyboard";
@@ -49,6 +58,7 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
 
   useFrame(() => {
     if (!playerRef.current || !cameraRef.current) return;
+
     const player = playerRef.current;
     const playerPos = player.position;
     const dir = directionRef.current;
@@ -102,9 +112,9 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
       }
     }
 
-    const camPos = playerPos.clone().add(cameraOffset);
-    cameraRef.current.position.lerp(camPos, 0.1);
-    cameraRef.current.lookAt(playerPos);
+      const camPos = playerPos.clone().add(cameraOffset);
+      cameraRef.current.position.lerp(camPos, 0.1);
+      cameraRef.current.lookAt(playerPos);
 
 
     // fadeOutFootprints();
@@ -121,11 +131,14 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
       currentActionRef.current = action;
     }
   };
+  const lastStepSoundTime = useRef(0); // 마지막 발소리 시간
+  const stepSoundDelay = 200; // 최소 300ms 간격 (0.3초)
 
   const leaveFootprint = (player) => {
     const currentPosition = player.position.clone();
     const distance = currentPosition.distanceTo(lastFootprintPosition.current);
 
+    
     if ( distance > footprintDistanceThreshold) {
       const footOffset = 0.3;
       const angle = player.rotation.y;
@@ -136,6 +149,22 @@ const PlayerController = forwardRef(({ destination, cameraRef, disableMovement =
         0.01,
         currentPosition.z + offsetZ
       );
+
+          // ✅ 발자국 사운드 재생
+          const now = Date.now();
+          if (now - lastStepSoundTime.current > stepSoundDelay) {
+            lastStepSoundTime.current = now;
+          
+            // ✅ 발소리 재생
+            audioLoaderRef.current.load('/assets/audio/walk_sound.mp3', (buffer) => {
+              const sound = new Audio(audioListenerRef.current);
+              sound.setBuffer(buffer);
+              sound.setVolume(0.05);
+              sound.setLoop(false);
+              sound.play();
+            });
+          }
+          
 
       textureLoader.load('/assets/images/footprint.webp', (texture) => {
         texture.colorSpace = THREE.SRGBColorSpace;

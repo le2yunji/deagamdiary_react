@@ -7,12 +7,8 @@ const posters = [
   'SushiMemo', 'KidsMemo', 'BakeryMemo',
   'DokseoMemo',  'GamzaMemo'
 ];
-
-export function Posters({selectedPoster, setSelectedPoster}) {
-  const gltfs = useLoader(
-    GLTFLoader,
-    posters.map((name) => `/assets/models/${name}.glb`)
-  );
+export function Posters({ selectedPoster, setSelectedPoster }) {
+  const gltfs = useLoader(GLTFLoader, posters.map((name) => `/assets/models/${name}.glb`));
 
   const models = useMemo(() => {
     const result = {};
@@ -22,62 +18,38 @@ export function Posters({selectedPoster, setSelectedPoster}) {
     return result;
   }, [gltfs]);
 
-  const [hoveredPoster, setHoveredPoster] = useState(null);
-  // const [selectedPoster, setSelectedPoster] = useState(null);
   const groupRef = useRef();
-
 
   return (
     <group ref={groupRef}>
       {posters.map((name, i) => (
         <primitive
-        key={name}
-        name={name}
-        object={models[name]?.scene}
-        position={[-25, 0.5, -13.5]}
-        scale={[1.3, 1.3, 1.3]}
-        onClick={() => {
-          // console.log('클릭됨:', name);
-          setSelectedPoster(prev => prev === name ? null : name);
-        }}
-      /> 
+          key={name}
+          object={models[name]?.scene}
+          position={[-25, 0.5, -13.5]}
+          scale={[1.3, 1.3, 1.3]}
+          onClick={() => {
+
+            const targetId = `${name.toLowerCase().replace('memo', '')}-poster`;
+            const targetEl = document.getElementById(targetId);
+
+              // ✅ 상태도 변경
+            setSelectedPoster(prev => prev === name ? null : name);
+
+            // 모두 숨기고
+            posters.forEach(p => {
+              const el = document.getElementById(`${p.toLowerCase().replace('memo', '')}-poster`);
+              if (el) el.style.display = 'none';
+            });
+
+            // 클릭한 포스터만 보이게
+            if (targetEl) {
+              const isVisible = targetEl.style.display === 'block';
+              targetEl.style.display = isVisible ? 'none' : 'block';
+            }
+          }}
+        />
       ))}
-
-{selectedPoster && (
-  <Html
-    fullscreen
-    transform={false}
-    portal={{ current: document.body }}  // ✔ 반드시 추가
-  >
-    <div
-      onClick={() => setSelectedPoster(null)}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: 'rgba(0, 0, 0, 0.6)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 9999,
-      }}
-    >
-      <img
-        src={`/assets/images/${selectedPoster}.webp`}
-        alt={selectedPoster}
-        style={{
-          width: '300px',
-          height: 'auto',
-          borderRadius: '12px',
-        }}
-      />
-    </div>
-  </Html>
-)}
-
-
     </group>
   );
 }

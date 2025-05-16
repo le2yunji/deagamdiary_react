@@ -97,7 +97,7 @@ export default function useCameraSwitcher() {
       });
     }
   };
-  
+
 
   return {
     sceneCameraRef,

@@ -9,6 +9,8 @@ import { gsap } from 'gsap';
 import { AlbaBoard } from '../components/AlbaBoard';
 import { AlbaGamza } from '../components/AlbaGamza';
 import { Posters } from '../components/AlbaPosters';
+import { useTexture } from '@react-three/drei';
+import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 
 import {
   disappearPlayer,
@@ -42,16 +44,29 @@ export default function AlbaScene({
   const [triggered, setTriggered] = useState(false);
   const [showCloudEffect, setShowCloudEffect] = useState(false);
 
-  const AlbaSpotMeshPosition = new Vector3(-26, 0.005, -11);
   const clock = new THREE.Clock();
   const { scene, camera } = useThree();
 
   const bgAudio = document.getElementById("bg-audio");
+  const ahaAudioRef = useRef();
+  const hmmAudioRef = useRef();
 
   const gamzaActions = useRef();
   const gamzaMixer = useRef();
 
   const [selectedPoster, setSelectedPoster] = useState(null);
+
+  const AlbaSpotMeshPosition = new Vector3(-25.5, 0.005, -10);
+  const albaTexture = useTexture('/assets/images/albaTrigger.png');
+
+  useEffect(() => {
+    if (albaTexture) {
+      albaTexture.colorSpace = THREE.SRGBColorSpace;
+      albaTexture.anisotropy = 16;
+      albaTexture.flipY = false;
+      albaTexture.needsUpdate = true;
+    }
+  }, [albaTexture]);
 
 
   const triggerCloudEffect = () => {
@@ -66,6 +81,11 @@ export default function AlbaScene({
     playerRef.current.position.set(-29, 0.3, -6);
     playerRef.current.scale.set(0.3, 0.3, 0.3);
 
+    if (bgAudio) bgAudio.volume = 0.2;
+
+    ahaAudioRef.current?.stop();
+    hmmAudioRef.current?.stop();
+
     gsap.to(camera, {
       duration: 1,
       zoom: 30,
@@ -73,7 +93,20 @@ export default function AlbaScene({
       onUpdate: () => camera.updateProjectionMatrix(),
     });
 
+    setSelectedPoster(null); // ✅ 알바씬 끝나면 포스터 닫기
 
+  // ✅ DOM에서 포스터 토글 닫기
+  const ids = [
+    "gamza-poster",
+    "bakery-poster",
+    "kids-poster",
+    "dokseo-poster",
+    "sushi-poster",
+  ];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
     appearPlayer(playerRef, 1.2);
     setCameraTarget(new Vector3(-33, 0, 1));
     setDisableMovement(false);
@@ -81,13 +114,15 @@ export default function AlbaScene({
 
   const hasRestoredRef = useRef(false);
 
+
   useEffect(() => {
     if (!triggered || !selectedPoster || !gamzaActions.current) return;
   
     const idle = gamzaActions.current["Idle"];
     const aha = gamzaActions.current["Aha"];
-    const confuse = gamzaActions.current["Scene"];
-  
+    const confuse = gamzaActions.current["Confuse"];
+
+
     if (confuse) {
       confuse.timeScale = 0.63;
       confuse.setLoop(THREE.LoopRepeat, Infinity);
@@ -111,6 +146,9 @@ export default function AlbaScene({
         idle?.stop()
         confuse?.stop()
         aha?.reset().play();
+        ahaAudioRef.current?.play();
+        hmmAudioRef.current?.stop();
+
         setTimeout(() => { 
           aha?.stop()
           idle?.reset().play(); 
@@ -123,6 +161,9 @@ export default function AlbaScene({
         aha?.stop()
         idle?.stop()
         confuse?.reset().play();
+        hmmAudioRef.current?.play();
+        ahaAudioRef.current?.stop();
+
         break;
       case "IwannagoHomeMemo":
       case "DoNotNakseoMemo":
@@ -130,11 +171,17 @@ export default function AlbaScene({
         aha?.stop()
         confuse?.reset().play(); 
         idle?.reset().play(); 
+        hmmAudioRef.current?.play();
+        ahaAudioRef.current?.stop();
+
         break;
       default:
         confuse?.stop()
         aha?.stop()
         idle?.reset().play();
+        hmmAudioRef.current?.play();
+        ahaAudioRef.current?.stop();
+
         break;
     }
   }, [triggered, selectedPoster]);
@@ -148,9 +195,10 @@ export default function AlbaScene({
         playerRef.current.position.z
       ).distanceTo(new Vector3(AlbaSpotMeshPosition.x, 0, AlbaSpotMeshPosition.z));
 
-      if (dist < 1.5) {
+      if (dist < 2) {
         setTriggered(true);
         setDisableMovement(true);
+        if (bgAudio) bgAudio.volume = 0.03;
 
         // if (bgAudio) bgAudio.pause();
         disappearPlayer(playerRef);
@@ -171,7 +219,7 @@ export default function AlbaScene({
         // 💡 카메라 이동 + 시선 애니메이션
         animateCamera({
           position: { x: -25, y: 10, z: 5 },
-          lookAt: [-25, 5, -10],
+          lookAt: [-25, 4, -10],
           zoom: 55,
           duration: 1.5
         });
@@ -214,6 +262,15 @@ export default function AlbaScene({
   useFrame((_, delta) => {
     gamzaMixer.current?.update(delta);
   });
+
+  useEffect(() => {
+    const handlePosterClose = (e) => {
+      setSelectedPoster(null);
+    };
+    window.addEventListener('PosterClosed', handlePosterClose);
+    return () => window.removeEventListener('PosterClosed', handlePosterClose);
+  }, []);
+
   return (
     <>
       {/* 👇 카메라 매니저는 비활성화 */}
@@ -237,6 +294,20 @@ export default function AlbaScene({
             gamzaActions.current = actions;
           }}
         />
+        <ManualAudioPlayer
+          ref={ahaAudioRef}
+          url="/assets/audio/albaScene_aha.mp3"
+          volume={3}
+          loop={false}
+          position={[-25, 2, -10]}
+        />
+        <ManualAudioPlayer
+          ref={hmmAudioRef}
+          url="/assets/audio/albaScene_hmm.mp3"
+          volume={3}
+          loop={false}
+          position={[-25, 2, -10]}
+        />
 
         {showCloudEffect && albaGamzaRef.current && (
           <CloudEffect
@@ -257,13 +328,21 @@ export default function AlbaScene({
           name="albaSpot"
           ref={albaSpotRef}
           position={AlbaSpotMeshPosition}
-          rotation={[-Math.PI / 2, 0, 0]}
+          rotation={[-Math.PI / 2, 0, Math.PI]}
           receiveShadow
         >
-          <planeGeometry args={[3, 3]} />
-          <meshStandardMaterial color="orange" transparent opacity={0.5} />
+          <planeGeometry args={[4, 4]} />
+          <meshStandardMaterial   
+          map={albaTexture}
+          transparent={true} 
+          alphaTest={0.5}
+          depthWrite={true}
+          premultipliedAlpha={true} // ✅ 핵심 옵션!
+          />
         </mesh>
       </group>
+
+
     </>
   );
 }

@@ -5,10 +5,20 @@ import { PointLight, Vector3 } from 'three';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { Metro } from '../components/Metro';
+import { useTexture } from '@react-three/drei';
+import ManualAudioPlayer from '../utils/ManualAudioPlayer';
+
 import {
   disappearPlayer,
   appearPlayer,
-  returnCameraY
+  disableMouseEvents,
+  disablePlayerControlEvents,
+  enableMouseEvents,
+  downCameraY,
+  returnCameraY,
+  showArrow,
+  hideAllArrows,
+  createArrows,
 } from '../utils/Common';
 
 
@@ -32,9 +42,24 @@ export default function MetroScene({
   const [mixer, setMixer] = useState(null);
   const [actions, setActions] = useState(null);
   const [triggered, setTriggered] = useState(false);
-  const MetroSpotMeshPosition = new Vector3(9, 0.005, -98);
   const { scene, camera } = useThree();
   const bgAudio = document.getElementById("bg-audio");
+  const metroAudioRef = useRef();
+
+
+
+  const MetroSpotMeshPosition = new Vector3(9, 0.005, -98);
+  const metroTexture = useTexture('/assets/images/metroTrigger.png');
+
+  useEffect(() => {
+    if (metroTexture) {
+      metroTexture.colorSpace = THREE.SRGBColorSpace;
+      metroTexture.anisotropy = 16;
+      metroTexture.flipY = false;
+      metroTexture.needsUpdate = true;
+    }
+  }, [metroTexture]);
+
 
 // 초기 위치 설정
 // useEffect(() => {
@@ -60,6 +85,8 @@ export default function MetroScene({
     playerRef.current.visible = true;
     playerRef.current.position.set(6.7, 0.3, -93);
     playerRef.current.scale.set(0.3, 0.3, 0.3);
+    metroAudioRef.current?.stop();
+    if (bgAudio) bgAudio.play(); //📢
 
     // appearPlayer(playerRef, 0.8);
     setDisableMovement(false);
@@ -95,6 +122,8 @@ export default function MetroScene({
 
       if (dist < 1.5) {
         // if (bgAudio) bgAudio.pause(); //📢
+        if (bgAudio) bgAudio.pause(); //📢
+        metroAudioRef.current?.play();
 
         setTriggered(true);
         disappearPlayer(playerRef);
@@ -179,12 +208,26 @@ export default function MetroScene({
         name="metroSpot"
         ref={metroSpotRef}
         position={MetroSpotMeshPosition}
-        rotation={[-Math.PI / 2, 0, 0]}
+        rotation={[-Math.PI / 2, 0, Math.PI]}
         receiveShadow
       >
-        <planeGeometry args={[3, 3]} />
-        <meshStandardMaterial color="hotpink" transparent opacity={0.5} />
+        <planeGeometry args={[6, 6]} />
+        <meshStandardMaterial 
+          map={metroTexture}
+          transparent={true} 
+          alphaTest={0.5}
+          depthWrite={true}
+          premultipliedAlpha={true} // ✅ 핵심 옵션!
+          />
+        
       </mesh>
+      <ManualAudioPlayer
+          ref={metroAudioRef}
+          url="/assets/audio/metroScene.mp3"
+          volume={2}
+          loop={false}
+          position={[-7.5, 2, -110]}
+        />
     </group>
   );
 }
