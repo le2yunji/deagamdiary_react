@@ -254,8 +254,9 @@ export default function AlbaScene({
               restorePlayerAfterAlba();
               hasRestoredRef.current = true;
             }
-          }, 1000 )
-        }, 20000);
+          }, 1000)
+
+        }, 30000);
       }
     }
   });

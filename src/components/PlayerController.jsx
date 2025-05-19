@@ -159,9 +159,9 @@ const PlayerController = forwardRef(({  lockCamera, destination, cameraRef, disa
             audioLoaderRef.current.load('/assets/audio/walk_sound.mp3', (buffer) => {
               const sound = new Audio(audioListenerRef.current);
               sound.setBuffer(buffer);
-              sound.setVolume(0.05);
+              sound.setVolume(0.04);
               sound.setLoop(false);
-              sound.play();
+              if(sound) sound.play();
             });
           }
           

@@ -7,7 +7,6 @@ import { gsap } from 'gsap';
 
 import CloudEffect from '../components/CloudEffect';
 import { Escalator } from "../components/Escalator";
-import { EscalatorGamza } from '../components/EscalatorGamza';
 import { useTexture } from '@react-three/drei';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 
@@ -40,16 +39,14 @@ export default function EscalatorScene({
 }) {
   const group = useRef();
   const gamzaRef = useRef();
+  const gamRef = useRef();
+
   const { scene, camera } = useThree();
   const clock = new THREE.Clock();
 
   const escalatorRef = useRef();
   const escalatorMixer = useRef();
   const escalatorActions = useRef();
-
-  const escalatorGamzaRef = useRef();
-  const escalatorGamzaMixer = useRef();
-  const escalatorGamzaActions = useRef();
 
   const escalatorSpotRef = useRef();
 
@@ -73,7 +70,6 @@ export default function EscalatorScene({
 
   const bgAudio = document.getElementById("bg-audio");
   const escalatorAudioRef = useRef();
-
 //   const wallTexture = useTexture('/assets/images/innerWall.png');
 
 //   useEffect(() => {
@@ -115,11 +111,20 @@ export default function EscalatorScene({
     setTimeout(() => setShowCloudEffect(false), 500);
   };
 
+  useEffect(() => {
+    if (gamzaRef.current) {
+      gamzaRef.current.visible = false; // 처음엔 안 보이게
+    }
+    if (gamRef.current) {
+        gamRef.current.visible = false; // 처음엔 안 보이게
+      }
+  }, []);
+  
+
   // ✅ 플레이어 도달 → 초기 애니메이션 재생
   useFrame(() => {
     const delta = clock.getDelta();
     escalatorMixer.current?.update(delta);
-    escalatorGamzaMixer.current?.update(delta);
 
 
     if (!triggered && playerRef.current) {
@@ -127,6 +132,7 @@ export default function EscalatorScene({
 
       if (dist < 3.5) {
         setTriggered(true);
+        triggerCloudEffect()
         disappearPlayer(playerRef);
         setDisableMovement(true);
         scene.remove(scene.getObjectByName('escalatorSpot'));
@@ -136,51 +142,109 @@ export default function EscalatorScene({
 
         escalatorAudioRef.current?.play();
 
-            setTimeout(() => {
-                triggerCloudEffect()
-                // 모델 등장
-                gsap.to(escalatorGamzaRef.current.scale, {
-                    x: 8,
-                    y: 8,
-                    z: 8,
-                    duration: 0.5,
-                    ease: "expo.inOut"
-                });
-        
-            }, 2000)
 
             setTimeout(() => {
+         
+
+                if (gamzaRef.current) {
+                    gamzaRef.current.visible = true;
+                    gamRef.current.visible = true;
+
+                    gamzaRef.current.traverse(child => {
+                      if (child.isMesh) {
+                        child.visible = true;
+                        if (child.material) {
+                          child.material.opacity = 1;
+                          child.material.transparent = false;
+                        }
+                      }
+                    });
+
+                    gamRef.current.traverse(child => {
+                        if (child.isMesh) {
+                          child.visible = true;
+                          if (child.material) {
+                            child.material.opacity = 1;
+                            child.material.transparent = false;
+                          }
+                        }
+                      });
+
+                  }                
                 const escalatorAnim = escalatorActions.current?.["Scene"]
                 escalatorAnim.reset().play();
                 escalatorAnim.timeScale = 0.3;
-        
-                const escalatorGamzaAnim = escalatorGamzaActions.current?.["Scene"]
-                escalatorGamzaAnim.reset().play();
-                escalatorGamzaAnim.timeScale = 0.3;
+                
             }, 2500)
+
+            // setTimeout(() => {
+            //  gsap.to(gamzaRef.current.position, {
+            //     duration: 4,
+            //     y: 0,
+            //     ease: 'steps(20)'
+            //  })
+            // }, 13000)
 
         setTimeout(() => {
           activateSceneCamera(setCameraActive, setUseSceneCamera);
 
           setInitialCameraPose({
             position: [28, 10, 150],
-            lookAt: [27, 2, 140],
-            zoom: 30,
+            lookAt: [27, 0, 140],
+            zoom: 35,
             near: -100,  // ✅ 추가
             far: 50,    // ✅ 추가
           });
 
-          setTimeout(() => {
-            animateCamera({
-                position: { x: 28, y: 12, z: 150},
-                lookAt: [27, 2, 140],
-                zoom: 22,
-                duration: 3,
-                near: -100,
-                far: 50,
-              });
-          }, 1000)
-    
+                setTimeout(() => {
+                    animateCamera({
+                        position: { x: 28, y: 12, z: 150},
+                        lookAt: [27, 0, 140],
+                        zoom: 20,
+                        duration: 2,
+                        near: -100,
+                        far: 50,
+                    });
+
+                    setTimeout(() => {
+                        animateCamera({
+                            position: { x: 26, y: 8, z: 150},
+                            lookAt: [27, 0, 140],
+                            zoom: 30,
+                            duration: 4,
+                            near: -100,
+                            far: 50,
+                        });
+                    }, 2000)
+
+                    setTimeout(() => {
+                        // gamzaRef.current.visible = false;
+                        setTimeout(() => {
+                            animateCamera({
+                                position: { x: 34, y: 7, z: 157},// { x: 34, y: 7, z: 157},
+                                lookAt: [27, 0, 140],
+                                zoom: 45,
+                                duration: 3,
+                                near: -100,
+                                far: 50,
+                            });
+                            
+                            setTimeout(() => {
+                                animateCamera({
+                                    position: { x: 35, y: 8, z: 155},
+                                    lookAt: [27, 0, 140],
+                                    zoom: 65,
+                                    duration: 3,
+                                    near: -100,
+                                    far: 50,
+                                });
+                            }, 3000)
+                        }, 1000)
+                    
+                    }, 9000)
+
+                }, 100)
+
         }, 1000)
 
 
@@ -221,7 +285,8 @@ export default function EscalatorScene({
     <group ref={group}>
       <Escalator
         ref={escalatorRef}
-        // onGamzaRef={(ref) => { gamzaRef.current = ref }}
+        onGamzaRef={(ref) => { gamzaRef.current = ref }}
+        onGamRef={(ref) => { gamRef.current = ref }}
         position={[24, 6.2, 143]}
         rotation={[0, THREE.MathUtils.degToRad(-45), 0]}
         scale={[8, 8, 8]}
@@ -232,7 +297,7 @@ export default function EscalatorScene({
         // innerWallMaterial={innerWallMaterial} // ✅ 전달
       />
 
-        <EscalatorGamza
+        {/* <EscalatorGamza
             ref={escalatorGamzaRef}
             // onGamzaRef={(ref) => { gamzaRef.current = ref }}
             position={[24, 6.2, 143]}
@@ -243,7 +308,7 @@ export default function EscalatorScene({
             escalatorGamzaMixer.current = mixer;
             }}  
             // innerWallMaterial={innerWallMaterial} // ✅ 전달
-        />
+        /> */}
 
       <ManualAudioPlayer
         ref={escalatorAudioRef}
@@ -255,10 +320,19 @@ export default function EscalatorScene({
 
 
       {showCloudEffect && (
+            <CloudEffect 
+            position={[
+            playerRef.current.position.x + 0.3, 
+            playerRef.current.position.y + 2,
+            playerRef.current.position.z + 0.8
+            ]}
+        />      
+        )}
+        {/* {showCloudEffect && (
         <CloudEffect
-          position={[ 27, 8, 138]}
+          position={[ 30, 0, 152]}
         />
-      )}
+      )} */}
 
 
       <mesh

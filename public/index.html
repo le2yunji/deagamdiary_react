@@ -17,7 +17,7 @@
     <meta property="og:site_name" content="움트" />
     <meta property="og:title" content="움트" />
     <meta property="og:description" content="졸업 전시 작품 맛 보세요 ♡" />
-    <meta property="og:image" content="/assets/images/poster.png" />
+    <meta property="og:image" content="https://iamtalkingpotato.vercel.app/assets/images/poster.png" />
     <meta property="og:url" content="https://iamtalkingpotato.vercel.app/" />
 
     <!--Twitter Card-->
@@ -25,11 +25,11 @@
     <meta property="twitter:card" content="summary" />
     <meta property="twitter:site" content="움트" />
     <meta property="twitter:title" content="움트" />
-    <meta property="twitter:description" content="졸업 전시 작품 맛 보세요 ♡" />
-    <meta property="twitter:image" content="/assets/images/poster.png" />
+    <meta property="twitter:description" content="졸업 전시 작품 맛보세요 ♡" />
+    <meta property="twitter:image" content="https://iamtalkingpotato.vercel.app/assets/images/poster.png" />
     <meta property="twitter:url" content="https://iamtalkingpotato.vercel.app/" />
 
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/daegam.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>나는야 말하는 감자</title>
   </head>
@@ -119,9 +119,6 @@
     <img src="./assets/images/SushiPoster.png" alt="스시 알바 포스터">
   </div>
   
-    <!-- <div class="alba-poster"></div>
-    <div class="alba-poster"></div> -->
-
     <div id="ending-screen">
       <video autoplay muted playsinline id="ending-video" >
         <source src="/assets/video/ending.webm" type="video/webm" />
@@ -129,40 +126,6 @@
       </video>
     </div>
 
-
-    <!-- <script>
-    const video = document.getElementById("ending-video");
-
-    if (video) {
-      video.addEventListener("ended", () => {
-        video.pause();
-        video.currentTime = 0;
-      });
-    }
-
-    const startScreenBtn = document.getElementById("start-screen-btn");
-
-    startScreenBtn.addEventListener("click", () => {
-      startScreenBtn.style.display = "none"
-      const startVideo = document.getElementById("start-video");
-      const startButton = document.getElementById("start-button");
-
-      if (startVideo) {
-        startVideo.muted = false;
-        startVideo.volume = 1.0;
-        startVideo.play(); // 수동 재생
-
-        setTimeout(() => {
-          startButton.style.display = "block";
-          startButton.classList.add("blinking");
-        }, 10000)
-
-        startButton.addEventListener("click", () => {
-          startVideo.pause();
-          })
-      }
-    })
-    </script> -->
 
   </body>
 </html>

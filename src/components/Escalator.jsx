@@ -1,17 +1,20 @@
 // Escalator.jsx
 
 import React, { forwardRef, useImperativeHandle, useEffect, useRef } from 'react'
+import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
+import { SkeletonUtils } from 'three-stdlib'
 import * as THREE from 'three'
 
-export const Escalator = forwardRef(({ onLoaded, onGamzaRef, innerWallMaterial, ...props }, ref) => {
+export const Escalator = forwardRef(({ onLoaded, onGamzaRef, onGamRef, ...props }, ref) => {
   const group = React.useRef()
-  const { nodes, materials, animations } = useGLTF('/assets/models/escalator.glb')
+  const { scene, animations } = useGLTF('/assets/models/escalator.glb')
+  const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
+  const { nodes, materials } = useGraph(clone)
   const { actions, mixer } = useAnimations(animations, group)
   const gamzaRef = useRef();
+  const gamRef = useRef();  
   
-  useImperativeHandle(ref, () => group.current);
-
   useEffect(() => {
     if (group.current) {
       group.current.traverse((child) => {
@@ -33,42 +36,43 @@ export const Escalator = forwardRef(({ onLoaded, onGamzaRef, innerWallMaterial, 
       onLoaded?.({ ref: group.current, mixer, actions });
       if (onGamzaRef && gamzaRef.current) {
         onGamzaRef(gamzaRef.current);
-      }    
-    
+        onGamRef(gamRef.current);
+      }        
     }
-  }, [actions, mixer, onLoaded, onGamzaRef]);  
+  }, [actions, mixer, onLoaded, onGamzaRef, onGamRef]);  
 
+  
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
         <group name="Plane002" rotation={[0, 0, -Math.PI / 2]} />
-        <mesh name="Plane" geometry={nodes.Plane.geometry} material={materials['Material.027']} position={[-0.035, 0.035, -0.07]}>
+        <group ref={gamRef} name="Empty" position={[1.327, -0.808, 0.249]} rotation={[0, -0.202, 0]} scale={1.454}>
+          <mesh name="KakaoTalk_20250517_172400608" geometry={nodes.KakaoTalk_20250517_172400608.geometry} material={materials.KakaoTalk_20250517_172400608} position={[-0.155, 0.452, 0.217]} rotation={[0.274, 0, -Math.PI / 2]} scale={0.006} />
+          <mesh name="KakaoTalk_20250517_172400608001" geometry={nodes.KakaoTalk_20250517_172400608001.geometry} material={materials.KakaoTalk_20250517_172400608} position={[-0.155, 0.586, -0.018]} rotation={[1.988, 0, -Math.PI / 2]} scale={0.011} />
+          <mesh name="KakaoTalk_20250517_172400608002" geometry={nodes.KakaoTalk_20250517_172400608002.geometry} material={materials.KakaoTalk_20250517_172400608} position={[-0.155, 0.428, -0.277]} rotation={[2.298, 0, -Math.PI / 2]} scale={0.01} />
+        </group>
+        <group name="Empty001" position={[1.227, -0.818, 0.21]} scale={1.287}>
+          <group name="metarig001" rotation={[0, 1.507, 0]} scale={0.121}>
+            <primitive object={nodes.spine} />
+          </group>
+          
+          {/* 감 아저씨 */}
 
-
-          {/* <group name="Head" position={[-0.29, 0.161, -0.837]}>
-            <mesh name="Cube008" geometry={nodes.Cube008.geometry} material={materials['Material.008']} />
-            <mesh name="Cube008_1" geometry={nodes.Cube008_1.geometry} material={materials['Material.010']} />
-            <mesh name="Cube008_2" geometry={nodes.Cube008_2.geometry} material={materials['Material.005']} />
-            <mesh name="Cube008_3" geometry={nodes.Cube008_3.geometry} material={materials['Material.004']} />
-            <mesh name="Cube008_4" geometry={nodes.Cube008_4.geometry} material={materials['Material.006']} />
-            <mesh name="Cube008_5" geometry={nodes.Cube008_5.geometry} material={materials['Material.007']} />
-            <mesh name="Cube008_6" geometry={nodes.Cube008_6.geometry} material={materials['Material.011']} />
-            <mesh name="Cube008_7" geometry={nodes.Cube008_7.geometry} material={materials['Material.014']} />
-            <mesh name="Cube008_8" geometry={nodes.Cube008_8.geometry} material={materials['Material.015']} />
-            <mesh name="Cube008_9" geometry={nodes.Cube008_9.geometry} material={materials['Material.009']} />
-            <mesh name="Cube008_10" geometry={nodes.Cube008_10.geometry} material={materials['Material.016']} />
-          </group> */}
-
-
-        </mesh>
+          <group ref={gamRef} name="Cube008">
+            <skinnedMesh name="Cube004_1" geometry={nodes.Cube004_1.geometry} material={materials['Material.031']} skeleton={nodes.Cube004_1.skeleton} morphTargetDictionary={nodes.Cube004_1.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_1.morphTargetInfluences} />
+            <skinnedMesh name="Cube004_2" geometry={nodes.Cube004_2.geometry} material={materials['Material.032']} skeleton={nodes.Cube004_2.skeleton} morphTargetDictionary={nodes.Cube004_2.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_2.morphTargetInfluences} />
+            <skinnedMesh name="Cube004_3" geometry={nodes.Cube004_3.geometry} material={materials['Material.033']} skeleton={nodes.Cube004_3.skeleton} morphTargetDictionary={nodes.Cube004_3.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_3.morphTargetInfluences} />
+            <skinnedMesh name="Cube004_4" geometry={nodes.Cube004_4.geometry} material={materials['Material.034']} skeleton={nodes.Cube004_4.skeleton} morphTargetDictionary={nodes.Cube004_4.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_4.morphTargetInfluences} />
+            <skinnedMesh name="Cube004_5" geometry={nodes.Cube004_5.geometry} material={materials['Material.035']} skeleton={nodes.Cube004_5.skeleton} morphTargetDictionary={nodes.Cube004_5.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_5.morphTargetInfluences} />
+            <skinnedMesh name="Cube004_6" geometry={nodes.Cube004_6.geometry} material={materials['Material.036']} skeleton={nodes.Cube004_6.skeleton} morphTargetDictionary={nodes.Cube004_6.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_6.morphTargetInfluences} />
+            <skinnedMesh name="Cube004_7" geometry={nodes.Cube004_7.geometry} material={materials['Material.037']} skeleton={nodes.Cube004_7.skeleton} morphTargetDictionary={nodes.Cube004_7.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_7.morphTargetInfluences} />
+            <skinnedMesh name="Cube004_8" geometry={nodes.Cube004_8.geometry} material={materials['Material.038']} skeleton={nodes.Cube004_8.skeleton} morphTargetDictionary={nodes.Cube004_8.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_8.morphTargetInfluences} />
+            <skinnedMesh name="Cube004_9" geometry={nodes.Cube004_9.geometry} material={materials['Material.040']} skeleton={nodes.Cube004_9.skeleton} morphTargetDictionary={nodes.Cube004_9.morphTargetDictionary} morphTargetInfluences={nodes.Cube004_9.morphTargetInfluences} />
+          </group>
+        </group>
         <mesh name="Plane003" geometry={nodes.Plane003.geometry} material={materials['Material.002']} position={[0.007, 0.278, -0.098]} rotation={[0, 0, -Math.PI / 2]} />
         <mesh name="Plane004" geometry={nodes.Plane004.geometry} material={materials['Material.003']} position={[-0.298, -0.367, -0.161]} rotation={[0, 0, -Math.PI / 2]} scale={[1, 0.972, 1]} />
         <mesh name="Plane005" geometry={nodes.Plane005.geometry} material={materials['Material.002']} position={[0.007, 0.03, -0.061]} rotation={[0, 0, -Math.PI / 2]} />
-        <group name="Cube" position={[0.084, -0.359, -0.086]} scale={[1.023, 1, 1]}>
-          <mesh name="Cube003_1" geometry={nodes.Cube003_1.geometry} material={materials['Material.013']} />
-          <mesh name="Cube003_2" geometry={nodes.Cube003_2.geometry} material={materials['Material.012']} />
-        </group>
-        <mesh name="Plane007" geometry={nodes.Plane007.geometry} material={materials['Material.027']} position={[0.748, 0.052, -0.098]} rotation={[0, 0, -Math.PI / 2]} />
         <mesh name="Plane008" geometry={nodes.Plane008.geometry} material={materials['Material.002']} position={[0.748, 0.278, -0.098]} rotation={[0, 0, -Math.PI / 2]} />
         <mesh name="Plane009" geometry={nodes.Plane009.geometry} material={materials['Material.003']} position={[0.443, -0.367, -0.161]} rotation={[0, 0, -Math.PI / 2]} scale={[1, 0.972, 1]} />
         <mesh name="Plane010" geometry={nodes.Plane010.geometry} material={materials['Material.002']} position={[0.748, 0.03, -0.061]} rotation={[0, 0, -Math.PI / 2]} />
@@ -76,31 +80,33 @@ export const Escalator = forwardRef(({ onLoaded, onGamzaRef, innerWallMaterial, 
           <mesh name="Cube005_1" geometry={nodes.Cube005_1.geometry} material={materials['Material.026']} />
           <mesh name="Cube005_2" geometry={nodes.Cube005_2.geometry} material={materials['Material.044']} />
         </group>
-        <group name="Cylinder006" position={[1.804, -0.385, -0.51]} rotation={[Math.PI, -1.458, Math.PI]} scale={0.355}>
+        
+        <group name="Cylinder001" position={[-1.445, -0.48, 0.735]} rotation={[-Math.PI, 1.397, -Math.PI]} scale={0.26}>
+          <mesh name="Cylinder007" geometry={nodes.Cylinder007.geometry} material={materials['Material.020']} />
+          <mesh name="Cylinder007_1" geometry={nodes.Cylinder007_1.geometry} material={materials['Material.021']} />
+          <mesh name="Cylinder007_2" geometry={nodes.Cylinder007_2.geometry} material={materials['Material.022']} />
+        </group>
+        <group name="Cylinder003" position={[1.58, -0.48, -1.811]} rotation={[0, -0.834, 0]} scale={0.26}>
+          <mesh name="Cylinder008" geometry={nodes.Cylinder008.geometry} material={materials['Material.020']} />
+          <mesh name="Cylinder008_1" geometry={nodes.Cylinder008_1.geometry} material={materials['Material.021']} />
+          <mesh name="Cylinder008_2" geometry={nodes.Cylinder008_2.geometry} material={materials['Material.022']} />
+        </group>
+        <group name="Cylinder004" position={[1.975, -0.48, -1.28]} rotation={[0, -0.876, 0]} scale={0.26}>
+          <mesh name="Cylinder009" geometry={nodes.Cylinder009.geometry} material={materials['Material.020']} />
+          <mesh name="Cylinder009_1" geometry={nodes.Cylinder009_1.geometry} material={materials['Material.021']} />
+          <mesh name="Cylinder009_2" geometry={nodes.Cylinder009_2.geometry} material={materials['Material.022']} />
+        </group>
+        <group name="Cylinder005" position={[-1.044, -0.48, 1.454]} rotation={[0, 1.139, 0]} scale={0.26}>
+          <mesh name="Cylinder010" geometry={nodes.Cylinder010.geometry} material={materials['Material.020']} />
+          <mesh name="Cylinder010_1" geometry={nodes.Cylinder010_1.geometry} material={materials['Material.021']} />
+          <mesh name="Cylinder010_2" geometry={nodes.Cylinder010_2.geometry} material={materials['Material.022']} />
+        </group>
+        <group name="Cylinder006" position={[1.896, -0.48, -0.491]} rotation={[Math.PI, -1.458, Math.PI]} scale={0.26}>
           <mesh name="Cylinder011" geometry={nodes.Cylinder011.geometry} material={materials['Material.020']} />
           <mesh name="Cylinder011_1" geometry={nodes.Cylinder011_1.geometry} material={materials['Material.021']} />
           <mesh name="Cylinder011_2" geometry={nodes.Cylinder011_2.geometry} material={materials['Material.022']} />
-          <group name="Cylinder001" position={[5.352, 0, 9.169]} rotation={[Math.PI, -0.287, Math.PI]}>
-            <mesh name="Cylinder007" geometry={nodes.Cylinder007.geometry} material={materials['Material.020']} />
-            <mesh name="Cylinder007_1" geometry={nodes.Cylinder007_1.geometry} material={materials['Material.021']} />
-            <mesh name="Cylinder007_2" geometry={nodes.Cylinder007_2.geometry} material={materials['Material.022']} />
-          </group>
-          <group name="Cylinder003" position={[-3.589, 0, 1.301]} rotation={[0, 0.85, 0]}>
-            <mesh name="Cylinder008" geometry={nodes.Cylinder008.geometry} material={materials['Material.020']} />
-            <mesh name="Cylinder008_1" geometry={nodes.Cylinder008_1.geometry} material={materials['Material.021']} />
-            <mesh name="Cylinder008_2" geometry={nodes.Cylinder008_2.geometry} material={materials['Material.022']} />
-          </group>
-          <group name="Cylinder004" position={[-2.231, 0, 0.029]} rotation={[0, 0.808, 0]}>
-            <mesh name="Cylinder009" geometry={nodes.Cylinder009.geometry} material={materials['Material.020']} />
-            <mesh name="Cylinder009_1" geometry={nodes.Cylinder009_1.geometry} material={materials['Material.021']} />
-            <mesh name="Cylinder009_2" geometry={nodes.Cylinder009_2.geometry} material={materials['Material.022']} />
-          </group>
-          <group name="Cylinder005" position={[7.04, 0, 7.267]} rotation={[-Math.PI, 0.319, -Math.PI]}>
-            <mesh name="Cylinder010" geometry={nodes.Cylinder010.geometry} material={materials['Material.020']} />
-            <mesh name="Cylinder010_1" geometry={nodes.Cylinder010_1.geometry} material={materials['Material.021']} />
-            <mesh name="Cylinder010_2" geometry={nodes.Cylinder010_2.geometry} material={materials['Material.022']} />
-          </group>
         </group>
+
         <group name="Cube005">
           <mesh name="Cube007_1" geometry={nodes.Cube007_1.geometry} material={materials['Material.012']} />
           <mesh name="Cube007_2" geometry={nodes.Cube007_2.geometry} material={materials.Material} />
@@ -111,6 +117,24 @@ export const Escalator = forwardRef(({ onLoaded, onGamzaRef, innerWallMaterial, 
         <mesh name="Cube002" geometry={nodes.Cube002.geometry} material={materials.Material} />
         <mesh name="Cube001" geometry={nodes.Cube001.geometry} material={materials['Material.018']} position={[-1.656, -0.686, -1.282]} scale={0.122} />
         <mesh name="Cube003" geometry={nodes.Cube003.geometry} material={materials['Material.018']} position={[-1.656, -0.686, -1.282]} rotation={[0, Math.PI / 2, 0]} scale={0.122} />
+        <mesh name="Plane007" geometry={nodes.Plane007.geometry} material={materials['Material.041']} position={[0.748, 0.052, -0.098]} rotation={[0, 0, -Math.PI / 2]} />
+        <mesh name="Plane" geometry={nodes.Plane.geometry} material={materials['Material.042']} position={[-0.035, 0.035, -0.07]}>
+          {/* 감자 */}
+ 
+          <group ref={gamzaRef}  name="Head" position={[-0.29, 0.622, -0.837]} scale={0.037}>
+            <mesh name="Cube001_1" geometry={nodes.Cube001_1.geometry} material={materials['Material.043']} />
+            <mesh name="Cube001_2" geometry={nodes.Cube001_2.geometry} material={materials['Material.045']} />
+            <mesh name="Cube001_3" geometry={nodes.Cube001_3.geometry} material={materials['Material.046']} />
+            <mesh name="Cube001_4" geometry={nodes.Cube001_4.geometry} material={materials['Material.047']} />
+            <mesh name="Cube001_5" geometry={nodes.Cube001_5.geometry} material={materials['Material.048']} />
+            <mesh name="Cube001_6" geometry={nodes.Cube001_6.geometry} material={materials['Material.049']} />
+            <mesh name="Cube001_7" geometry={nodes.Cube001_7.geometry} material={materials['Material.050']} />
+            <mesh name="Cube001_8" geometry={nodes.Cube001_8.geometry} material={materials['Material.051']} />
+            <mesh name="Cube001_9" geometry={nodes.Cube001_9.geometry} material={materials['Material.052']} />
+            <mesh name="Cube001_10" geometry={nodes.Cube001_10.geometry} material={materials['Material.053']} />
+            <mesh name="Cube001_11" geometry={nodes.Cube001_11.geometry} material={materials['Material.054']} />
+          </group>
+        </mesh>
       </group>
     </group>
   )

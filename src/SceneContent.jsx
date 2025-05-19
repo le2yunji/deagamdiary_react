@@ -99,7 +99,7 @@ export default function SceneContent({
     const dz = pos.z - destination.z;
     const distance = Math.sqrt(dx * dx + dz * dz);
 
-    if (distance < 0.3) {
+    if (distance < 0.5) {
       hasArrived.current = true;
 
       const startGuideBtn2 = document.getElementById('start-guide-btn2');
@@ -176,7 +176,7 @@ useFrame(() => {
     const endingScreen = document.getElementById('ending-screen');
     const endingVideo = document.getElementById('ending-video'); // ✅ 여기에 선언 추가!
 
-    if (z > 120 && endingScreen) {
+    if (z > 200 && endingScreen) {
       hasEnded.current = true; // ✅ 한 번만 실행
       endingScreen.style.display = 'block'; // 끝 화면 보이기
                 

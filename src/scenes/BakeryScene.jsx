@@ -165,9 +165,7 @@ export default function BakeryScene({
           ease: "expo.inOut",
         });
 
-        // setTimeout(() => {
-        //   addLight()
-        // }, 800)
+      
 
         const bakeryAnim = bakeryActions.current?.["Scene"]
         bakeryAnim.reset().play();
@@ -180,6 +178,32 @@ export default function BakeryScene({
         const bamGogumaAnim = bamGogumaActions.current?.["Scene"]
         bamGogumaAnim.reset().play();
         bamGogumaAnim.timeScale = 0.7;
+
+        setTimeout(() => {
+  
+          animateCamera({
+            position: { x: 30, y: 6, z: -33},
+            lookAt: [30, 2, -37],
+            zoom: 40,
+            duration: 3,
+            near: -100,
+            far: 50,
+          });
+
+        }, 10000)
+
+        setTimeout(() => {
+  
+          animateCamera({
+            position: { x: 30, y: 3.2, z: -35},
+            lookAt: [30, 2, -37],
+            zoom: 50,
+            duration: 2,
+            near: -100,
+            far: 50,
+          });
+
+        }, 15000)
 
         setTimeout(() => {
           triggerCloudEffect()

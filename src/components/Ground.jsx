@@ -26,7 +26,7 @@ export default function Ground({ onClickGround }) {
   texture.repeat.y = 60;
   texture.premultiplyAlpha = true;
 
-  const texture2 = useTexture('/assets/images/road.png');
+  const texture2 = useTexture('/assets/images/road_arrow.png');
   // texture2.colorSpace = THREE.SRGBColorSpace;
   // texture2.needsUpdate = true;
   // texture2.premultiplyAlpha = true;
@@ -104,7 +104,7 @@ useEffect(() => {
     svgGroup.scale.set(0.1, 0.1, 0.1);       // 사이즈 조정
     svgGroup.rotation.x = -Math.PI / 2;      // 바닥에 눕히기
     svgGroup.position.set(0, 0.01, 0);        // 살짝 띄우기
-    groupRef.current.add(svgGroup);
+    if (groupRef.current) groupRef.current.add(svgGroup);
   });
 }, []);
 
@@ -137,7 +137,7 @@ useEffect(() => {
 
      <mesh
        rotation={[-Math.PI / 2, 0, 0]}
-       position={[3, 0.002, 0]}
+       position={[0, 0.002, 100]}
       //  receiveShadow
        onPointerDown={handlePointerDown}
        onPointerMove={handlePointerMove}
