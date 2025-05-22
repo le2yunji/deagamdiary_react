@@ -118,9 +118,17 @@ import {
         const playerPosXZ = new Vector3(playerRef.current.position.x, 0, playerRef.current.position.z);
         const spotPosXZ = new Vector3(mailSpotMeshPosition.x, 0, mailSpotMeshPosition.z);
         const dist = playerPosXZ.distanceTo(spotPosXZ);
-
+        
+        const mailScript = document.getElementById('mail-script')
+        mailScript.style.display = 'none'
+    
+        if (dist < 15 && !triggered) {
+          mailScript.style.display = 'block'
+        }
         // 일정 거리 이내에 도달하면 이벤트 트리거
         if (dist < 1.5) {
+          mailScript.style.display = 'none'
+
           // if (bgAudio) bgAudio.pause(); //📢
           setTriggered(true);
           setDisableMovement(true)

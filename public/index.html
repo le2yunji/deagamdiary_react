@@ -89,6 +89,32 @@
     </div>
 
 
+    <div class="script" id="cafe-script" style="display: none;">
+      <img src="./assets/images/cafe_script.png" alt="카페 자막">
+    </div>
+    <div class="script" id="classroom-script" style="display: none;">
+      <img src="./assets/images/classroom_script.png" alt="클래스룸 자막">
+    </div>
+    <div class="script" id="nomoney-script" style="display: none;">
+      <img src="./assets/images/nomoney_script.png" alt="노머니 자막">
+    </div>
+    <div class="script" id="alba-script" style="display: none;">
+      <img src="./assets/images/alba_script.png" alt="알바 자막">
+    </div>
+    <div class="script" id="bakery-script" style="display: none;">
+      <img src="./assets/images/bakery_script.png" alt="베이커리 자막">
+    </div>
+    <div class="script" id="gpt-script" style="display: none;">
+      <img src="./assets/images/gpt_script.png" alt="지피티 자막">
+    </div>
+    <div class="script" id="mail-script" style="display: none;">
+      <img src="./assets/images/mail_script.png" alt="메일 자막">
+    </div>
+    <div class="script" id="house-script" style="display: none;">
+      <img src="./assets/images/house_script.png" alt="하우스 자막">
+    </div>
+
+
     <div class="alba-poster" id="gamza-poster" style="display:none;"   
     onclick="this.style.display='none'; window.dispatchEvent(new CustomEvent('PosterClosed', { detail: 'GamzaMemo' }))"
   >
@@ -118,12 +144,28 @@
   >
     <img src="./assets/images/SushiPoster.png" alt="스시 알바 포스터">
   </div>
-  
+
+      <div id="blackout-overlay" style="
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: black;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1000;
+      transition: opacity 1.5s ease-in;
+    "></div>
+
     <div id="ending-screen">
       <video autoplay muted playsinline id="ending-video" >
         <source src="/assets/video/ending.webm" type="video/webm" />
         <source src="/assets/video/ending.mp4" type="video/mp4" />
       </video>
+    </div>
+
+    <div class="after-game scroll-hidden" id="after-game" style="display: none;" >
+      <img src="./assets/images/oummt_web.png" alt="비하인드 미니 웹">
     </div>
 
 

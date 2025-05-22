@@ -2,15 +2,13 @@
 import { useRef, useState, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
-
 import {
-  PointLight, DirectionalLight,
-  Vector3,
   PlaneGeometry,
   MeshBasicMaterial,
   Mesh,
   TextureLoader,
-  Raycaster,
+  Vector3,
+  SRGBColorSpace,
   Clock
 } from 'three';
 
@@ -85,15 +83,95 @@ export default function ClassroomScene({
   const [slides, setSlides] = useState([]);
   const [talks, setTalks] = useState([]);
   const [timerMesh, setTimerMesh] = useState(null);
+
   const clock = useRef(new Clock()).current;
+  
   const [showGamzaArrow, setShowGamzaArrow] = useState(false);
   const slideStarted = useRef(false)
+
   const bgAudio = document.getElementById("bg-audio");
   const classAudioRef = useRef();
+  const presentAudioRef = useRef();
+  const bbongAudioRef = useRef();
+
+
   const cloudRef = useRef()
 
   const ClassroomSpotMeshPosition = new Vector3(-99, 0.005, -70);
   const classTexture = useTexture('/assets/images/classTrigger.png');
+
+const gsu = useRef();
+const gsuPosition = new Vector3(-107, 3, -78); // -10.5  
+
+ // ✅ 이미지 텍스처 로드
+ const gsuTexture = useTexture('/assets/images/gsu.webp');
+ const anTexture = useTexture('/assets/images/an.webp');
+
+ useEffect(() => {
+  if (gsuTexture) {
+    gsuTexture.colorSpace = THREE.SRGBColorSpace;
+    gsuTexture.anisotropy = 16;
+    // gsuTexture.flipY = false;
+    gsuTexture.needsUpdate = true;
+  }
+}, [gsuTexture]);
+
+// useEffect(() => {
+//   const loader = new THREE.TextureLoader();
+//   loader.load('/assets/images/gsu.webp', (texture) => {
+//     texture.colorSpace = THREE.SRGBColorSpace;
+//     texture.needsUpdate = true;
+
+//     const material = new THREE.MeshBasicMaterial({
+//       map: texture,
+//       transparent: true,
+//       alphaTest: 0.5,
+//       // depthWrite: false,
+//     });
+
+//     const geometry = new THREE.PlaneGeometry(2, 1.2);
+//     const mesh = new THREE.Mesh(geometry, material);
+//     mesh.position.set(-107, 3, -78);
+//     mesh.rotation.y = THREE.MathUtils.degToRad(30);
+//     mesh.scale.set(5, 10, 5);
+//     mesh.visible = true;
+//     mesh.receiveShadow = true;
+//     mesh.castShadow = true;
+
+//     scene.add(mesh);
+//     gsu.current = mesh;
+//   });
+// }, []);
+
+
+// const an = useRef();
+// useEffect(() => {
+//   const loader = new THREE.TextureLoader();
+//   loader.load('/assets/images/an.webp', (texture) => {
+//     texture.colorSpace = THREE.SRGBColorSpace;
+//     texture.needsUpdate = true;
+
+//     const material = new THREE.MeshBasicMaterial({
+//       map: texture,
+//       transparent: true,
+//       alphaTest: 0.5,
+//       // depthWrite: false,
+//     });
+
+//     const geometry = new THREE.PlaneGeometry(10, 10);
+//     const mesh = new THREE.Mesh(geometry, material);
+//     mesh.position.set(-95, 3, -80);
+
+//     mesh.rotation.y = THREE.MathUtils.degToRad(10);
+//     mesh.scale.set(0.7, 1, 0.7);
+//     mesh.visible = true;
+//     mesh.receiveShadow = true;
+//     mesh.castShadow = true;
+
+//     scene.add(mesh);
+//     an.current = mesh;
+//   });
+// }, []);
 
   const pptClickRef = useRef();
   const pptClickMeshPosition = new Vector3(-92.1, 6.8, -69.5);
@@ -232,6 +310,8 @@ export default function ClassroomScene({
   // 🌈 🪧 슬라이드 쇼 시작 
   const startSlideShow = () => {
     if (!slides.length) return;
+    classAudioRef.current?.play();
+    presentAudioRef.current?.play();
     pptClickRef.current.visible = false
     animateTalkBubbles();
     let index = 0;
@@ -313,11 +393,8 @@ export default function ClassroomScene({
             
                 setTimeout(() => {
                   restorePlayerAfterClass()
-                }, 4000)
+                }, 10000)
       
-
-                
-
                 return; // ✅ 종료
               }
               animateSlide(); // 다음 슬라이드 호출
@@ -333,6 +410,9 @@ export default function ClassroomScene({
   // ✅ 클래스룸 인터랙션 끝 완료
   const restorePlayerAfterClass = () => {
 
+    classAudioRef.current.stop();
+    bbongAudioRef.current.stop();
+    presentAudioRef.current.stop();
 
     restoreMainCamera(setCameraActive, setUseSceneCamera);
     playerRef.current.visible = true;
@@ -353,10 +433,20 @@ export default function ClassroomScene({
 
   // ✅ 클래스룸 스팟 매쉬 도달 시 / 시작
   useFrame(() => {
+    const classroomScript = document.getElementById('classroom-script')
+    if (!triggered.current && playerRef.current) classroomScript.style.display = 'none'
+
+
     if (!playerRef.current || triggered.current) return;
-    
       const dist = playerRef.current.position.clone().setY(0).distanceTo(ClassroomSpotMeshPosition);
+
+  
+      if (dist < 25 && !triggered.current) {
+        classroomScript.style.display = 'block'
+      }
+
       if (dist < 3 && !triggered.current) {
+        classroomScript.style.display = 'none'
 
         // Entered.current = true
         if (bgAudio) bgAudio.pause(); //📢
@@ -378,6 +468,7 @@ export default function ClassroomScene({
         });
 
         setTimeout(() => {
+          bbongAudioRef.current?.play()
           gsap.to(classroomGamzaRef.current.scale, { 
             x: 5.6, 
             y: 5.6, 
@@ -385,13 +476,17 @@ export default function ClassroomScene({
             duration: 0.3, 
             ease: "power3.inOut" 
           });
-          gsap.to(onionRef.current.scale, { 
-            x: 5.6, 
-            y: 5.6, 
-            z: 5.6, 
-            duration: 0.3, 
-            ease: "power3.inOut" 
-          });
+          setTimeout(() => {
+            bbongAudioRef.current?.play()
+            gsap.to(onionRef.current.scale, { 
+              x: 5.6, 
+              y: 5.6, 
+              z: 5.6, 
+              duration: 0.3, 
+              ease: "power3.inOut" 
+            });
+          }, 500)
+
           
           const onionAnimation = onionActions.current["Scene"]
           onionAnimation.timeScale = 0.65;
@@ -563,13 +658,47 @@ export default function ClassroomScene({
         }}        
         onClick={ handleClassroomClick }
       />
+
       <ManualAudioPlayer
         ref={classAudioRef}
-        url="/assets/audio/classroomScene.mp3"
+        url="/assets/audio/classScene_bgm.mp3"
         volume={1}
         loop={false}
         position={[-96, 2, -66]}
       />
+      <ManualAudioPlayer
+        ref={presentAudioRef}
+        url="/assets/audio/classScene_daegam_talk.mp3"
+        volume={1}
+        loop={false}
+        position={[-96, 2, -66]}
+      />
+      <ManualAudioPlayer
+        ref={bbongAudioRef}
+        url="/assets/audio/classScene_onion_daegam.mp3"
+        volume={1}
+        loop={false}
+        position={[-96, 2, -66]}
+      />
+
+      {/* <mesh
+        name="gsu"
+        ref={gsu} // ✅ ref 연결
+        position={gsuPosition}
+        rotation={[ 0, Math.PI / 4, 0]}
+        receiveShadow
+        castShadow
+      >
+        <planeGeometry args={[8, 8]} />
+        <meshStandardMaterial
+          map={gsuTexture}
+          transparent={true}
+          alphaTest={0.5}
+          // depthWrite={true}
+          premultipliedAlpha={true} // ✅ 핵심 옵션!
+        />
+      </mesh> */}
+      
       <mesh
         name="classroomSpot"
         ref={classroomSpotRef}

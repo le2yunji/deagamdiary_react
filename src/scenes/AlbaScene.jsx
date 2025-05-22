@@ -195,6 +195,14 @@ export default function AlbaScene({
         playerRef.current.position.z
       ).distanceTo(new Vector3(AlbaSpotMeshPosition.x, 0, AlbaSpotMeshPosition.z));
 
+      const albaScript = document.getElementById('alba-script')
+      albaScript.style.display = 'none'
+  
+      if (dist < 25 && !triggered) {
+        albaScript.style.display = 'block'
+      }
+  
+
       if (dist < 2) {
         setTriggered(true);
         setDisableMovement(true);

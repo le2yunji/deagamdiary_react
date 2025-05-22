@@ -85,25 +85,6 @@ export default function CafeScene({
   ];
 
 
-
-  // 카페 가이드💬
-  const cafeGuide = useRef();
-  useEffect(() => {
-    const texture = new THREE.TextureLoader().load('/assets/images/cafeGuide.png');
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.needsUpdate = true;
-    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
-    const geometry = new THREE.PlaneGeometry(10, 10);
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(playerRef.current.position.x, playerRef.current.position.y + 7, playerRef.current.position.z);
-    mesh.rotation.y = THREE.MathUtils.degToRad(5);
-    mesh.scale.set(1, 1, 1); // 아주 작게 시작
-    mesh.visible = false;
-    scene.add(mesh);
-    cafeGuide.current = mesh;
-  }, [scene]);
-
-
   // 커피 그림
   useEffect(() => {
     const geometry = new PlaneGeometry(4, 6);
@@ -184,21 +165,19 @@ const animateDrinkCoffee = () => {
         playerRef.current.position.x, 0, playerRef.current.position.z
       ).distanceTo(new Vector3(CafeSpotMeshPosition.x, 0, CafeSpotMeshPosition.z));
 
+      const cafeScript = document.getElementById('cafe-script')
+      cafeScript.style.display = 'none'
 
-      if (dist < 30 && !triggered) {
-        cafeGuide.current.visible = true;
-        cafeGuide.current.position.x = playerRef.current.position.x
-        cafeGuide.current.position.y = playerRef.current.position.y + 7
-        cafeGuide.current.position.z = playerRef.current.position.z
+      if (dist < 25 && !triggered) {
+        cafeScript.style.display = 'block'
       }
 
       // 카페 스팟 매쉬 도달시
       if (dist < 3) {
+        cafeScript.style.display = 'none'
 
         if (bgAudio) bgAudio.pause(); //📢
         cafeAudioRef.current?.play();
-
-        cafeGuide.current.visible = false;
 
         triggerCloudEffect();
         disappearPlayer(playerRef);

@@ -96,6 +96,15 @@ export default function ChatGPTScene({
     setTimeout(() => {
       playerRef.current.visible = true;
       playerRef.current.position.set(90.8, 0.3, -6.8);
+      console.log(Object.keys(playerRef.current?.animations || {}));
+
+      const bbyong = playerRef.current?.animations?.["Bbyong"];
+      if (bbyong) {
+        bbyong.reset().setLoop(THREE.LoopOnce, 1);
+        bbyong.clampWhenFinished = true;
+        bbyong.play();
+      }
+      
       playerRef.current.scale.set(0.3, 0.3, 0.3);
       appearPlayer(playerRef, 1.2);
       restoreMainCamera(setCameraActive, setUseSceneCamera);
@@ -119,7 +128,17 @@ export default function ChatGPTScene({
         playerRef.current.position.x, 0, playerRef.current.position.z
       ).distanceTo(new Vector3(ChatGPTSpotMeshPosition.x, 0, ChatGPTSpotMeshPosition.z));
 
+      const gptScript = document.getElementById('gpt-script')
+      gptScript.style.display = 'none'
+  
+      if (dist < 25 && !triggered) {
+        gptScript.style.display = 'block'
+      }
+
       if (dist < 3) {
+        gptScript.style.display = 'none'
+
+        
         setTriggered(true);
         // if (emotionRef.current) emotionRef.current.visible = false;
         disappearPlayer(playerRef);

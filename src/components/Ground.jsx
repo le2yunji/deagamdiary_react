@@ -52,31 +52,10 @@ export default function Ground({ onClickGround }) {
     point.y = 0.3;
     onClickGround(point);
   };
- // ✅ 이미지 텍스처 로드
- const textureLoader = new TextureLoader();
- const gsuTexture = textureLoader.load('/assets/images/gsu.webp');
- const anTexture = textureLoader.load('/assets/images/an.webp');
 
- [gsuTexture, anTexture].forEach((texture) => {
-   texture.colorSpace = SRGBColorSpace;
-   texture.needsUpdate = true;
- });
 
- // ✅ 이미지 plane 설정
- const imagePlanes = [
-   {
-     texture: gsuTexture,
-     position: new Vector3(-90, 3, -83),
-     rotation: [0, THREE.MathUtils.degToRad(10), 0],
-     size: [15, 15],
-   },
-   {
-     texture: anTexture,
-     position: new Vector3(-118, 3, -68),
-     rotation: [0, THREE.MathUtils.degToRad(30), 0],
-     size: [10, 10],
-   },
- ];
+
+
 
 // ✅ SVG를 geometry로 변환
 useEffect(() => {
@@ -137,13 +116,13 @@ useEffect(() => {
 
      <mesh
        rotation={[-Math.PI / 2, 0, 0]}
-       position={[0, 0.002, 100]}
+       position={[0, 0.002, 10]}
       //  receiveShadow
        onPointerDown={handlePointerDown}
        onPointerMove={handlePointerMove}
        onPointerUp={handlePointerUp}
      >
-       <planeGeometry args={[400, 400]} />
+       <planeGeometry args={[200, 200]} />
        <meshBasicMaterial 
        map={texture2}
        transparent={true}        // ✨ PNG 알파 반영

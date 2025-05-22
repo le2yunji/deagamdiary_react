@@ -17,6 +17,7 @@ body, #root {
 
 /* 소리 버튼 */
 .sound-btn-set {
+  visibility: hidden;
   position: fixed;
   width: 50px;
   height: 50px;
@@ -209,15 +210,29 @@ body, #root {
     cursor: pointer;
   }
   .alba-poster img{
-
     width: 100%;
     height: 100%;
-
-
-
   }
 
-
+  .script {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    cursor: pointer;
+    pointer-events: none;
+  }
+    .script img {
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
 
     #ending-screen {
       position: fixed;
@@ -225,7 +240,7 @@ body, #root {
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 9999;
+      z-index: 9997;
       overflow: hidden;
       display: none;       /* 처음엔 숨김 */
       opacity: 0;           /* 투명도 0으로 시작 */
@@ -245,9 +260,46 @@ body, #root {
       display: block;
       opacity: 1;
       pointer-events: auto;
+      transition: opacity 1.5s ease-in;
+    }
+    #ending-screen.fade-out {
+      opacity: 0;
+      pointer-events: auto;
+      transition: opacity 1.5s ease-in;
     }
 
-    #subway-video {
-      display: none;       /* 처음엔 숨김 */
-
+    
+    .after-game {
+      position: fixed;
+      top: 50%;
+      left: 70%; /* 가로 정렬을 위해 left: 50% */
+      transform: translateX(-50%); /* 가로 중앙 정렬 */
+      /* left: 0; */
+      width: 600px;
+      height: 600px;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      /* overflow-y: scroll; */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border-radius: 10px;
     }
+
+    .after-game img {
+      width: 600px; 
+      height: 5000px;
+    }
+
+    .scroll-hidden {
+      overflow: auto;
+      -ms-overflow-style: none;  /* IE, Edge */
+      scrollbar-width: none;     /* Firefox */
+    }
+    
+    .scroll-hidden::-webkit-scrollbar {
+      display: none;             /* Chrome, Safari */
+    }
+    
+

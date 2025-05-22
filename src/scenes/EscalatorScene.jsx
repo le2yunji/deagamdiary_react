@@ -58,6 +58,8 @@ export default function EscalatorScene({
   const EscalatorSpotMeshPosition = new Vector3(43.5, 0.005, 118);
   const escalatorTexture = useTexture('/assets/images/houseTrigger.png');
 
+  const hasEnded = useRef(false); // ✅ 한 번만 실행
+
   useEffect(() => {
     if (escalatorTexture) {
       escalatorTexture.colorSpace = THREE.SRGBColorSpace;
@@ -126,11 +128,18 @@ export default function EscalatorScene({
     const delta = clock.getDelta();
     escalatorMixer.current?.update(delta);
 
-
     if (!triggered && playerRef.current) {
       const dist = playerRef.current.position.clone().setY(0).distanceTo(EscalatorSpotMeshPosition);
 
+      const houseScript = document.getElementById('house-script')
+      houseScript.style.display = 'none'
+  
+      if (dist < 50 && !triggered) {
+        houseScript.style.display = 'block'
+      }
+
       if (dist < 3.5) {
+        houseScript.style.display = 'none'
         setTriggered(true);
         triggerCloudEffect()
         disappearPlayer(playerRef);
@@ -248,30 +257,54 @@ export default function EscalatorScene({
         }, 1000)
 
 
-     
-
-
-        // setTimeout(() => {
-        //   addLight()
-        // }, 800)
-
-     
-    
-        // setTimeout(() => {
-        //   triggerCloudEffect()
-        //   gsap.to(escalatorGamzaRef.current.scale, {
-        //     x: 0,
-        //     y: 0,
-        //     z: 0,
-        //     duration: 0.5,
-        //     ease: "power3.inOut",
-        //   });
-        // }, 30000);
+        const endingScreen = document.getElementById('ending-screen');
+        const endingVideo = document.getElementById('ending-video'); // ✅ 여기에 선언 추가!
 
         setTimeout(() => {
-        //   restoreMainCamera(setCameraActive, setUseSceneCamera);
-        //   restorePlayerAfterBakery();
-        }, 35000);
+            // 🖤 화면 어두워지게 만들기
+                const blackoutOverlay = document.getElementById('blackout-overlay');
+                if (blackoutOverlay) {
+                    blackoutOverlay.style.opacity = '1'; // 서서히 검정화
+                }
+                setTimeout(() => {
+                    if (endingScreen) {
+                        hasEnded.current = true; // ✅ 한 번만 실행
+                        endingScreen.style.display = 'block'; // 끝 화면 보이기
+                                
+                            // 페이드 인 효과
+                            endingScreen.classList.add('fade-in');
+                
+                            if (endingVideo) {
+                            endingVideo.muted = false; // 혹시 모르니 재확인
+                            endingVideo.play().catch((e) => {
+                                console.warn('Ending video playback failed:', e);
+                            });
+                            }
+
+                            setTimeout(() => {
+    
+                                if (endingScreen) {
+                                            
+                                // 페이드 인 효과
+                                endingScreen.classList.add('fade-out');
+                    
+                                    setTimeout(() => {
+                                        blackoutOverlay.style.opacity = '0.5'; // 서서히 검정화
+                                        endingScreen.style.display = 'none'; // 끝 화면 보이기
+
+                                        const endedWeb = document.getElementById('after-game')
+                                        endedWeb.style.display = "block"
+
+                                    }, 1500)
+                                }
+                            
+                            }, 1230); // 123000
+                    }
+                }, 2000)
+        
+        }, 17000);
+
+  
 
       }
     }

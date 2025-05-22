@@ -20,6 +20,7 @@ const PlayerController = forwardRef(({  lockCamera, destination, cameraRef, disa
   const prevDestinationRef = useRef(null);
   const audioListenerRef = useRef(new AudioListener());
   const audioLoaderRef = useRef(new AudioLoader());
+  const actionsRef = useRef(null); // 💡 actions를 저장할 ref
 
   // 👣 발자국 관련 상태
   const footprints = useRef([]);
@@ -27,8 +28,15 @@ const PlayerController = forwardRef(({  lockCamera, destination, cameraRef, disa
   const lastFootprintPosition = useRef(new Vector3());
   const isLeftFoot = useRef(true);
 
-  useImperativeHandle(ref, () => playerRef.current);
+  // useImperativeHandle(ref, () => playerRef.current);
 
+
+  useImperativeHandle(ref, () => ({
+    ...playerRef.current,
+    animations: actionsRef.current, // ✅ 안전하게 전달
+  }));
+
+  
   useEffect(() => {
     if (playerRef.current) {
       playerRef.current.traverse((child) => {
@@ -76,6 +84,10 @@ const PlayerController = forwardRef(({  lockCamera, destination, cameraRef, disa
     if (hasMoved) {
       moveVec.normalize().multiplyScalar(speed);
       playerPos.add(moveVec);
+
+      playerPos.x = Math.max(-150, Math.min(150, playerPos.x));
+      playerPos.z = Math.max(-150, Math.min(150, playerPos.z));
+
       const angle = Math.atan2(moveVec.z, moveVec.x);
       player.rotation.y = -angle - Math.PI / 2;
       leaveFootprint(player);
@@ -100,6 +112,10 @@ const PlayerController = forwardRef(({  lockCamera, destination, cameraRef, disa
           playerPos.x += Math.cos(angle) * speed;
           playerPos.z += Math.sin(angle) * speed;
         }
+        // ▶ 제한 추가
+        playerPos.x = Math.max(-150, Math.min(150, playerPos.x));
+        playerPos.z = Math.max(-150, Math.min(150, playerPos.z));
+
         player.rotation.y = -angle - Math.PI / 2;
         leaveFootprint(player);
         playAnimation(player, "Walk");
@@ -207,7 +223,13 @@ const PlayerController = forwardRef(({  lockCamera, destination, cameraRef, disa
     }
   };
 
-  return <Player ref={playerRef} />;
+  return <Player
+  ref={playerRef}
+  onLoaded={({ actions }) => {
+    actionsRef.current = actions; // ✅ actions 저장
+  }}
+/>
+;
 });
 
 export default PlayerController;

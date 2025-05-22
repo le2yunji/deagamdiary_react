@@ -51,6 +51,9 @@ export default function NomoneyScene({
   const bgAudio = document.getElementById("bg-audio");
   const nomoneyAudioRef = useRef();
 
+  const nomoneyTalkAudioRef = useRef();
+  const bbongAudioRef= useRef();
+
   const nomoneyTexture = useTexture('/assets/images/noMoneyTrigger.png');
 
   useEffect(() => {
@@ -120,7 +123,7 @@ export default function NomoneyScene({
     appearPlayer(playerRef, 1.2); // 부드럽게 다시 나타남
     nomoneyAudioRef.current?.stop();
     if (bgAudio) bgAudio.volume = 0.2;
-
+    nomoneyTalkAudioRef.current?.stop();
     // // 카메라 복귀
     // returnCameraY(camera)
     // gsap.to(camera, {
@@ -149,8 +152,19 @@ export default function NomoneyScene({
       const playerPosXZ = new Vector3(playerRef.current.position.x, 0, playerRef.current.position.z);
       const spotPosXZ = new Vector3(NomoneySpotMeshPosition.x, 0, NomoneySpotMeshPosition.z);
       const dist = playerPosXZ.distanceTo(spotPosXZ);
+
+      const nomoneyScript = document.getElementById('nomoney-script')
+      nomoneyScript.style.display = 'none'
+
+      if (dist < 20 && !triggered) {
+        nomoneyScript.style.display = 'block'
+      }
+
       // 일정 거리 이내에 도달하면 이벤트 트리거
       if (dist < 3) {
+        nomoneyScript.style.display = 'none'
+
+        bbongAudioRef.current?.play()
         setTriggered(true);
         setDisableMovement(true);
         disappearPlayer(playerRef); // 감자 작아지며 사라짐
@@ -225,6 +239,7 @@ export default function NomoneyScene({
 
         // 말풍선 & gif 표시
         setTimeout(() => {
+          nomoneyTalkAudioRef.current?.play()
           noMoneyText.current.visible = true;
           showGIFOverlay();
         }, 5500)
@@ -293,15 +308,29 @@ export default function NomoneyScene({
    {showCloudEffect && playerRef.current && (
       <CloudEffect 
         position={[
-          playerRef.current.position.x + 0.3, 
-          playerRef.current.position.y + 3,
-          playerRef.current.position.z + 0.8
+          nomoneyGamzaRef.current.position.x , 
+          nomoneyGamzaRef.current.position.y + 3,
+          nomoneyGamzaRef.current.position.z 
         ]}
       />
     )}
      <ManualAudioPlayer
         ref={nomoneyAudioRef}
         url="/assets/audio/nomoneyScene.mp3"
+        volume={3}
+        loop={false}
+        position={[-92, 2, -15]}
+      />
+      <ManualAudioPlayer
+        ref={nomoneyTalkAudioRef}
+        url="/assets/audio/nomoney_money.mp3"
+        volume={3}
+        loop={false}
+        position={[-92, 2, -15]}
+      />
+     <ManualAudioPlayer
+        ref={bbongAudioRef}
+        url="/assets/audio/bbong.wav"
         volume={3}
         loop={false}
         position={[-92, 2, -15]}
@@ -333,7 +362,7 @@ export default function NomoneyScene({
         depthWrite={true}
         premultipliedAlpha={true} // ✅ 핵심 옵션!
       />
-        </mesh>
+      </mesh>
     </group>
   );
 }

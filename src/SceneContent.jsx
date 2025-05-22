@@ -36,7 +36,6 @@ export default function SceneContent({
 
   const cameraRef = useRef();
   // const playerRef = useRef();
-  const hasEnded = useRef(false); // ✅ 한 번만 실행
 
   const setIsEntered = useSetRecoilState(IsEnteredAtom);
 
@@ -173,30 +172,6 @@ useFrame(() => {
     //   camera.lookAt(player.position);
     // }
     const z = playerRef.current?.position.z;
-    const endingScreen = document.getElementById('ending-screen');
-    const endingVideo = document.getElementById('ending-video'); // ✅ 여기에 선언 추가!
-
-    if (z > 200 && endingScreen) {
-      hasEnded.current = true; // ✅ 한 번만 실행
-      endingScreen.style.display = 'block'; // 끝 화면 보이기
-                
-          // 페이드 인 효과
-          endingScreen.classList.add('fade-in');
-
-          if (endingVideo) {
-            endingVideo.muted = false; // 혹시 모르니 재확인
-            endingVideo.play().catch((e) => {
-              console.warn('Ending video playback failed:', e);
-            });
-          }
-
-        // 필요하면 일정 시간 후 페이드 아웃
-        setTimeout(() => {
-          endingScreen.classList.remove('show');
-          // endingScreen.style.display = 'none'; // 나중에 완전히 숨기고 싶으면
-          // ✅ 영상 재생 시도
-        }, 500);
-    }
 
     if (z == null) return;
 

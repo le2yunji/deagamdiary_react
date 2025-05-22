@@ -81,9 +81,12 @@ export default function BakeryScene({
     playerRef.current.visible = true;
     playerRef.current.position.set(23, 0.3, -28);
     playerRef.current.scale.set(0.3, 0.3, 0.3);
+
     appearPlayer(playerRef, 1.2);
+
     setDisableMovement(false);
     // enableMouseEvents();
+
 
     if (bgAudio) bgAudio.play(); //📢
     bakeryAudioRef.current?.stop();
@@ -104,11 +107,18 @@ export default function BakeryScene({
     bakeryGamzaMixer.current?.update(delta);
     bamGogumaMixer.current?.update(delta);
 
-
     if (!triggered && playerRef.current) {
       const dist = playerRef.current.position.clone().setY(0).distanceTo(BakerySpotMeshPosition);
-
+      const bakeryScript = document.getElementById('bakery-script')
+      bakeryScript.style.display = 'none'
+  
+      if (dist < 15 && !triggered) {
+        bakeryScript.style.display = 'block'
+      }
+      
       if (dist < 3.5) {
+        bakeryScript.style.display = 'none'
+
         setTriggered(true);
         disappearPlayer(playerRef);
         setDisableMovement(true);
@@ -165,7 +175,7 @@ export default function BakeryScene({
           ease: "expo.inOut",
         });
 
-      
+        
 
         const bakeryAnim = bakeryActions.current?.["Scene"]
         bakeryAnim.reset().play();
