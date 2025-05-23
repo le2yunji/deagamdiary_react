@@ -62,6 +62,83 @@ export default function BakeryScene({
 
   const BakerySpotMeshPosition = new Vector3(31, 0.005, -38);
   const bakeryTexture = useTexture('/assets/images/bakeryTrigger.png');
+  const bakeryZzal = useRef();
+  const bakeryZzal2 = useRef();
+  const bakeryZzal3 = useRef();
+
+  useEffect(() => {
+    const loader = new THREE.TextureLoader();
+    loader.load('/assets/images/bakery_zzal.png', (texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.needsUpdate = true;
+  
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true,
+        alphaTest: 0.5,
+        // depthWrite: false,
+      });
+  
+      const geometry = new THREE.PlaneGeometry(1.3, 1.2);
+      const mesh = new THREE.Mesh(geometry, material);
+      const mesh2 = new THREE.Mesh(geometry, material);
+
+
+      mesh.position.set(10, 0.05, -43);
+      mesh2.position.set(43, 0.05, -32.5);
+
+      mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+      mesh.rotation.z = THREE.MathUtils.degToRad(30);
+
+      mesh2.rotation.x = THREE.MathUtils.degToRad(-90);
+      mesh2.rotation.z = THREE.MathUtils.degToRad(-30);
+
+      mesh.scale.set(5, 8, 5);
+      mesh2.scale.set(4, 8, 5);
+
+      mesh.visible = true;
+      mesh2.visible = true;
+
+      mesh.receiveShadow = true;
+      mesh.castShadow = true;
+      mesh2.receiveShadow = true;
+      mesh2.castShadow = true;
+
+      scene.add(mesh);
+      scene.add(mesh2);
+
+      bakeryZzal.current = mesh;
+      bakeryZzal2.current = mesh2;
+    });
+  }, []);
+  
+  useEffect(() => {
+    const loader = new THREE.TextureLoader();
+    loader.load('/assets/images/bakery_zzal2.png', (texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.needsUpdate = true;
+
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true,
+        alphaTest: 0.5,
+        // depthWrite: false,
+      });
+  
+      const geometry = new THREE.PlaneGeometry(1.3, 1.2);
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(43, 0.05, -13.5);
+      mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+      mesh.rotation.z = THREE.MathUtils.degToRad(-30);
+      mesh.scale.set(8, 10, 5);
+      mesh.visible = true;
+      mesh.receiveShadow = true;
+      mesh.castShadow = true;
+      scene.add(mesh);
+      bakeryZzal3.current = mesh;
+    });
+  }, []);
+
 
   useEffect(() => {
     if (bakeryTexture) {
@@ -75,6 +152,9 @@ export default function BakeryScene({
 
   const bgAudio = document.getElementById("bg-audio");
   const bakeryAudioRef = useRef();
+  const bakerySorryAudioRef = useRef();
+  const gogumiAudioRef = useRef();
+
 
   // ✅ 씬 복귀
   const restorePlayerAfterBakery = () => {
@@ -133,7 +213,7 @@ export default function BakeryScene({
           setInitialCameraPose({
             position: [30, 8, -30],
             lookAt: [30, 2, -37],
-            zoom: 30,
+            zoom: 40,
             near: -100,  // ✅ 추가
             far: 50,    // ✅ 추가
           });
@@ -141,7 +221,7 @@ export default function BakeryScene({
           animateCamera({
             position: { x: 30, y: 6, z: -30},
             lookAt: [30, 2, -37],
-            zoom: 35,
+            zoom: 45,
             duration: 3,
             near: -100,
             far: 50,
@@ -175,7 +255,10 @@ export default function BakeryScene({
           ease: "expo.inOut",
         });
 
-        
+        gogumiAudioRef.current.play()
+        setTimeout(() => {
+          bakerySorryAudioRef.current.play()
+        }, 26000)
 
         const bakeryAnim = bakeryActions.current?.["Scene"]
         bakeryAnim.reset().play();
@@ -226,6 +309,8 @@ export default function BakeryScene({
           });
         }, 30000);
 
+
+
         setTimeout(() => {
           restoreMainCamera(setCameraActive, setUseSceneCamera);
           restorePlayerAfterBakery();
@@ -275,6 +360,20 @@ export default function BakeryScene({
       <ManualAudioPlayer
         ref={bakeryAudioRef}
         url="/assets/audio/bakeryScene.mp3"
+        volume={3}
+        loop={false}
+        position={[30, 2, -38]}
+      />
+      <ManualAudioPlayer
+        ref={bakerySorryAudioRef}
+        url="/assets/audio/bakeryScene_sorry.mp3"
+        volume={3}
+        loop={false}
+        position={[30, 2, -38]}
+      />
+      <ManualAudioPlayer
+        ref={gogumiAudioRef}
+        url="/assets/audio/gogumi.mp3"
         volume={3}
         loop={false}
         position={[30, 2, -38]}

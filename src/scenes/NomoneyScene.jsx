@@ -65,6 +65,35 @@ export default function NomoneyScene({
     }
   }, [nomoneyTexture]);
   
+const nomneyZzal = useRef();
+  useEffect(() => {
+    const loader = new THREE.TextureLoader();
+    loader.load('/assets/images/nomoney_zzal.png', (texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.needsUpdate = true;
+
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true,
+        alphaTest: 0.5,
+        // depthWrite: false,
+      });
+  
+      const geometry = new THREE.PlaneGeometry(2, 2);
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(-60, 0.05, 1);
+      mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+      mesh.rotation.z = THREE.MathUtils.degToRad(-10);
+      mesh.scale.set(8, 10, 5);
+      mesh.visible = true;
+      mesh.receiveShadow = true;
+      mesh.castShadow = true;
+      scene.add(mesh);
+      nomneyZzal.current = mesh;
+    });
+  }, []);
+
+
   // 텅장 텍스트 💬
   const noMoneyText = useRef();
   useEffect(() => {
@@ -85,13 +114,13 @@ export default function NomoneyScene({
  // 💭
   const nomoneyTalk = useRef();
   useEffect(() => {
-    const texture = new THREE.TextureLoader().load('/assets/images/talk5.webp');
+    const texture = new THREE.TextureLoader().load('/assets/images/nomoney_talk.webp');
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
-    const geometry = new THREE.PlaneGeometry(8, 5.5);
+    const geometry = new THREE.PlaneGeometry(7, 7);
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(-88, 5, -14.5);
+    mesh.position.set(-87, 6, -14.5);
     mesh.rotation.y = THREE.MathUtils.degToRad(10);
     mesh.visible = false;
     scene.add(mesh);
@@ -124,23 +153,13 @@ export default function NomoneyScene({
     nomoneyAudioRef.current?.stop();
     if (bgAudio) bgAudio.volume = 0.2;
     nomoneyTalkAudioRef.current?.stop();
-    // // 카메라 복귀
-    // returnCameraY(camera)
-    // gsap.to(camera, {
-    //   duration: 1,  
-    //   zoom: 30,    // ✅ 목표 zoom 값
-    //   ease: "expo.inOut", // ✅ 부드러운 감속 애니메이션
-    //   onUpdate: () => {
-    //     camera.updateProjectionMatrix(); // ✅ 변경 사항 반영
-    //   }
-    // });
+
     
     setTimeout(() => {
     // 카메라가 다시 감자를 따라가도록 플레이어 타겟 위치 설정
     setCameraTarget(new Vector3(-83.4, 0, -9.5));  
-    // enableMouseEvents();      // 마우스 이벤트 복원
+  
     }, 1000)
-
   };
 
 
@@ -159,11 +178,10 @@ export default function NomoneyScene({
       if (dist < 20 && !triggered) {
         nomoneyScript.style.display = 'block'
       }
-
+   
       // 일정 거리 이내에 도달하면 이벤트 트리거
       if (dist < 3) {
         nomoneyScript.style.display = 'none'
-
         bbongAudioRef.current?.play()
         setTriggered(true);
         setDisableMovement(true);
@@ -177,7 +195,7 @@ export default function NomoneyScene({
         triggerCloudEffect();
 
 
-        if (bgAudio) bgAudio.volume = 0.03;
+        if (bgAudio) bgAudio.volume = 0.1;
 
         setTimeout(() => {
           nomoneyAudioRef.current?.play();
@@ -200,14 +218,14 @@ export default function NomoneyScene({
           setInitialCameraPose({
             position: [-90, 12, -1.5],
             lookAt: [-92, 3, -11],
-            zoom: 30
+            zoom: 40
           });
 
           // 💡 카메라 이동 + 시선 애니메이션
           animateCamera({
-            position: { x: -90, y: 8, z: -1.5},
+            position: { x: -90, y: 8, z: -2},
             lookAt: [-92, 3, -11],
-            zoom: 60,
+            zoom: 70,
             duration: 1.5
           });
           // gsap.to(camera.position, {
@@ -291,6 +309,7 @@ export default function NomoneyScene({
 
         setTimeout(() => {
           restorePlayerAfterNomoney();
+
         }, 13000);
 
       } 
@@ -317,20 +336,20 @@ export default function NomoneyScene({
      <ManualAudioPlayer
         ref={nomoneyAudioRef}
         url="/assets/audio/nomoneyScene.mp3"
-        volume={3}
+        volume={1.3}
         loop={false}
         position={[-92, 2, -15]}
       />
       <ManualAudioPlayer
         ref={nomoneyTalkAudioRef}
         url="/assets/audio/nomoney_money.mp3"
-        volume={3}
+        volume={1.3}
         loop={false}
         position={[-92, 2, -15]}
       />
      <ManualAudioPlayer
         ref={bbongAudioRef}
-        url="/assets/audio/bbong.wav"
+        url="/assets/audio/bbong.mp3"
         volume={3}
         loop={false}
         position={[-92, 2, -15]}
@@ -351,7 +370,7 @@ export default function NomoneyScene({
         name="nomoneySpot"
         ref={nomoneySpotRef} // ✅ ref 연결
         position={NomoneySpotMeshPosition}
-        rotation={[ -Math.PI/2, 0,  Math.PI]}
+        rotation={[ -Math.PI/2, 0, -Math.PI/1.5]}
         receiveShadow
       >
         <planeGeometry args={[6, 6]} />

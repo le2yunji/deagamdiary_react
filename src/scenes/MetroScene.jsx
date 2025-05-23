@@ -46,6 +46,7 @@ export default function MetroScene({
   const bgAudio = document.getElementById("bg-audio");
   const metroAudioRef = useRef();
 
+  const bbongAudioRef = useRef();
 
 
   const MetroSpotMeshPosition = new Vector3(9, 0.005, -98);
@@ -60,14 +61,35 @@ export default function MetroScene({
     }
   }, [metroTexture]);
 
+  const metroZzal = useRef();
 
-// 초기 위치 설정
-// useEffect(() => {
-//   setInitialCameraPose({
-//     position: [-35, 18, -129],
-//     lookAt: [0, 1, -120]
-//   });
-// }, []);
+  useEffect(() => {
+    const loader = new THREE.TextureLoader();
+    loader.load('/assets/images/metro_zzal.png', (texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.needsUpdate = true;
+
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true,
+        alphaTest: 0.5,
+        // depthWrite: false,
+      });
+  
+      const geometry = new THREE.PlaneGeometry(1.3, 1.2);
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(16.5, 0.05, -71.5);
+      mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+      mesh.rotation.z = THREE.MathUtils.degToRad(0);
+      mesh.scale.set(8, 10, 5);
+      mesh.visible = true;
+      mesh.receiveShadow = true;
+      mesh.castShadow = true;
+      scene.add(mesh);
+      metroZzal.current = mesh;
+    });
+  }, []);
+
 
   useEffect(() => {
     const light = new PointLight('white', 50, 200, 1.5);
@@ -94,7 +116,7 @@ export default function MetroScene({
 
     gsap.to(camera, {
       duration: 0.5,
-      zoom: 30,  
+      zoom: 40,  
       ease: "power2.out",
       onUpdate: () => camera.updateProjectionMatrix(),
     });
@@ -124,6 +146,7 @@ export default function MetroScene({
         // if (bgAudio) bgAudio.pause(); //📢
         if (bgAudio) bgAudio.pause(); //📢
         metroAudioRef.current?.play();
+        bbongAudioRef.current?.play()
 
         setTriggered(true);
         disappearPlayer(playerRef);
@@ -222,9 +245,16 @@ export default function MetroScene({
         
       </mesh>
       <ManualAudioPlayer
+        ref={bbongAudioRef}
+        url="/assets/audio/bbong.mp3"
+        volume={3}
+        loop={false}
+        position={[-7.5, 2, -110]}
+        />
+      <ManualAudioPlayer
           ref={metroAudioRef}
           url="/assets/audio/metroScene.mp3"
-          volume={2}
+          volume={2.3}
           loop={false}
           position={[-7.5, 2, -110]}
         />

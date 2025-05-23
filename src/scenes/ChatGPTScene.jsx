@@ -50,6 +50,8 @@ export default function ChatGPTScene({
   const bgAudio = document.getElementById("bg-audio");
   const gptAudioRef = useRef();
 
+  const bbongAudioRef = useRef();
+
   const ChatGPTSpotMeshPosition = new Vector3(91, 0.005, -17.5);  //(92.5, 0.005, -12.5);
   const gptTexture = useTexture('/assets/images/gptTrigger.png');
 
@@ -61,6 +63,39 @@ export default function ChatGPTScene({
       gptTexture.needsUpdate = true;
     }
   }, [gptTexture]);
+
+
+const gptZzal = useRef()
+
+  useEffect(() => {
+    const loader = new THREE.TextureLoader();
+    loader.load('/assets/images/gpt_zzal.png', (texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.needsUpdate = true;
+
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true,
+        alphaTest: 0.5,
+        // depthWrite: false,
+      });
+  
+      const geometry = new THREE.PlaneGeometry(2, 2);
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(105, 0.05, -6.5);
+      mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+      mesh.rotation.z = THREE.MathUtils.degToRad(0);
+      mesh.scale.set(5, 7, 1);
+      mesh.visible = true;
+      mesh.receiveShadow = true;
+      mesh.castShadow = true;
+      scene.add(mesh);
+      gptZzal.current = mesh;
+    });
+  }, []);
+
+
+
 
 
   useEffect(() => {
@@ -137,7 +172,7 @@ export default function ChatGPTScene({
 
       if (dist < 3) {
         gptScript.style.display = 'none'
-
+        bbongAudioRef.current?.play()
         
         setTriggered(true);
         // if (emotionRef.current) emotionRef.current.visible = false;
@@ -160,14 +195,14 @@ export default function ChatGPTScene({
 
        setInitialCameraPose({
          position: [93, 12, 16],
-         lookAt: [89, 3, -14],
+         lookAt: [89, 2, -14],
          zoom: 40
        });
 
        // 💡 카메라 이동 + 시선 애니메이션
        animateCamera({
          position: { x: 93, y: 12, z: 18 },
-         lookAt: [89, 3, -14],
+         lookAt: [89, 2, -14],
          zoom: 50,
          duration: 1.5
        });
@@ -225,6 +260,14 @@ export default function ChatGPTScene({
      <ManualAudioPlayer
         ref={gptAudioRef}
         url="/assets/audio/gptScene.mp3"
+        volume={3}
+        loop={false}
+        position={[87, 2, -16]}
+      />
+
+    <ManualAudioPlayer
+        ref={bbongAudioRef}
+        url="/assets/audio/bbong.mp3"
         volume={3}
         loop={false}
         position={[87, 2, -16]}

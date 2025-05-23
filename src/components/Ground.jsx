@@ -88,8 +88,6 @@ useEffect(() => {
 }, []);
 
 
-
-
  return (
    <group>
      {/* 🟦 바닥 메쉬 */}
@@ -122,7 +120,7 @@ useEffect(() => {
        onPointerMove={handlePointerMove}
        onPointerUp={handlePointerUp}
      >
-       <planeGeometry args={[200, 200]} />
+       <planeGeometry args={[400, 400]} />
        <meshBasicMaterial 
        map={texture2}
        transparent={true}        // ✨ PNG 알파 반영

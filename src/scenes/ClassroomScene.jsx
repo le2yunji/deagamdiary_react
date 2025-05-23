@@ -93,6 +93,7 @@ export default function ClassroomScene({
   const classAudioRef = useRef();
   const presentAudioRef = useRef();
   const bbongAudioRef = useRef();
+  const bbyongAudioRef = useRef();
 
 
   const cloudRef = useRef()
@@ -100,78 +101,68 @@ export default function ClassroomScene({
   const ClassroomSpotMeshPosition = new Vector3(-99, 0.005, -70);
   const classTexture = useTexture('/assets/images/classTrigger.png');
 
-const gsu = useRef();
-const gsuPosition = new Vector3(-107, 3, -78); // -10.5  
+const classZzal = useRef();
+// const classZzalPosition = new Vector3(-107, 0.05, -78); // -10.5  
 
  // ✅ 이미지 텍스처 로드
- const gsuTexture = useTexture('/assets/images/gsu.webp');
- const anTexture = useTexture('/assets/images/an.webp');
-
- useEffect(() => {
-  if (gsuTexture) {
-    gsuTexture.colorSpace = THREE.SRGBColorSpace;
-    gsuTexture.anisotropy = 16;
-    // gsuTexture.flipY = false;
-    gsuTexture.needsUpdate = true;
-  }
-}, [gsuTexture]);
-
-// useEffect(() => {
-//   const loader = new THREE.TextureLoader();
-//   loader.load('/assets/images/gsu.webp', (texture) => {
-//     texture.colorSpace = THREE.SRGBColorSpace;
-//     texture.needsUpdate = true;
-
-//     const material = new THREE.MeshBasicMaterial({
-//       map: texture,
-//       transparent: true,
-//       alphaTest: 0.5,
-//       // depthWrite: false,
-//     });
-
-//     const geometry = new THREE.PlaneGeometry(2, 1.2);
-//     const mesh = new THREE.Mesh(geometry, material);
-//     mesh.position.set(-107, 3, -78);
-//     mesh.rotation.y = THREE.MathUtils.degToRad(30);
-//     mesh.scale.set(5, 10, 5);
-//     mesh.visible = true;
-//     mesh.receiveShadow = true;
-//     mesh.castShadow = true;
-
-//     scene.add(mesh);
-//     gsu.current = mesh;
-//   });
-// }, []);
+//  const classZzalTexture = useTexture('/assets/images/gsu.webp');
 
 
-// const an = useRef();
-// useEffect(() => {
-//   const loader = new THREE.TextureLoader();
-//   loader.load('/assets/images/an.webp', (texture) => {
-//     texture.colorSpace = THREE.SRGBColorSpace;
-//     texture.needsUpdate = true;
+useEffect(() => {
+  const loader = new THREE.TextureLoader();
+  loader.load('/assets/images/class_zzal.png', (texture) => {
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
 
-//     const material = new THREE.MeshBasicMaterial({
-//       map: texture,
-//       transparent: true,
-//       alphaTest: 0.5,
-//       // depthWrite: false,
-//     });
+    const material = new THREE.MeshBasicMaterial({
+      map: texture,
+      transparent: true,
+      alphaTest: 0.5,
+      // depthWrite: false,
+    });
 
-//     const geometry = new THREE.PlaneGeometry(10, 10);
-//     const mesh = new THREE.Mesh(geometry, material);
-//     mesh.position.set(-95, 3, -80);
+    const geometry = new THREE.PlaneGeometry(2, 1.2);
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(-80, 0.05, -70);
+    mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+    mesh.scale.set(5, 10, 5);
+    mesh.visible = true;
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
 
-//     mesh.rotation.y = THREE.MathUtils.degToRad(10);
-//     mesh.scale.set(0.7, 1, 0.7);
-//     mesh.visible = true;
-//     mesh.receiveShadow = true;
-//     mesh.castShadow = true;
+    scene.add(mesh);
+    classZzal.current = mesh;
+  });
+}, []);
 
-//     scene.add(mesh);
-//     an.current = mesh;
-//   });
-// }, []);
+useEffect(() => {
+  const loader = new THREE.TextureLoader();
+  loader.load('/assets/images/class_zzal2.png', (texture) => {
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+
+    const material = new THREE.MeshBasicMaterial({
+      map: texture,
+      transparent: true,
+      alphaTest: 0.5,
+      // depthWrite: false,
+    });
+
+    const geometry = new THREE.PlaneGeometry(2, 1.2);
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(-110, 0.05, -50);
+    mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+    mesh.rotation.z = THREE.MathUtils.degToRad(30);
+    mesh.scale.set(5, 10, 5);
+    mesh.visible = true;
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
+
+    scene.add(mesh);
+    classZzal.current = mesh;
+  });
+}, []);
+
 
   const pptClickRef = useRef();
   const pptClickMeshPosition = new Vector3(-92.1, 6.8, -69.5);
@@ -447,6 +438,7 @@ const gsuPosition = new Vector3(-107, 3, -78); // -10.5
 
       if (dist < 3 && !triggered.current) {
         classroomScript.style.display = 'none'
+        bbyongAudioRef.current?.play()
 
         // Entered.current = true
         if (bgAudio) bgAudio.pause(); //📢
@@ -518,7 +510,7 @@ const gsuPosition = new Vector3(-107, 3, -78); // -10.5
           setInitialCameraPose({
             position: [-95, 6, -60],
             lookAt: [-96.5, 3, -66],
-            zoom: 30,
+            zoom: 40,
             near: -100,  // ✅ 추가
             far: 50,    // ✅ 추가
           });
@@ -669,7 +661,7 @@ const gsuPosition = new Vector3(-107, 3, -78); // -10.5
       <ManualAudioPlayer
         ref={presentAudioRef}
         url="/assets/audio/classScene_daegam_talk.mp3"
-        volume={1}
+        volume={2}
         loop={false}
         position={[-96, 2, -66]}
       />
@@ -680,25 +672,14 @@ const gsuPosition = new Vector3(-107, 3, -78); // -10.5
         loop={false}
         position={[-96, 2, -66]}
       />
+      <ManualAudioPlayer
+        ref={bbyongAudioRef}
+        url="/assets/audio/bbong.mp3"
+        volume={3}
+        loop={false}
+        position={[-96, 2, -66]}
+      />
 
-      {/* <mesh
-        name="gsu"
-        ref={gsu} // ✅ ref 연결
-        position={gsuPosition}
-        rotation={[ 0, Math.PI / 4, 0]}
-        receiveShadow
-        castShadow
-      >
-        <planeGeometry args={[8, 8]} />
-        <meshStandardMaterial
-          map={gsuTexture}
-          transparent={true}
-          alphaTest={0.5}
-          // depthWrite={true}
-          premultipliedAlpha={true} // ✅ 핵심 옵션!
-        />
-      </mesh> */}
-      
       <mesh
         name="classroomSpot"
         ref={classroomSpotRef}

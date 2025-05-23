@@ -50,6 +50,7 @@ export default function AlbaScene({
   const bgAudio = document.getElementById("bg-audio");
   const ahaAudioRef = useRef();
   const hmmAudioRef = useRef();
+  const bbongAudioRef = useRef();
 
   const gamzaActions = useRef();
   const gamzaMixer = useRef();
@@ -88,7 +89,7 @@ export default function AlbaScene({
 
     gsap.to(camera, {
       duration: 1,
-      zoom: 30,
+      zoom: 40,
       ease: "power2.out",
       onUpdate: () => camera.updateProjectionMatrix(),
     });
@@ -198,12 +199,21 @@ export default function AlbaScene({
       const albaScript = document.getElementById('alba-script')
       albaScript.style.display = 'none'
   
-      if (dist < 25 && !triggered) {
-        albaScript.style.display = 'block'
+      if (dist < 15 && !triggered) {
+        albaScript.style.display = 'none'
       }
   
 
       if (dist < 2) {
+        albaScript.style.display = 'none'
+        bbongAudioRef.current?.play()
+        const posterClick = document.getElementById('click-poster')
+
+        setTimeout(() => {
+          posterClick.style.display = 'block'
+        }, 500);
+      
+
         setTriggered(true);
         setDisableMovement(true);
         if (bgAudio) bgAudio.volume = 0.03;
@@ -258,6 +268,7 @@ export default function AlbaScene({
         }
           setTimeout(() => {
             if (!hasRestoredRef.current) {
+              posterClick.style.display = 'none'
               restoreMainCamera(setCameraActive, setUseSceneCamera);
               restorePlayerAfterAlba();
               hasRestoredRef.current = true;
@@ -317,7 +328,13 @@ export default function AlbaScene({
           loop={false}
           position={[-25, 2, -10]}
         />
-
+        <ManualAudioPlayer
+        ref={bbongAudioRef}
+        url="/assets/audio/bbong.mp3"
+        volume={3}
+        loop={false}
+        position={[87, 2, -16]}
+      />
         {showCloudEffect && albaGamzaRef.current && (
           <CloudEffect
             position={[

@@ -13,6 +13,7 @@ import { Html } from '@react-three/drei';
 import { MailBox } from '../components/MailBox';
 import { MailGamza } from '../components/MailGamza';
 import { File } from '../components/File';
+import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 
 import {
     // downCameraY,
@@ -59,6 +60,10 @@ import {
   
     const [showCloudEffect, setShowCloudEffect] = useState(false);
     const bgAudio = document.getElementById("bg-audio");
+    const gotoendAudio = document.getElementById("bg-audio2");
+
+    const mailAudioRef = useRef();
+    const bbongAudioRef = useRef();
 
     const mailSpotMeshPosition = new Vector3(111, 0.005, 25); // 감자가 도달해야 할 스팟 위치
     const mailTexture = useTexture('/assets/images/mailTrigger.png');
@@ -75,6 +80,38 @@ import {
       }
     }, [mailTexture]);
   
+
+
+const mailZzal = useRef();
+    useEffect(() => {
+      const loader = new THREE.TextureLoader();
+      loader.load('/assets/images/mail_zzal.png', (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.needsUpdate = true;
+  
+        const material = new THREE.MeshBasicMaterial({
+          map: texture,
+          transparent: true,
+          alphaTest: 0.5,
+          // depthWrite: false,
+        });
+    
+        const geometry = new THREE.PlaneGeometry(1.3, 1.2);
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(99, 0.05, 44);
+        mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+        mesh.rotation.z = THREE.MathUtils.degToRad(20);
+        mesh.scale.set(8, 10, 5);
+        mesh.visible = true;
+        mesh.receiveShadow = true;
+        mesh.castShadow = true;
+        scene.add(mesh);
+        mailZzal.current = mesh;
+      });
+    }, []);
+
+
+
  // ⚪️ 구름 이펙트
  const triggerCloudEffect = () => {
   setShowCloudEffect(true);
@@ -102,8 +139,8 @@ import {
       setCameraTarget(new Vector3(99, 0, 25));  
       // enableMouseEvents();      // 마우스 이벤트 복원
       setDisableMovement(false)
-      // if (bgAudio) bgAudio.play(); //📢
-
+      if (bgAudio) bgAudio.pause(); //📢
+      if (gotoendAudio) gotoendAudio.play(); //📢
     };
 
   
@@ -129,6 +166,8 @@ import {
         if (dist < 1.5) {
           mailScript.style.display = 'none'
 
+          bbongAudioRef.current?.play()
+
           // if (bgAudio) bgAudio.pause(); //📢
           setTriggered(true);
           setDisableMovement(true)
@@ -146,7 +185,7 @@ import {
 
             gsap.to(camera, {
               duration: 1,
-              zoom: 45,
+              zoom: 55,
               ease: "power2.out",
               onUpdate: () => camera.updateProjectionMatrix(),
             });
@@ -199,6 +238,10 @@ import {
                 fileAnim.timeScale = 0.6
                 fileAnim.reset().play()
                 // 🔥 Three.js 이벤트에서 GIF 오버레이 실행
+
+                setTimeout(() => {
+                  mailAudioRef.current.play()
+                }, 2500)
 
                 setTimeout(() => {
                   // showGIFOverlay(); // GIF 화면 전체 표시
@@ -280,7 +323,6 @@ import {
             mailgamzaMixer.current = mixer;
           }}
         />
-
       <File
         ref={fileRef}
         position={[111, 0.5, 24.7]}
@@ -302,6 +344,20 @@ import {
         ]}
       />
     )}
+      <ManualAudioPlayer
+        ref={mailAudioRef}
+        url="/assets/audio/mail.mp3"
+        volume={1}
+        loop={false}
+        position={[111, 0.5, 24.7]}
+      />
+        <ManualAudioPlayer
+        ref={bbongAudioRef}
+        url="/assets/audio/bbong.mp3"
+        volume={1}
+        loop={false}
+        position={[111, 0.5, 24.7]}
+      />
   
         {/* ✅ 바닥 클릭 지점 */}
         <mesh

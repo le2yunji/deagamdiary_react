@@ -7,7 +7,7 @@ export default function ScrollZoomController({ active = true }) {
   const scroll = useScroll();
   const { camera } = useThree();
 
-  const minZoom = 25;
+  const minZoom = 30;
   const maxZoom = 50;
 
   useFrame(() => {

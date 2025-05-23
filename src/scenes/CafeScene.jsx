@@ -84,6 +84,39 @@ export default function CafeScene({
     '/assets/images/coffee4.webp',
   ];
 
+  const cafeZzal = useRef();
+
+  useEffect(() => {
+    const loader = new THREE.TextureLoader();
+    loader.load('/assets/images/cafe_zzal.png', (texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.needsUpdate = true;
+
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true,
+        alphaTest: 0.5,
+        // depthWrite: false,
+      });
+  
+      const geometry = new THREE.PlaneGeometry(1.3, 1.2);
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(-22.5, 0.05, -62.5);
+      mesh.rotation.x = THREE.MathUtils.degToRad(-90);
+      mesh.rotation.z = THREE.MathUtils.degToRad(-40);
+      mesh.scale.set(8, 10, 5);
+      mesh.visible = true;
+      mesh.receiveShadow = true;
+      mesh.castShadow = true;
+      scene.add(mesh);
+      cafeZzal.current = mesh;
+    });
+  }, []);
+
+
+
+
+
 
   // 커피 그림
   useEffect(() => {
@@ -215,7 +248,7 @@ const animateDrinkCoffee = () => {
 
           // 커피 2D 애니메이션
           setTimeout(() => {
-            // animateDrinkCoffee()
+            animateDrinkCoffee()
           }, 15000)
         }
 

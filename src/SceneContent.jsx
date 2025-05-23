@@ -204,12 +204,12 @@ useFrame(() => {
   // if (isEntered) {
     return (
       <>
-        <StatsGl className='stats' />
+        {/* <StatsGl className='stats' /> */}
 
         {/* 메인 카메라 */}
         <SceneCameraManager
           position={[1, 5, 5]}
-          zoom={30}  // ✅ Leva에서 조절
+          zoom={40}  // ✅ Leva에서 조절
           makeActive={cameraType === "main"} // <- 무조건 메인 카메라로
           cameraRef={cameraRef}
           playerRef={playerRef}
@@ -219,7 +219,7 @@ useFrame(() => {
       <OrthographicCamera
         ref={sceneCameraRef}
         makeDefault={useSceneCamera} // 상태에 따라 전환
-        zoom={30}  // ✅ Leva에서 조절
+        zoom={40}  // ✅ Leva에서 조절
         near={0.1}
         far={100}
         position={[1, 5, 5]} // 기본값 (바로 덮어씀)

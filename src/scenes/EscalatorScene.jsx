@@ -10,19 +10,8 @@ import { Escalator } from "../components/Escalator";
 import { useTexture } from '@react-three/drei';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 
-
-
 import {
   disappearPlayer,
-//   appearPlayer,
-//   disableMouseEvents,
-  disablePlayerControlEvents,
-//   enableMouseEvents,
-//   downCameraY,
-//   returnCameraY,
-//   showArrow,
-//   hideAllArrows,
-//   createArrows,
 } from '../utils/Common';
 
 export default function EscalatorScene({
@@ -49,13 +38,12 @@ export default function EscalatorScene({
   const escalatorActions = useRef();
 
   const escalatorSpotRef = useRef();
+  const bbongAudioRef = useRef();
 
   const [triggered, setTriggered] = useState(false);
-  const [ovenInteractionReady, setOvenInteractionReady] = useState(false);
   const [showCloudEffect, setShowCloudEffect] = useState(false);
-  const light = new PointLight('white', 3, 200, 1);
 
-  const EscalatorSpotMeshPosition = new Vector3(43.5, 0.005, 118);
+  const EscalatorSpotMeshPosition = new Vector3(43.5, 0.005, 120);
   const escalatorTexture = useTexture('/assets/images/houseTrigger.png');
 
   const hasEnded = useRef(false); // ✅ 한 번만 실행
@@ -70,42 +58,9 @@ export default function EscalatorScene({
   }, [escalatorTexture]);
 
 
-  const bgAudio = document.getElementById("bg-audio");
+  const gotoendAudio = document.getElementById("bg-audio2");
   const escalatorAudioRef = useRef();
-//   const wallTexture = useTexture('/assets/images/innerWall.png');
-
-//   useEffect(() => {
-//     wallTexture.wrapS = THREE.RepeatWrapping;
-//     wallTexture.wrapT = THREE.RepeatWrapping;
-//     wallTexture.repeat.set(1, 1); // 필요 시 조정
-//     wallTexture.flipY = false;
-//     wallTexture.colorSpace = THREE.SRGBColorSpace;
-//     wallTexture.needsUpdate = true;
-//   }, [wallTexture]);
-  
-//   const innerWallMaterial = useMemo(() => {
-//     return new THREE.MeshStandardMaterial({
-//       map: wallTexture,
-//       side: THREE.FrontSide,
-//       transparent: true,
-//     });
-//   }, [wallTexture]);
-  
-  
-//   // ✅ 씬 복귀
-//   const restorePlayerAfterBakery = () => {
-//     playerRef.current.visible = true;
-//     playerRef.current.position.set(23, 0.3, -28);
-//     playerRef.current.scale.set(0.3, 0.3, 0.3);
-//     appearPlayer(playerRef, 1.2);
-//     setDisableMovement(false);
-//     enableMouseEvents();
-
-//     if (bgAudio) bgAudio.play(); //📢
-//     escalatorAudioRef.current?.stop();
-
-//     setCameraTarget(new Vector3(20, 0, -23.5));
-//   };        
+       
 
   // ⚪️ 구름 이펙트
   const triggerCloudEffect = () => {
@@ -139,6 +94,8 @@ export default function EscalatorScene({
       }
 
       if (dist < 3.5) {
+        bbongAudioRef.current?.play()
+
         houseScript.style.display = 'none'
         setTriggered(true);
         triggerCloudEffect()
@@ -147,7 +104,7 @@ export default function EscalatorScene({
         scene.remove(scene.getObjectByName('escalatorSpot'));
         escalatorSpotRef.current.visible = false;
 
-        if (bgAudio) bgAudio.pause(); // 혹은 bgAudio.volume = 0;
+        if (gotoendAudio) gotoendAudio.volume = 0.15; //📢
 
         escalatorAudioRef.current?.play();
 
@@ -200,7 +157,7 @@ export default function EscalatorScene({
           setInitialCameraPose({
             position: [28, 10, 150],
             lookAt: [27, 0, 140],
-            zoom: 35,
+            zoom: 45,
             near: -100,  // ✅ 추가
             far: 50,    // ✅ 추가
           });
@@ -209,7 +166,7 @@ export default function EscalatorScene({
                     animateCamera({
                         position: { x: 28, y: 12, z: 150},
                         lookAt: [27, 0, 140],
-                        zoom: 20,
+                        zoom: 30,
                         duration: 2,
                         near: -100,
                         far: 50,
@@ -219,7 +176,7 @@ export default function EscalatorScene({
                         animateCamera({
                             position: { x: 26, y: 8, z: 150},
                             lookAt: [27, 0, 140],
-                            zoom: 30,
+                            zoom: 40,
                             duration: 4,
                             near: -100,
                             far: 50,
@@ -232,7 +189,7 @@ export default function EscalatorScene({
                             animateCamera({
                                 position: { x: 34, y: 7, z: 157},// { x: 34, y: 7, z: 157},
                                 lookAt: [27, 0, 140],
-                                zoom: 45,
+                                zoom: 55,
                                 duration: 3,
                                 near: -100,
                                 far: 50,
@@ -242,7 +199,7 @@ export default function EscalatorScene({
                                 animateCamera({
                                     position: { x: 35, y: 8, z: 155},
                                     lookAt: [27, 0, 140],
-                                    zoom: 65,
+                                    zoom: 75,
                                     duration: 3,
                                     near: -100,
                                     far: 50,
@@ -265,6 +222,8 @@ export default function EscalatorScene({
                 const blackoutOverlay = document.getElementById('blackout-overlay');
                 if (blackoutOverlay) {
                     blackoutOverlay.style.opacity = '1'; // 서서히 검정화
+                    gotoendAudio.volume = 0
+                    gotoendAudio.pause()
                 }
                 setTimeout(() => {
                     if (endingScreen) {
@@ -289,7 +248,7 @@ export default function EscalatorScene({
                                 endingScreen.classList.add('fade-out');
                     
                                     setTimeout(() => {
-                                        blackoutOverlay.style.opacity = '0.5'; // 서서히 검정화
+                                        blackoutOverlay.style.opacity = '0.7'; // 서서히 검정화
                                         endingScreen.style.display = 'none'; // 끝 화면 보이기
 
                                         const endedWeb = document.getElementById('after-game')
@@ -298,13 +257,11 @@ export default function EscalatorScene({
                                     }, 1500)
                                 }
                             
-                            }, 1230); // 123000
+                            }, 123000); // 123000
                     }
                 }, 2000)
         
         }, 17000);
-
-  
 
       }
     }
@@ -367,6 +324,13 @@ export default function EscalatorScene({
         />
       )} */}
 
+        <ManualAudioPlayer
+        ref={bbongAudioRef}
+        url="/assets/audio/bbong.mp3"
+        volume={3}
+        loop={false}
+        position={[30, 2, -38]}
+      />
 
       <mesh
         name="escalatorSpot"
