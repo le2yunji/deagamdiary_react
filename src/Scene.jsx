@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { PCFSoftShadowMap } from 'three';
 import SceneContent from './SceneContent';
 import  React, { useEffect } from 'react';
+import { shouldPreventPageScroll } from './utils/keyboard';
 import { Loader } from './components/Loader';
 import ScrollZoomController from './components/ScrollZoomController';
 import {  ScrollControls, useScroll } from '@react-three/drei';
@@ -74,8 +75,7 @@ export const Scene = ({
 }) => {
   useEffect(() => {
     const handleKeyDown = (e) => {
-      const keys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' '];
-      if (keys.includes(e.key)) {
+      if (shouldPreventPageScroll(e.key)) {
         e.preventDefault(); // ⛔️ 키보드 스크롤 막기
       }
     };
