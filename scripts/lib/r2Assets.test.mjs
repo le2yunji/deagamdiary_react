@@ -1,13 +1,56 @@
 import assert from 'node:assert/strict'
+import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises'
+import os from 'node:os'
+import path from 'node:path'
 import test from 'node:test'
 
 import {
+  buildAssetInventory,
   extractAssetReferences,
   getContentType,
   validateAssetEntries,
   validateObjectKey,
   validateReferencedAssets,
 } from './r2Assets.mjs'
+
+test('builds file metadata from a controlled asset source', async (context) => {
+  const sourceRoot = await mkdtemp(path.join(os.tmpdir(), 'r2-assets-'))
+  context.after(() => rm(sourceRoot, { force: true, recursive: true }))
+  await mkdir(path.join(sourceRoot, 'public/assets/models'), { recursive: true })
+  await writeFile(
+    path.join(sourceRoot, 'public/assets/models/Player.glb'),
+    'potato'
+  )
+  const entries = [
+    {
+      objectKey: 'assets/models/Player.glb',
+      sourcePath: 'public/assets/models/Player.glb',
+      kind: 'model',
+      status: 'required',
+    },
+  ]
+
+  const inventory = await buildAssetInventory(entries, {
+    sourceRoot,
+    trackedPaths: new Set(['public/assets/models/Player.glb']),
+    referencesByObjectKey: new Map([
+      ['assets/models/Player.glb', ['src/components/Player.jsx']],
+    ]),
+  })
+
+  assert.deepEqual(inventory, [
+    {
+      objectKey: 'assets/models/Player.glb',
+      sourcePath: 'public/assets/models/Player.glb',
+      kind: 'model',
+      status: 'required',
+      size: 6,
+      sha256: 'e91c254ad58860a02c788dfb5c1a65d6a8846ab1dc649631c7db16fef4af2dec',
+      gitTracked: true,
+      references: ['src/components/Player.jsx'],
+    },
+  ])
+})
 
 test('rejects an object key outside the assets directory', () => {
   assert.throws(
@@ -69,6 +112,7 @@ test('extracts active asset references and ignores comments', () => {
   const source = `
     const model = getAssetUrl('/assets/models/Player.glb')
     const image = '/assets/images/poster.png'
+    const dynamicModel = \`/assets/models/\${name}.glb\`
     // const oldImage = '/assets/images/old.png'
     /* const oldVideo = '/assets/video/old.webm' */
   `
@@ -91,6 +135,18 @@ test('does not treat test fixtures as runtime references', () => {
   )
 })
 
+test('does not treat HTML comments as runtime references', () => {
+  const source = `
+    <img src="/assets/images/visible.png" />
+    <!-- <video src="/assets/video/hidden.mp4"></video> -->
+  `
+
+  assert.deepEqual(
+    extractAssetReferences(source, 'public/index.html'),
+    ['assets/images/visible.png']
+  )
+})
+
 test('rejects a runtime reference missing from the required asset list', () => {
   const entries = [
     {
@@ -107,4 +163,19 @@ test('rejects a runtime reference missing from the required asset list', () => {
     ),
     /assets\/audio\/voice\.mp3/
   )
+})
+
+test('accepts a runtime reference documented as an excluded broken asset', () => {
+  const entries = [
+    {
+      objectKey: 'assets/audio/missing.mp3',
+      status: 'excluded',
+      reason: 'Known broken reference without a source file',
+    },
+  ]
+
+  assert.doesNotThrow(() => validateReferencedAssets(
+    ['assets/audio/missing.mp3'],
+    entries
+  ))
 })

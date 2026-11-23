@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto'
+import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 
 const CONTENT_TYPES = new Map([
@@ -11,6 +13,47 @@ const CONTENT_TYPES = new Map([
   ['.webm', 'video/webm'],
   ['.webp', 'image/webp'],
 ])
+
+/** 원본 파일의 크기·해시·Git 상태·참조 위치를 인벤토리 항목에 더한다. */
+export async function buildAssetInventory(entries, options) {
+  const {
+    sourceRoot,
+    trackedPaths = new Set(),
+    referencesByObjectKey = new Map(),
+  } = options
+  const inventory = []
+
+  for (const entry of entries) {
+    let fileBuffer = null
+
+    if (entry.sourcePath) {
+      try {
+        fileBuffer = await readFile(path.join(sourceRoot, entry.sourcePath))
+      } catch (error) {
+        if (entry.status === 'required') {
+          throw new Error(
+            `Missing required asset source: ${entry.sourcePath}`,
+            { cause: error }
+          )
+        }
+      }
+    }
+
+    inventory.push({
+      ...entry,
+      size: fileBuffer?.byteLength ?? null,
+      sha256: fileBuffer
+        ? createHash('sha256').update(fileBuffer).digest('hex')
+        : null,
+      gitTracked: entry.sourcePath
+        ? trackedPaths.has(entry.sourcePath)
+        : false,
+      references: referencesByObjectKey.get(entry.objectKey) ?? [],
+    })
+  }
+
+  return inventory
+}
 
 /** R2 객체 키가 허용된 assets 경로인지 검사한다. */
 export function validateObjectKey(objectKey) {
@@ -65,6 +108,7 @@ export function extractAssetReferences(source, filePath) {
   }
 
   const withoutComments = source
+    .replace(/<!--[\s\S]*?-->/g, '')
     .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/^\s*\/\/.*$/gm, '')
   const matches = withoutComments.match(
@@ -72,19 +116,19 @@ export function extractAssetReferences(source, filePath) {
   ) ?? []
 
   return [...new Set(
-    matches.map((reference) => reference.replace(/^(?:\.\/|\/)/, ''))
+    matches
+      .map((reference) => reference.replace(/^(?:\.\/|\/)/, ''))
+      .filter((reference) => !reference.endsWith('/'))
   )].sort()
 }
 
 /** 실행 참조가 필수 에셋 목록에 모두 포함되었는지 검사한다. */
 export function validateReferencedAssets(references, entries) {
-  const requiredObjectKeys = new Set(
-    entries
-      .filter((entry) => entry.status === 'required')
-      .map((entry) => entry.objectKey)
+  const documentedObjectKeys = new Set(
+    entries.map((entry) => entry.objectKey)
   )
   const missingReferences = references.filter(
-    (reference) => !requiredObjectKeys.has(reference)
+    (reference) => !documentedObjectKeys.has(reference)
   )
 
   if (missingReferences.length > 0) {

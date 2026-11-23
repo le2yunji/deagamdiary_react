@@ -32,6 +32,7 @@
     "test:jest": "react-scripts test --watchAll=false --detectOpenHandles",
     "test:assets": "node --test scripts/lib/*.test.mjs",
     "test:ci": "npm run test:jest && npm run test:assets",
+    "assets:inventory": "node scripts/generate-r2-asset-inventory.mjs",
     "lint": "eslint src --ext .js,.jsx",
     "eject": "react-scripts eject"
   },
