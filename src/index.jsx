@@ -8,7 +8,9 @@ import styled from "styled-components";
 import gsap from 'gsap';
 import * as THREE from 'three'
 import useCameraSwitcher from './hooks/useCameraSwitcher'; // 경로 맞게 조정
+import { applyAssetStyleVariables } from './utils/assetStyles';
 
+/** 시작 화면의 DOM 이벤트와 3D 장면 진입 상태를 연결한다. */
 const AppWithStartScreen = () => {
   const [showCanvas, setShowCanvas] = useState(false);
   const playerRef = useRef(); // 🎯 Player에 접근할 ref
@@ -197,6 +199,8 @@ const AppWithStartScreen = () => {
     </RecoilRoot>
   );
 };
+
+applyAssetStyleVariables();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

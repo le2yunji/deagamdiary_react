@@ -39,8 +39,7 @@ body, #root {
   width: 300px;
   height: 300px;
   top: 30vh;
-  /* background: url('./assets/images/gamza_button_unclick.webp') no-repeat center; */
-  background: url('./assets/images/start_button.png') no-repeat center;
+  background: var(--start-screen-button-image) no-repeat center;
   background-size: cover;
   border: none;
   cursor: pointer;
@@ -56,7 +55,7 @@ body, #root {
 
 }
 #start-screen-btn:hover {
-  background: url('./assets/images/start_button_hover.png') no-repeat center;
+  background: var(--start-screen-button-hover-image) no-repeat center;
   background-size: cover;
 }
 
@@ -90,8 +89,7 @@ body, #root {
     height: 165px;
     top: 10px;
     right: 30px;
-	  /* background: url('./assets/images/gamza_button_unclick.webp') no-repeat center; */
-    background: url('./assets/images/yellowsun.png') no-repeat center;
+    background: var(--start-button-yellow-image) no-repeat center;
 	  background-size: cover;
     border: none;
     cursor: pointer;
@@ -109,10 +107,10 @@ body, #root {
 
   @keyframes blinkSun {
     0%, 100% {
-      background-image: url('./assets/images/yellowsun.png');
+      background-image: var(--start-button-yellow-image);
     }
     50% {
-      background-image: url('./assets/images/redsun.png');
+      background-image: var(--start-button-red-image);
     }
   }
   
@@ -123,7 +121,7 @@ body, #root {
   /* Hover 시 이미지 변경 */
   #start-button.blinking:hover {
     animation: none;
-    background: url('./assets/images/redsun.png') no-repeat center;
+    background: var(--start-button-red-image) no-repeat center;
     background-size: cover;
   }
 
@@ -162,8 +160,7 @@ body, #root {
     position: absolute; /* relative → absolute 변경 */
     width: 100px;
     height: 100px;
-    /* background: url('./assets/images/gamza_button_unclick.webp') no-repeat center; */
-    background: url('./assets/images/guide_btn1.png') no-repeat center;
+    background: var(--start-guide-button-one-image) no-repeat center;
     background-size: cover;
     border: none;
     cursor: pointer;
@@ -182,8 +179,7 @@ body, #root {
     position: absolute; /* relative → absolute 변경 */
     width: 70px;
     height: 70px;
-    /* background: url('./assets/images/gamza_button_unclick.webp') no-repeat center; */
-    background: url('./assets/images/guide_btn2.png') no-repeat center;
+    background: var(--start-guide-button-two-image) no-repeat center;
     background-size: cover;
     border: none;
     cursor: pointer;
