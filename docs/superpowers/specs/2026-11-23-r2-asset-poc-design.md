@@ -32,6 +32,14 @@ Vercel 재배포에 포함되지 않는 필수 GLB를 Cloudflare R2에서 안정
 
 `r2.dev`는 개발용이며 캐시와 운영 기능이 제한된다. PoC가 통과하면 #8에서 전체 에셋을 이전하고, 도메인을 확보한 뒤 같은 환경변수 값만 `https://assets.<domain>`으로 교체한다.
 
+## Required production follow-up
+
+- `r2.dev`는 PoC 확인에만 사용하는 임시 주소다.
+- 전체 에셋 이전과 운영 전환 전에는 `assets.<domain>` 형태의 커스텀 도메인을 R2 버킷에 연결한다.
+- 소스 코드에 `r2.dev` 주소를 직접 넣지 않고 `REACT_APP_ASSET_BASE_URL`만 교체한다.
+- 커스텀 도메인 전환 뒤 Cloudflare 캐시 적용 여부와 CORS 응답을 다시 검증한다.
+- 이 후속 작업은 전체 에셋 이전 이슈 #8의 완료 조건으로 관리한다.
+
 ## Security and rollback
 
 - 공개 권한은 객체 읽기에만 사용하고 업로드 자격 증명은 브라우저에 노출하지 않는다.
