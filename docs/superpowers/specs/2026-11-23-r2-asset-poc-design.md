@@ -46,6 +46,15 @@ Vercel 재배포에 포함되지 않는 필수 GLB를 Cloudflare R2에서 안정
 - CORS는 `GET`과 `HEAD`만 허용하고 허용 origin을 명시한다.
 - 실패하면 `REACT_APP_ASSET_BASE_URL`을 비우고 R2 공개 접근을 끄면 기존 `/assets/...` 경로로 돌아간다.
 
+## Validation result
+
+- Public base URL: `https://pub-8f16ad22f2904f4fa68a2f18fd268daa.r2.dev`
+- Object key: `assets/models/Gamza_cycle.glb`
+- GET response: `200 OK`, `Content-Type: model/gltf-binary`, `Content-Length: 1146932`
+- `http://localhost:3000`과 `https://iamtalkingpotato.vercel.app` 요청에는 각각 일치하는 `Access-Control-Allow-Origin`이 반환된다.
+- 허용하지 않은 `https://example.com` 요청에는 `Access-Control-Allow-Origin`이 반환되지 않는다.
+- 브라우저 자산 기록에서 `Gamza_cycle.glb`가 위 R2 URL의 `fetch` 요청으로 확인되었다.
+
 ## Official sources
 
 - Public buckets: https://developers.cloudflare.com/r2/buckets/public-buckets/
