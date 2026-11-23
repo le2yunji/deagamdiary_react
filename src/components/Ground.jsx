@@ -12,10 +12,19 @@ import {
 import * as THREE from 'three';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
 import { getAssetUrl } from '../utils/assetUrl';
+import { getAspectFitHeight } from '../utils/planeGeometry';
 
 const FLOOR_TEXTURE_URL = getAssetUrl('/assets/images/floor.svg');
 const ROAD_ARROW_TEXTURE_URL = getAssetUrl('/assets/images/road_arrow.png');
 const STREET_SVG_URL = getAssetUrl('/assets/images/street.svg');
+const GROUND_WIDTH = 400;
+const ROAD_ARROW_IMAGE_WIDTH = 5000;
+const ROAD_ARROW_IMAGE_HEIGHT = 4167;
+const ROAD_ARROW_PLANE_HEIGHT = getAspectFitHeight(
+  GROUND_WIDTH,
+  ROAD_ARROW_IMAGE_WIDTH,
+  ROAD_ARROW_IMAGE_HEIGHT
+);
 
 /** 이동 가능한 바닥과 도로 안내 텍스처를 표시하고 클릭 지점을 전달한다. */
 export default function Ground({ onClickGround }) {
@@ -105,7 +114,7 @@ useEffect(() => {
        onPointerMove={handlePointerMove}
        onPointerUp={handlePointerUp}
      >
-       <planeGeometry args={[400, 400]} />
+       <planeGeometry args={[GROUND_WIDTH, GROUND_WIDTH]} />
        <meshBasicMaterial 
         map={texture}
         transparent={true}        // ✨ PNG 알파 반영
@@ -126,7 +135,7 @@ useEffect(() => {
        onPointerMove={handlePointerMove}
        onPointerUp={handlePointerUp}
      >
-       <planeGeometry args={[400, 400]} />
+       <planeGeometry args={[GROUND_WIDTH, ROAD_ARROW_PLANE_HEIGHT]} />
        <meshBasicMaterial 
        map={texture2}
        transparent={true}        // ✨ PNG 알파 반영
@@ -144,7 +153,7 @@ useEffect(() => {
     position={[0, 0, 0]}
     receiveShadow
   >
-    <planeGeometry args={[400, 400]} />
+    <planeGeometry args={[GROUND_WIDTH, GROUND_WIDTH]} />
     <meshStandardMaterial 
  />
     {/* <shadowMaterial opacity={0.35} /> */}
