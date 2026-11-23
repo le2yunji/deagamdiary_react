@@ -35,6 +35,7 @@
     "assets:inventory": "node scripts/generate-r2-asset-inventory.mjs",
     "assets:upload": "node scripts/upload-r2-assets.mjs",
     "assets:verify-r2": "node scripts/verify-r2-assets.mjs",
+    "assets:check": "node scripts/check-r2-asset-references.mjs",
     "lint": "eslint src --ext .js,.jsx",
     "eject": "react-scripts eject"
   },

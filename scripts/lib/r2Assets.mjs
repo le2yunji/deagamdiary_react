@@ -14,6 +14,47 @@ const CONTENT_TYPES = new Map([
   ['.webp', 'image/webp'],
 ])
 
+const UNMANAGED_REFERENCE_EXCLUSIONS = new Set([
+  'src/components/AlbaPosters copy.jsx',
+  'src/components/Coffee.jsx',
+  'src/components/Escalator copy.jsx',
+  'src/components/NomoneyBank.jsx',
+  'src/utils/assetStyles.js',
+])
+
+/** 파일 종류별로 공통 R2 주소 장치를 거치지 않은 실행 에셋 경로를 찾는다. */
+export function findUnmanagedAssetReferences(source, filePath) {
+  const normalizedFilePath = filePath.replaceAll('\\', '/')
+
+  if (
+    /\.(?:test|spec)\.[cm]?[jt]sx?$/.test(normalizedFilePath) ||
+    UNMANAGED_REFERENCE_EXCLUSIONS.has(normalizedFilePath)
+  ) {
+    return []
+  }
+
+  if (normalizedFilePath.endsWith('.html')) {
+    const withoutManagedPlaceholders = source.replaceAll(
+      '%REACT_APP_ASSET_BASE_URL%/assets/',
+      'managed/'
+    )
+    return extractAssetReferences(withoutManagedPlaceholders, filePath)
+  }
+
+  if (normalizedFilePath.endsWith('.css')) {
+    const withoutComments = source.replace(/\/\*[\s\S]*?\*\//g, '')
+    const references = withoutComments.match(
+      /(?:\.\/|\/)?assets\/[A-Za-z0-9_./-]+/g
+    ) ?? []
+
+    return [...new Set(
+      references.map((reference) => reference.replace(/^(?:\.\/|\/)/, ''))
+    )].sort()
+  }
+
+  return findRawRuntimeAssetReferences(source)
+}
+
 /** 인벤토리 항목을 자격 증명이 포함되지 않은 AWS CLI 업로드 인자로 바꾼다. */
 export function buildAwsUploadArgs(asset, options) {
   const { bucket, endpointUrl, sourceRoot } = options

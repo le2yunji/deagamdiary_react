@@ -8,6 +8,7 @@ import {
   buildAssetInventory,
   buildAwsUploadArgs,
   extractAssetReferences,
+  findUnmanagedAssetReferences,
   findRawGlbReferences,
   findRawRuntimeAssetReferences,
   getContentType,
@@ -17,6 +18,69 @@ import {
   validateRemoteAssetResponse,
   validateReferencedAssets,
 } from './r2Assets.mjs'
+
+test('finds unmanaged asset URLs but permits shared R2 URL mechanisms', () => {
+  assert.deepEqual(
+    findUnmanagedAssetReferences(
+      '<img src="/assets/images/raw.png">',
+      'public/index.html'
+    ),
+    ['assets/images/raw.png']
+  )
+  assert.deepEqual(
+    findUnmanagedAssetReferences(
+      'background: url("./assets/images/raw.png")',
+      'src/index.css'
+    ),
+    ['assets/images/raw.png']
+  )
+  assert.deepEqual(
+    findUnmanagedAssetReferences(
+      "const image = '/assets/images/raw.png'",
+      'src/App.jsx'
+    ),
+    ['assets/images/raw.png']
+  )
+
+  assert.deepEqual(
+    findUnmanagedAssetReferences(
+      '<img src="%REACT_APP_ASSET_BASE_URL%/assets/images/safe.png">',
+      'public/index.html'
+    ),
+    []
+  )
+  assert.deepEqual(
+    findUnmanagedAssetReferences(
+      "const image = getAssetUrl('/assets/images/safe.png')",
+      'src/App.jsx'
+    ),
+    []
+  )
+  assert.deepEqual(
+    findUnmanagedAssetReferences(
+      'background: var(--safe-image)',
+      'src/index.css'
+    ),
+    []
+  )
+})
+
+test('allows documented central style paths and unused component exclusions', () => {
+  assert.deepEqual(
+    findUnmanagedAssetReferences(
+      "const path = '/assets/images/button.png'",
+      'src/utils/assetStyles.js'
+    ),
+    []
+  )
+  assert.deepEqual(
+    findUnmanagedAssetReferences(
+      "useGLTF('/assets/models/old.glb')",
+      'src/components/Coffee.jsx'
+    ),
+    []
+  )
+})
 
 test('finds raw runtime media paths but allows getAssetUrl constants', () => {
   const source = `

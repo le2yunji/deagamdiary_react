@@ -4,8 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
-public/assets/models
-public/assets/images
+/public/assets/
+/src/assets/
 
 
 # testing
