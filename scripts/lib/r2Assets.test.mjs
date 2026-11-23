@@ -37,6 +37,8 @@ test('builds an R2 upload command without credentials', () => {
       'https://account-id.r2.cloudflarestorage.com',
       '--content-type',
       'model/gltf-binary',
+      '--region',
+      'auto',
       '--only-show-errors',
     ]
   )

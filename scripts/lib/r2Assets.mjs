@@ -27,6 +27,8 @@ export function buildAwsUploadArgs(asset, options) {
     endpointUrl,
     '--content-type',
     getContentType(asset.objectKey),
+    '--region',
+    'auto',
     '--only-show-errors',
   ]
 }
