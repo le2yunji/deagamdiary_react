@@ -6,12 +6,98 @@ import test from 'node:test'
 
 import {
   buildAssetInventory,
+  buildAwsUploadArgs,
   extractAssetReferences,
   getContentType,
+  validateAssetBuffer,
   validateAssetEntries,
   validateObjectKey,
+  validateRemoteAssetResponse,
   validateReferencedAssets,
 } from './r2Assets.mjs'
+
+test('builds an R2 upload command without credentials', () => {
+  const asset = {
+    objectKey: 'assets/models/Player.glb',
+    sourcePath: 'public/assets/models/Player.glb',
+  }
+
+  assert.deepEqual(
+    buildAwsUploadArgs(asset, {
+      bucket: 'i-am-talking-potato',
+      endpointUrl: 'https://account-id.r2.cloudflarestorage.com',
+      sourceRoot: '/source',
+    }),
+    [
+      's3',
+      'cp',
+      '/source/public/assets/models/Player.glb',
+      's3://i-am-talking-potato/assets/models/Player.glb',
+      '--endpoint-url',
+      'https://account-id.r2.cloudflarestorage.com',
+      '--content-type',
+      'model/gltf-binary',
+      '--only-show-errors',
+    ]
+  )
+})
+
+test('rejects a local asset whose hash differs from the inventory', () => {
+  const asset = {
+    objectKey: 'assets/models/Player.glb',
+    size: 6,
+    sha256: 'wrong-hash',
+  }
+
+  assert.throws(
+    () => validateAssetBuffer(asset, Buffer.from('potato')),
+    /SHA-256/
+  )
+})
+
+test('accepts a matching remote R2 response and CORS origin', () => {
+  const asset = {
+    objectKey: 'assets/models/Player.glb',
+    size: 6,
+  }
+  const response = new Response(null, {
+    status: 200,
+    headers: {
+      'access-control-allow-origin': 'http://localhost:3000',
+      'content-length': '6',
+      'content-type': 'model/gltf-binary',
+    },
+  })
+
+  assert.doesNotThrow(() => validateRemoteAssetResponse(
+    asset,
+    response,
+    'http://localhost:3000'
+  ))
+})
+
+test('rejects a remote R2 response without the requested CORS origin', () => {
+  const asset = {
+    objectKey: 'assets/models/Player.glb',
+    size: 6,
+  }
+  const response = new Response(null, {
+    status: 200,
+    headers: {
+      'content-length': '6',
+      'content-type': 'model/gltf-binary',
+    },
+  })
+
+  assert.throws(
+    () => validateRemoteAssetResponse(
+      asset,
+      response,
+      'http://localhost:3000'
+    ),
+    /CORS/
+  )
+})
 
 test('builds file metadata from a controlled asset source', async (context) => {
   const sourceRoot = await mkdtemp(path.join(os.tmpdir(), 'r2-assets-'))

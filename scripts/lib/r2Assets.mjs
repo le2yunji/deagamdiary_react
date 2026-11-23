@@ -14,6 +14,79 @@ const CONTENT_TYPES = new Map([
   ['.webp', 'image/webp'],
 ])
 
+/** 인벤토리 항목을 자격 증명이 포함되지 않은 AWS CLI 업로드 인자로 바꾼다. */
+export function buildAwsUploadArgs(asset, options) {
+  const { bucket, endpointUrl, sourceRoot } = options
+
+  return [
+    's3',
+    'cp',
+    path.join(sourceRoot, asset.sourcePath),
+    `s3://${bucket}/${asset.objectKey}`,
+    '--endpoint-url',
+    endpointUrl,
+    '--content-type',
+    getContentType(asset.objectKey),
+    '--only-show-errors',
+  ]
+}
+
+/** 업로드 직전 파일 내용이 인벤토리의 크기와 SHA-256에 맞는지 검사한다. */
+export function validateAssetBuffer(asset, fileBuffer) {
+  if (fileBuffer.byteLength !== asset.size) {
+    throw new Error(
+      `Size mismatch for ${asset.objectKey}: ` +
+      `expected ${asset.size}, received ${fileBuffer.byteLength}`
+    )
+  }
+
+  const sha256 = createHash('sha256').update(fileBuffer).digest('hex')
+  if (sha256 !== asset.sha256) {
+    throw new Error(
+      `SHA-256 mismatch for ${asset.objectKey}: ` +
+      `expected ${asset.sha256}, received ${sha256}`
+    )
+  }
+
+  return asset
+}
+
+/** 공개 R2 응답의 상태·크기·형식·CORS가 인벤토리와 맞는지 검사한다. */
+export function validateRemoteAssetResponse(asset, response, expectedOrigin) {
+  if (response.status !== 200) {
+    throw new Error(
+      `Unexpected status for ${asset.objectKey}: ${response.status}`
+    )
+  }
+
+  const contentLength = Number(response.headers.get('content-length'))
+  if (contentLength !== asset.size) {
+    throw new Error(
+      `Content-Length mismatch for ${asset.objectKey}: ` +
+      `expected ${asset.size}, received ${contentLength}`
+    )
+  }
+
+  const contentType = response.headers.get('content-type')?.split(';')[0]
+  const expectedContentType = getContentType(asset.objectKey)
+  if (contentType !== expectedContentType) {
+    throw new Error(
+      `Content-Type mismatch for ${asset.objectKey}: ` +
+      `expected ${expectedContentType}, received ${contentType}`
+    )
+  }
+
+  const allowedOrigin = response.headers.get('access-control-allow-origin')
+  if (allowedOrigin !== expectedOrigin) {
+    throw new Error(
+      `CORS mismatch for ${asset.objectKey}: ` +
+      `expected ${expectedOrigin}, received ${allowedOrigin}`
+    )
+  }
+
+  return asset
+}
+
 /** 원본 파일의 크기·해시·Git 상태·참조 위치를 인벤토리 항목에 더한다. */
 export async function buildAssetInventory(entries, options) {
   const {
