@@ -14,6 +14,7 @@ import { MailBox } from '../components/MailBox';
 import { MailGamza } from '../components/MailGamza';
 import { File } from '../components/File';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
+import { getAssetUrl } from '../utils/assetUrl';
 
 import {
     // downCameraY,
@@ -24,6 +25,13 @@ import {
     // enableMouseEvents
   } from '../utils/Common';
 
+  const MAIL_TRIGGER_URL = getAssetUrl('/assets/images/mailTrigger.png');
+  const MAIL_ZZAL_URL = getAssetUrl('/assets/images/mail_zzal.png');
+  const FIRECRACKER_URL = getAssetUrl('/assets/images/firecracker.gif');
+  const MAIL_AUDIO_URL = getAssetUrl('/assets/audio/mail.mp3');
+  const BBONG_AUDIO_URL = getAssetUrl('/assets/audio/bbong.mp3');
+
+  /** 우편 장면의 모델·카메라·축하 이미지·오디오 진행을 제어한다. */
   export default function MailScene({
     playerRef,        // 감자 모델 참조
     emotionRef,       // 감자 머리 위 이모션 참조
@@ -49,7 +57,7 @@ import {
 
     const mailgamzaMixer = useRef();
     const mailgamzaActions = useRef();
-  
+
     const fileMixer = useRef();
     const fileActions = useRef();
 
@@ -66,7 +74,7 @@ import {
     const bbongAudioRef = useRef();
 
     const mailSpotMeshPosition = new Vector3(111, 0.005, 25); // 감자가 도달해야 할 스팟 위치
-    const mailTexture = useTexture('/assets/images/mailTrigger.png');
+    const mailTexture = useTexture(MAIL_TRIGGER_URL);
 
     const [showGif, setShowGif] = useState(false);
 
@@ -85,7 +93,7 @@ import {
 const mailZzal = useRef();
     useEffect(() => {
       const loader = new THREE.TextureLoader();
-      loader.load('/assets/images/mail_zzal.png', (texture) => {
+      loader.load(MAIL_ZZAL_URL, (texture) => {
         texture.colorSpace = THREE.SRGBColorSpace;
         texture.needsUpdate = true;
   
@@ -295,7 +303,7 @@ const mailZzal = useRef();
       {showGif && (
         <Html position={[113, 6, 24]} transform occlude>
           <img
-            src="/assets/images/firecracker.gif"
+            src={FIRECRACKER_URL}
             alt="과제 제출 완료 폭죽"
             style={{
               width: '400px',
@@ -346,14 +354,14 @@ const mailZzal = useRef();
     )}
       <ManualAudioPlayer
         ref={mailAudioRef}
-        url="/assets/audio/mail.mp3"
+        url={MAIL_AUDIO_URL}
         volume={1}
         loop={false}
         position={[111, 0.5, 24.7]}
       />
         <ManualAudioPlayer
         ref={bbongAudioRef}
-        url="/assets/audio/bbong.mp3"
+        url={BBONG_AUDIO_URL}
         volume={1}
         loop={false}
         position={[111, 0.5, 24.7]}
@@ -380,4 +388,3 @@ const mailZzal = useRef();
       </>
     );
   }
-  

@@ -7,6 +7,7 @@ import { gsap } from 'gsap';
 import { Metro } from '../components/Metro';
 import { useTexture } from '@react-three/drei';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
+import { getAssetUrl } from '../utils/assetUrl';
 
 import {
   disappearPlayer,
@@ -21,7 +22,12 @@ import {
   // createArrows,
 } from '../utils/Common';
 
+const METRO_TRIGGER_URL = getAssetUrl('/assets/images/metroTrigger.png');
+const METRO_ZZAL_URL = getAssetUrl('/assets/images/metro_zzal.png');
+const METRO_AUDIO_URL = getAssetUrl('/assets/audio/metroScene.mp3');
+const BBONG_AUDIO_URL = getAssetUrl('/assets/audio/bbong.mp3');
 
+/** 지하철 장면의 모델·카메라·이미지·오디오 진행을 제어한다. */
 export default function MetroScene({
   playerRef,
   setDisableMovement,
@@ -50,7 +56,7 @@ export default function MetroScene({
 
 
   const MetroSpotMeshPosition = new Vector3(9, 0.005, -98);
-  const metroTexture = useTexture('/assets/images/metroTrigger.png');
+  const metroTexture = useTexture(METRO_TRIGGER_URL);
 
   useEffect(() => {
     if (metroTexture) {
@@ -65,7 +71,7 @@ export default function MetroScene({
 
   useEffect(() => {
     const loader = new THREE.TextureLoader();
-    loader.load('/assets/images/metro_zzal.png', (texture) => {
+    loader.load(METRO_ZZAL_URL, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
 
@@ -246,14 +252,14 @@ export default function MetroScene({
       </mesh>
       <ManualAudioPlayer
         ref={bbongAudioRef}
-        url="/assets/audio/bbong.mp3"
+        url={BBONG_AUDIO_URL}
         volume={3}
         loop={false}
         position={[-7.5, 2, -110]}
         />
       <ManualAudioPlayer
           ref={metroAudioRef}
-          url="/assets/audio/metroScene.mp3"
+          url={METRO_AUDIO_URL}
           volume={2.3}
           loop={false}
           position={[-7.5, 2, -110]}

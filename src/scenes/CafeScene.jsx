@@ -12,6 +12,7 @@ import { AudioTimelinePlayer } from '../utils/AudioTimelinePlayer';
 // import useCameraSwitcher from '../hooks/useCameraSwitcher';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 import { useTexture } from '@react-three/drei';
+import { getAssetUrl } from '../utils/assetUrl';
 
 import {
   PlaneGeometry,
@@ -29,6 +30,17 @@ import {
   // returnCameraY
 } from '../utils/Common';
 
+const CAFE_TRIGGER_URL = getAssetUrl('/assets/images/cafeTrigger.png');
+const CAFE_ZZAL_URL = getAssetUrl('/assets/images/cafe_zzal.png');
+const COFFEE_IMAGE_URLS = [
+  getAssetUrl('/assets/images/coffee1.webp'),
+  getAssetUrl('/assets/images/coffee2.webp'),
+  getAssetUrl('/assets/images/coffee3.webp'),
+  getAssetUrl('/assets/images/coffee4.webp'),
+];
+const CAFE_AUDIO_URL = getAssetUrl('/assets/audio/cafeScene.mp3');
+
+/** 카페 주문 장면의 모델·프레임 이미지·카메라·오디오 진행을 제어한다. */
 export default function CafeScene({
   playerRef,
   setCameraTarget,
@@ -66,7 +78,7 @@ export default function CafeScene({
 
 
   const CafeSpotMeshPosition = new Vector3(-37.5, 0.005, -89);
-  const cafeTexture = useTexture('/assets/images/cafeTrigger.png');
+  const cafeTexture = useTexture(CAFE_TRIGGER_URL);
 
   useEffect(() => {
     if (cafeTexture) {
@@ -77,18 +89,11 @@ export default function CafeScene({
     }
   }, [cafeTexture]);
 
-  const coffeePaths = [
-    '/assets/images/coffee1.webp',
-    '/assets/images/coffee2.webp',
-    '/assets/images/coffee3.webp',
-    '/assets/images/coffee4.webp',
-  ];
-
   const cafeZzal = useRef();
 
   useEffect(() => {
     const loader = new THREE.TextureLoader();
-    loader.load('/assets/images/cafe_zzal.png', (texture) => {
+    loader.load(CAFE_ZZAL_URL, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
 
@@ -122,7 +127,7 @@ export default function CafeScene({
   useEffect(() => {
     const geometry = new PlaneGeometry(4, 6);
     setcoffee(
-      coffeePaths.map((path, i) => {
+      COFFEE_IMAGE_URLS.map((path, i) => {
         const mat = new MeshBasicMaterial({ transparent: true, alphaTest: 0.5 });
         const mesh = new Mesh(geometry, mat);
         mesh.rotation.y = THREE.MathUtils.degToRad(20);
@@ -365,7 +370,7 @@ const animateDrinkCoffee = () => {
 
       <ManualAudioPlayer
         ref={cafeAudioRef}
-        url="/assets/audio/cafeScene.mp3"
+        url={CAFE_AUDIO_URL}
         volume={2}
         loop={false}
         position={[-38, 2, -86]}

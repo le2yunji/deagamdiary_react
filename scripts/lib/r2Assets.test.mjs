@@ -9,6 +9,7 @@ import {
   buildAwsUploadArgs,
   extractAssetReferences,
   findRawGlbReferences,
+  findRawRuntimeAssetReferences,
   getContentType,
   validateAssetBuffer,
   validateAssetEntries,
@@ -16,6 +17,23 @@ import {
   validateRemoteAssetResponse,
   validateReferencedAssets,
 } from './r2Assets.mjs'
+
+test('finds raw runtime media paths but allows getAssetUrl constants', () => {
+  const source = `
+    const texture = useTexture('/assets/images/raw.png')
+    loader.load('/assets/images/loaded.webp', callback)
+    <ManualAudioPlayer url="/assets/audio/voice.mp3" />
+    <img src="/assets/images/dom.png" />
+    const safeUrl = getAssetUrl('/assets/images/safe.png')
+  `
+
+  assert.deepEqual(findRawRuntimeAssetReferences(source), [
+    'assets/audio/voice.mp3',
+    'assets/images/dom.png',
+    'assets/images/loaded.webp',
+    'assets/images/raw.png',
+  ])
+})
 
 test('finds raw GLB loader paths but allows getAssetUrl constants', () => {
   const source = `
@@ -60,6 +78,32 @@ test('runtime component GLB loaders use the shared asset URL helper', async () =
   for (const filePath of componentFiles) {
     const source = await readFile(filePath, 'utf8')
     for (const reference of findRawGlbReferences(source)) {
+      violations.push(`${filePath}: ${reference}`)
+    }
+  }
+
+  assert.deepEqual(violations, [])
+})
+
+test('runtime scenes use the shared asset URL helper for media', async () => {
+  const runtimeFiles = [
+    'src/components/Ground.jsx',
+    'src/components/PlayerController.jsx',
+    'src/scenes/AlbaScene.jsx',
+    'src/scenes/BakeryScene.jsx',
+    'src/scenes/CafeScene.jsx',
+    'src/scenes/ChatGPTScene.jsx',
+    'src/scenes/ClassroomScene.jsx',
+    'src/scenes/EscalatorScene.jsx',
+    'src/scenes/MailScene.jsx',
+    'src/scenes/MetroScene.jsx',
+    'src/scenes/NomoneyScene.jsx',
+  ]
+  const violations = []
+
+  for (const filePath of runtimeFiles) {
+    const source = await readFile(filePath, 'utf8')
+    for (const reference of findRawRuntimeAssetReferences(source)) {
       violations.push(`${filePath}: ${reference}`)
     }
   }

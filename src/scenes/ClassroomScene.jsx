@@ -31,23 +31,33 @@ import { useScroll } from '@react-three/drei';
 import { Onion } from '../components/Onion';
 import { ClassroomGamza } from '../components/ClassroomGamza';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
+import { getAssetUrl } from '../utils/assetUrl';
 
 const slidePaths = [
-  '/assets/images/ppt1.webp',
-  '/assets/images/ppt2.webp',
-  '/assets/images/ppt3.webp',
-  '/assets/images/ppt4.webp',
-  '/assets/images/ppt5.webp',
+  getAssetUrl('/assets/images/ppt1.webp'),
+  getAssetUrl('/assets/images/ppt2.webp'),
+  getAssetUrl('/assets/images/ppt3.webp'),
+  getAssetUrl('/assets/images/ppt4.webp'),
+  getAssetUrl('/assets/images/ppt5.webp'),
 ];
 const talkPaths = [
-  '/assets/images/talk1.webp',
-  '/assets/images/talk2.webp',
-  '/assets/images/talk3.webp',
-  '/assets/images/talk4.webp',
+  getAssetUrl('/assets/images/talk1.webp'),
+  getAssetUrl('/assets/images/talk2.webp'),
+  getAssetUrl('/assets/images/talk3.webp'),
+  getAssetUrl('/assets/images/talk4.webp'),
 ];
+const CLASS_TRIGGER_URL = getAssetUrl('/assets/images/classTrigger.png');
+const CLASS_ZZAL_URL = getAssetUrl('/assets/images/class_zzal.png');
+const CLASS_ZZAL_SECOND_URL = getAssetUrl('/assets/images/class_zzal2.png');
+const PPT_CLICK_URL = getAssetUrl('/assets/images/ppt_click.png');
+const CLASS_BGM_URL = getAssetUrl('/assets/audio/classScene_bgm.mp3');
+const CLASS_GAMZA_AUDIO_URL = getAssetUrl('/assets/audio/classScene_daegam_talk.mp3');
+const CLASS_ONION_AUDIO_URL = getAssetUrl('/assets/audio/classScene_onion_daegam.mp3');
+const BBONG_AUDIO_URL = getAssetUrl('/assets/audio/bbong.mp3');
 
 let timeline;
 
+/** 교실 발표 장면의 슬라이드·대화·모델·카메라·오디오 진행을 제어한다. */
 export default function ClassroomScene({ 
   playerRef,
   setDisableMovement,
@@ -99,7 +109,7 @@ export default function ClassroomScene({
   const cloudRef = useRef()
 
   const ClassroomSpotMeshPosition = new Vector3(-99, 0.005, -70);
-  const classTexture = useTexture('/assets/images/classTrigger.png');
+  const classTexture = useTexture(CLASS_TRIGGER_URL);
 
 const classZzal = useRef();
 // const classZzalPosition = new Vector3(-107, 0.05, -78); // -10.5  
@@ -110,7 +120,7 @@ const classZzal = useRef();
 
 useEffect(() => {
   const loader = new THREE.TextureLoader();
-  loader.load('/assets/images/class_zzal.png', (texture) => {
+  loader.load(CLASS_ZZAL_URL, (texture) => {
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
 
@@ -137,7 +147,7 @@ useEffect(() => {
 
 useEffect(() => {
   const loader = new THREE.TextureLoader();
-  loader.load('/assets/images/class_zzal2.png', (texture) => {
+  loader.load(CLASS_ZZAL_SECOND_URL, (texture) => {
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
 
@@ -166,7 +176,7 @@ useEffect(() => {
 
   const pptClickRef = useRef();
   const pptClickMeshPosition = new Vector3(-92.1, 6.8, -69.5);
-  const pptClickTexture = useTexture('/assets/images/ppt_click.png');
+  const pptClickTexture = useTexture(PPT_CLICK_URL);
 
   useEffect(() => {
     if (classTexture) {
@@ -653,28 +663,28 @@ useEffect(() => {
 
       <ManualAudioPlayer
         ref={classAudioRef}
-        url="/assets/audio/classScene_bgm.mp3"
+        url={CLASS_BGM_URL}
         volume={1}
         loop={false}
         position={[-96, 2, -66]}
       />
       <ManualAudioPlayer
         ref={presentAudioRef}
-        url="/assets/audio/classScene_daegam_talk.mp3"
+        url={CLASS_GAMZA_AUDIO_URL}
         volume={2}
         loop={false}
         position={[-96, 2, -66]}
       />
       <ManualAudioPlayer
         ref={bbongAudioRef}
-        url="/assets/audio/classScene_onion_daegam.mp3"
+        url={CLASS_ONION_AUDIO_URL}
         volume={1}
         loop={false}
         position={[-96, 2, -66]}
       />
       <ManualAudioPlayer
         ref={bbyongAudioRef}
-        url="/assets/audio/bbong.mp3"
+        url={BBONG_AUDIO_URL}
         volume={3}
         loop={false}
         position={[-96, 2, -66]}

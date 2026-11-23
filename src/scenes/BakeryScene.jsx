@@ -10,6 +10,7 @@ import { BakeryGamza } from '../components/BakeryGamza';
 import { BamGoguma } from '../components/BamGoguma';
 import { useTexture } from '@react-three/drei';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
+import { getAssetUrl } from '../utils/assetUrl';
 
 import {
   disappearPlayer,
@@ -24,6 +25,14 @@ import {
   // createArrows,
 } from '../utils/Common';
 
+const BAKERY_TRIGGER_URL = getAssetUrl('/assets/images/bakeryTrigger.png');
+const BAKERY_ZZAL_URL = getAssetUrl('/assets/images/bakery_zzal.png');
+const BAKERY_ZZAL_SECOND_URL = getAssetUrl('/assets/images/bakery_zzal2.png');
+const BAKERY_AUDIO_URL = getAssetUrl('/assets/audio/bakeryScene.mp3');
+const BAKERY_SORRY_AUDIO_URL = getAssetUrl('/assets/audio/bakeryScene_sorry.mp3');
+const GOGUMI_AUDIO_URL = getAssetUrl('/assets/audio/gogumi.mp3');
+
+/** 베이커리 아르바이트 장면의 모델·카메라·오디오 진행을 제어한다. */
 export default function BakeryScene({
   playerRef,
   setDisableMovement,
@@ -61,14 +70,14 @@ export default function BakeryScene({
   const light = new PointLight('white', 3, 200, 1);
 
   const BakerySpotMeshPosition = new Vector3(31, 0.005, -38);
-  const bakeryTexture = useTexture('/assets/images/bakeryTrigger.png');
+  const bakeryTexture = useTexture(BAKERY_TRIGGER_URL);
   const bakeryZzal = useRef();
   const bakeryZzal2 = useRef();
   const bakeryZzal3 = useRef();
 
   useEffect(() => {
     const loader = new THREE.TextureLoader();
-    loader.load('/assets/images/bakery_zzal.png', (texture) => {
+    loader.load(BAKERY_ZZAL_URL, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
   
@@ -114,7 +123,7 @@ export default function BakeryScene({
   
   useEffect(() => {
     const loader = new THREE.TextureLoader();
-    loader.load('/assets/images/bakery_zzal2.png', (texture) => {
+    loader.load(BAKERY_ZZAL_SECOND_URL, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
 
@@ -359,21 +368,21 @@ export default function BakeryScene({
 
       <ManualAudioPlayer
         ref={bakeryAudioRef}
-        url="/assets/audio/bakeryScene.mp3"
+        url={BAKERY_AUDIO_URL}
         volume={3}
         loop={false}
         position={[30, 2, -38]}
       />
       <ManualAudioPlayer
         ref={bakerySorryAudioRef}
-        url="/assets/audio/bakeryScene_sorry.mp3"
+        url={BAKERY_SORRY_AUDIO_URL}
         volume={3}
         loop={false}
         position={[30, 2, -38]}
       />
       <ManualAudioPlayer
         ref={gogumiAudioRef}
-        url="/assets/audio/gogumi.mp3"
+        url={GOGUMI_AUDIO_URL}
         volume={3}
         loop={false}
         position={[30, 2, -38]}

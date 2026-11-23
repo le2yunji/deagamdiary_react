@@ -11,12 +11,18 @@ import {
 } from 'three';
 import * as THREE from 'three';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
+import { getAssetUrl } from '../utils/assetUrl';
 
+const FLOOR_TEXTURE_URL = getAssetUrl('/assets/images/floor.svg');
+const ROAD_ARROW_TEXTURE_URL = getAssetUrl('/assets/images/road_arrow.png');
+const STREET_SVG_URL = getAssetUrl('/assets/images/street.svg');
+
+/** 이동 가능한 바닥과 도로 안내 텍스처를 표시하고 클릭 지점을 전달한다. */
 export default function Ground({ onClickGround }) {
   const groupRef = useRef();
 
   // const texture = useTexture('/assets/images/grid_only2.png');
-  const texture = useTexture('/assets/images/floor.svg');
+  const texture = useTexture(FLOOR_TEXTURE_URL);
   const isDragging = useRef(false);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.needsUpdate = true;
@@ -26,7 +32,7 @@ export default function Ground({ onClickGround }) {
   texture.repeat.y = 60;
   texture.premultiplyAlpha = true;
 
-  const texture2 = useTexture('/assets/images/road_arrow.png');
+  const texture2 = useTexture(ROAD_ARROW_TEXTURE_URL);
   // texture2.colorSpace = THREE.SRGBColorSpace;
   // texture2.needsUpdate = true;
   // texture2.premultiplyAlpha = true;
@@ -60,7 +66,7 @@ export default function Ground({ onClickGround }) {
 // ✅ SVG를 geometry로 변환
 useEffect(() => {
   const svgLoader = new SVGLoader();
-  svgLoader.load('/assets/images/street.svg', (data) => {
+  svgLoader.load(STREET_SVG_URL, (data) => {
     const paths = data.paths;
     const svgGroup = new THREE.Group();
 

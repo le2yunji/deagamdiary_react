@@ -11,6 +11,7 @@ import { AlbaGamza } from '../components/AlbaGamza';
 import { Posters } from '../components/AlbaPosters';
 import { useTexture } from '@react-three/drei';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
+import { getAssetUrl } from '../utils/assetUrl';
 
 import {
   disappearPlayer,
@@ -20,6 +21,12 @@ import {
   // returnCameraY
 } from '../utils/Common';
 
+const ALBA_TRIGGER_URL = getAssetUrl('/assets/images/albaTrigger.png');
+const ALBA_AHA_AUDIO_URL = getAssetUrl('/assets/audio/albaScene_aha.mp3');
+const ALBA_HMM_AUDIO_URL = getAssetUrl('/assets/audio/albaScene_hmm.mp3');
+const BBONG_AUDIO_URL = getAssetUrl('/assets/audio/bbong.mp3');
+
+/** 알바 포스터 선택 장면의 모델·카메라·오디오 진행을 제어한다. */
 export default function AlbaScene({
   playerRef,
   setPlayerVisible,
@@ -58,7 +65,7 @@ export default function AlbaScene({
   const [selectedPoster, setSelectedPoster] = useState(null);
 
   const AlbaSpotMeshPosition = new Vector3(-25.5, 0.005, -10);
-  const albaTexture = useTexture('/assets/images/albaTrigger.png');
+  const albaTexture = useTexture(ALBA_TRIGGER_URL);
 
   useEffect(() => {
     if (albaTexture) {
@@ -316,21 +323,21 @@ export default function AlbaScene({
         />
         <ManualAudioPlayer
           ref={ahaAudioRef}
-          url="/assets/audio/albaScene_aha.mp3"
+          url={ALBA_AHA_AUDIO_URL}
           volume={3}
           loop={false}
           position={[-25, 2, -10]}
         />
         <ManualAudioPlayer
           ref={hmmAudioRef}
-          url="/assets/audio/albaScene_hmm.mp3"
+          url={ALBA_HMM_AUDIO_URL}
           volume={3}
           loop={false}
           position={[-25, 2, -10]}
         />
         <ManualAudioPlayer
         ref={bbongAudioRef}
-        url="/assets/audio/bbong.mp3"
+        url={BBONG_AUDIO_URL}
         volume={3}
         loop={false}
         position={[87, 2, -16]}

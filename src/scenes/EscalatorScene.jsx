@@ -9,11 +9,16 @@ import CloudEffect from '../components/CloudEffect';
 import { Escalator } from "../components/Escalator";
 import { useTexture } from '@react-three/drei';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
+import { getAssetUrl } from '../utils/assetUrl';
 
 import {
   disappearPlayer,
 } from '../utils/Common';
 
+const ESCALATOR_TRIGGER_URL = getAssetUrl('/assets/images/houseTrigger.png');
+const BBONG_AUDIO_URL = getAssetUrl('/assets/audio/bbong.mp3');
+
+/** 에스컬레이터 엔딩 장면의 모델·카메라·영상 전환을 제어한다. */
 export default function EscalatorScene({
   playerRef,
   setDisableMovement,
@@ -44,7 +49,7 @@ export default function EscalatorScene({
   const [showCloudEffect, setShowCloudEffect] = useState(false);
 
   const EscalatorSpotMeshPosition = new Vector3(43.5, 0.005, 120);
-  const escalatorTexture = useTexture('/assets/images/houseTrigger.png');
+  const escalatorTexture = useTexture(ESCALATOR_TRIGGER_URL);
 
   const hasEnded = useRef(false); // ✅ 한 번만 실행
 
@@ -59,7 +64,6 @@ export default function EscalatorScene({
 
 
   const gotoendAudio = document.getElementById("bg-audio2");
-  const escalatorAudioRef = useRef();
        
 
   // ⚪️ 구름 이펙트
@@ -105,9 +109,6 @@ export default function EscalatorScene({
         escalatorSpotRef.current.visible = false;
 
         if (gotoendAudio) gotoendAudio.volume = 0.15; //📢
-
-        escalatorAudioRef.current?.play();
-
 
             setTimeout(() => {
          
@@ -300,15 +301,6 @@ export default function EscalatorScene({
             // innerWallMaterial={innerWallMaterial} // ✅ 전달
         /> */}
 
-      <ManualAudioPlayer
-        ref={escalatorAudioRef}
-        url="/assets/audio/escalatorScene.mp3"
-        volume={3}
-        loop={false}
-        position={[30, 2, -38]}
-      />
-
-
       {showCloudEffect && (
             <CloudEffect 
             position={[
@@ -326,7 +318,7 @@ export default function EscalatorScene({
 
         <ManualAudioPlayer
         ref={bbongAudioRef}
-        url="/assets/audio/bbong.mp3"
+        url={BBONG_AUDIO_URL}
         volume={3}
         loop={false}
         position={[30, 2, -38]}

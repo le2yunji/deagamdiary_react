@@ -12,6 +12,7 @@ import { AudioPlayer } from '../utils/AudioPlayer';
 import { AudioTimelinePlayer } from '../utils/AudioTimelinePlayer';
 import { useTexture } from '@react-three/drei';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
+import { getAssetUrl } from '../utils/assetUrl';
 
 import {
   disappearPlayer,
@@ -22,6 +23,12 @@ import {
   // returnCameraY
 } from '../utils/Common';
 
+const GPT_TRIGGER_URL = getAssetUrl('/assets/images/gptTrigger.png');
+const GPT_ZZAL_URL = getAssetUrl('/assets/images/gpt_zzal.png');
+const GPT_AUDIO_URL = getAssetUrl('/assets/audio/gptScene.mp3');
+const BBONG_AUDIO_URL = getAssetUrl('/assets/audio/bbong.mp3');
+
+/** GPT 상담 장면의 모델·카메라·이미지·오디오 진행을 제어한다. */
 export default function ChatGPTScene({
   playerRef,
   setCameraTarget,
@@ -53,7 +60,7 @@ export default function ChatGPTScene({
   const bbongAudioRef = useRef();
 
   const ChatGPTSpotMeshPosition = new Vector3(91, 0.005, -17.5);  //(92.5, 0.005, -12.5);
-  const gptTexture = useTexture('/assets/images/gptTrigger.png');
+  const gptTexture = useTexture(GPT_TRIGGER_URL);
 
   useEffect(() => {
     if (gptTexture) {
@@ -69,7 +76,7 @@ const gptZzal = useRef()
 
   useEffect(() => {
     const loader = new THREE.TextureLoader();
-    loader.load('/assets/images/gpt_zzal.png', (texture) => {
+    loader.load(GPT_ZZAL_URL, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
 
@@ -259,7 +266,7 @@ const gptZzal = useRef()
     />
      <ManualAudioPlayer
         ref={gptAudioRef}
-        url="/assets/audio/gptScene.mp3"
+        url={GPT_AUDIO_URL}
         volume={3}
         loop={false}
         position={[87, 2, -16]}
@@ -267,7 +274,7 @@ const gptZzal = useRef()
 
     <ManualAudioPlayer
         ref={bbongAudioRef}
-        url="/assets/audio/bbong.mp3"
+        url={BBONG_AUDIO_URL}
         volume={3}
         loop={false}
         position={[87, 2, -16]}

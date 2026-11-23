@@ -6,10 +6,13 @@ import { Player } from './Player';
 import useKeyboardControls from '../hooks/useKeyboardControls';
 import * as THREE from 'three'
 import { gsap } from 'gsap';
+import { getAssetUrl } from '../utils/assetUrl';
 
 const textureLoader = new TextureLoader();
+const WALK_SOUND_URL = getAssetUrl('/assets/audio/walk_sound.mp3');
+const FOOTPRINT_TEXTURE_URL = getAssetUrl('/assets/images/footprint.webp');
 
-
+/** 플레이어 이동·애니메이션·카메라 추적·발자국 효과를 함께 제어한다. */
 const PlayerController = forwardRef(({  lockCamera, destination, cameraRef, disableMovement = false, scene }, ref) => {
   const playerRef = useRef();
   const cameraOffset = new Vector3(1, 3, 5);
@@ -172,7 +175,7 @@ const PlayerController = forwardRef(({  lockCamera, destination, cameraRef, disa
             lastStepSoundTime.current = now;
           
             // ✅ 발소리 재생
-            audioLoaderRef.current.load('/assets/audio/walk_sound.mp3', (buffer) => {
+            audioLoaderRef.current.load(WALK_SOUND_URL, (buffer) => {
               const sound = new Audio(audioListenerRef.current);
               sound.setBuffer(buffer);
               sound.setVolume(0.04);
@@ -182,7 +185,7 @@ const PlayerController = forwardRef(({  lockCamera, destination, cameraRef, disa
           }
           
 
-      textureLoader.load('/assets/images/footprint.webp', (texture) => {
+      textureLoader.load(FOOTPRINT_TEXTURE_URL, (texture) => {
         texture.colorSpace = THREE.SRGBColorSpace;
         texture.needsUpdate = true;
         const geo = new PlaneGeometry(0.6, 0.6);

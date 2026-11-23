@@ -177,6 +177,28 @@ export function findRawGlbReferences(source) {
   return [...new Set(references)].sort()
 }
 
+/** 실행 코드에 공통 URL 헬퍼 없이 남아 있는 이미지·오디오·영상 경로를 찾는다. */
+export function findRawRuntimeAssetReferences(source) {
+  const withoutComments = source
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/^\s*\/\/.*$/gm, '')
+  const references = []
+
+  for (const line of withoutComments.split('\n')) {
+    if (!line.includes('/assets/') || line.includes('getAssetUrl(')) {
+      continue
+    }
+
+    const matches = line.match(
+      /\/assets\/[A-Za-z0-9_.$/{}/-]+\.[A-Za-z0-9]+/g
+    ) ?? []
+    references.push(...matches.map((reference) => reference.slice(1)))
+  }
+
+  return [...new Set(references)].sort()
+}
+
 /** 원본 목록의 객체 키와 중복 파일 충돌을 검사한다. */
 export function validateAssetEntries(entries) {
   const entriesByObjectKey = new Map()

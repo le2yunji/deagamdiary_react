@@ -8,6 +8,7 @@ import { gsap } from 'gsap';
 import { NomoneyGamza } from '../components/NomoneyGamza';
 import { useTexture } from '@react-three/drei';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
+import { getAssetUrl } from '../utils/assetUrl';
 
 import {
   disappearPlayer,
@@ -20,8 +21,15 @@ import {
   setDisableMovement
 } from '../utils/Common';
 
-// 지하철 씬을 담당하는 컴포넌트입니다.
-// 플레이어가 특정 위치(스팟)에 도달하면 지하철이 등장하고 애니메이션이 실행됩니다.
+const NOMONEY_TRIGGER_URL = getAssetUrl('/assets/images/noMoneyTrigger.png');
+const NOMONEY_ZZAL_URL = getAssetUrl('/assets/images/nomoney_zzal.png');
+const NOMONEY_TEXT_URL = getAssetUrl('/assets/images/nomoney.webp');
+const NOMONEY_TALK_URL = getAssetUrl('/assets/images/nomoney_talk.webp');
+const NOMONEY_AUDIO_URL = getAssetUrl('/assets/audio/nomoneyScene.mp3');
+const NOMONEY_MONEY_AUDIO_URL = getAssetUrl('/assets/audio/nomoney_money.mp3');
+const BBONG_AUDIO_URL = getAssetUrl('/assets/audio/bbong.mp3');
+
+/** 잔고 부족 장면의 모델·카메라·대화 이미지·오디오 진행을 제어한다. */
 export default function NomoneyScene({
   playerRef,
   setCameraTarget,
@@ -54,7 +62,7 @@ export default function NomoneyScene({
   const nomoneyTalkAudioRef = useRef();
   const bbongAudioRef= useRef();
 
-  const nomoneyTexture = useTexture('/assets/images/noMoneyTrigger.png');
+  const nomoneyTexture = useTexture(NOMONEY_TRIGGER_URL);
 
   useEffect(() => {
     if (nomoneyTexture) {
@@ -68,7 +76,7 @@ export default function NomoneyScene({
 const nomneyZzal = useRef();
   useEffect(() => {
     const loader = new THREE.TextureLoader();
-    loader.load('/assets/images/nomoney_zzal.png', (texture) => {
+    loader.load(NOMONEY_ZZAL_URL, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
 
@@ -97,7 +105,7 @@ const nomneyZzal = useRef();
   // 텅장 텍스트 💬
   const noMoneyText = useRef();
   useEffect(() => {
-    const texture = new THREE.TextureLoader().load('/assets/images/nomoney.webp');
+    const texture = new THREE.TextureLoader().load(NOMONEY_TEXT_URL);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
@@ -114,7 +122,7 @@ const nomneyZzal = useRef();
  // 💭
   const nomoneyTalk = useRef();
   useEffect(() => {
-    const texture = new THREE.TextureLoader().load('/assets/images/nomoney_talk.webp');
+    const texture = new THREE.TextureLoader().load(NOMONEY_TALK_URL);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
@@ -335,21 +343,21 @@ const nomneyZzal = useRef();
     )}
      <ManualAudioPlayer
         ref={nomoneyAudioRef}
-        url="/assets/audio/nomoneyScene.mp3"
+        url={NOMONEY_AUDIO_URL}
         volume={1.3}
         loop={false}
         position={[-92, 2, -15]}
       />
       <ManualAudioPlayer
         ref={nomoneyTalkAudioRef}
-        url="/assets/audio/nomoney_money.mp3"
+        url={NOMONEY_MONEY_AUDIO_URL}
         volume={1.3}
         loop={false}
         position={[-92, 2, -15]}
       />
      <ManualAudioPlayer
         ref={bbongAudioRef}
-        url="/assets/audio/bbong.mp3"
+        url={BBONG_AUDIO_URL}
         volume={3}
         loop={false}
         position={[-92, 2, -15]}
