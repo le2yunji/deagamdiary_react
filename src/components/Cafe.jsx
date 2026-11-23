@@ -4,10 +4,14 @@ import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
 import * as THREE from 'three'
+import { getAssetUrl } from '../utils/assetUrl'
 
+const CAFE_MODEL_URL = getAssetUrl('/assets/models/CafeScene.glb')
+
+/** 카페 배경 GLB를 복제하고 장면 애니메이션 제어 정보를 전달한다. */
 export const Cafe = forwardRef(({ onLoaded, ...props }, ref) => {
   const group = React.useRef()
-  const { scene, animations } = useGLTF('/assets/models/CafeScene.glb')
+  const { scene, animations } = useGLTF(CAFE_MODEL_URL)
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
   const { actions, mixer } = useAnimations(animations, group)
@@ -117,4 +121,4 @@ export const Cafe = forwardRef(({ onLoaded, ...props }, ref) => {
   )
 })
 
-useGLTF.preload('/assets/models/CafeScene.glb')
+useGLTF.preload(CAFE_MODEL_URL)

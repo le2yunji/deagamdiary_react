@@ -10,10 +10,14 @@ import { useGLTF, useAnimations } from '@react-three/drei';
 import { SkeletonUtils } from 'three-stdlib';
 import * as THREE from 'three';
 import { useGraph } from '@react-three/fiber'
+import { getAssetUrl } from '../utils/assetUrl';
 
+const NOMONEY_GAMZA_MODEL_URL = getAssetUrl('/assets/models/Gamza_Nomoney.glb');
+
+/** 잔고 부족 장면 감자 GLB와 애니메이션을 장면 제어에 연결한다. */
 export const NomoneyGamza = forwardRef(({ onLoaded, ...props }, ref) => {
   const group = React.useRef()
-  const { scene, animations } = useGLTF('/assets/models/Gamza_Nomoney.glb')
+  const { scene, animations } = useGLTF(NOMONEY_GAMZA_MODEL_URL)
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
   const { actions, mixer } = useAnimations(animations, group);
@@ -82,4 +86,4 @@ export const NomoneyGamza = forwardRef(({ onLoaded, ...props }, ref) => {
   )
 })
 
-useGLTF.preload('/assets/models/Gamza_Nomoney.glb')
+useGLTF.preload(NOMONEY_GAMZA_MODEL_URL)

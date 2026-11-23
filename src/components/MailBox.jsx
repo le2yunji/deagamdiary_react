@@ -10,10 +10,14 @@ import React, {
 import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { SkeletonUtils } from 'three-stdlib';
+import { getAssetUrl } from '../utils/assetUrl';
 
+const MAIL_BOX_MODEL_URL = getAssetUrl('/assets/models/MailBox.glb');
+
+/** 우편함 GLB를 복제하고 메시 그림자를 설정해 장면에 제공한다. */
 export const MailBox = forwardRef(({ onLoaded, ...props }, ref) => {
   const group = useRef();
-  const { scene } = useGLTF('/assets/models/MailBox.glb');
+  const { scene } = useGLTF(MAIL_BOX_MODEL_URL);
   const clonedScene = useMemo(() => SkeletonUtils.clone(scene), [scene]);
 
   useImperativeHandle(ref, () => group.current);
@@ -39,4 +43,4 @@ export const MailBox = forwardRef(({ onLoaded, ...props }, ref) => {
   );
 });
 
-useGLTF.preload('/assets/models/MailBox.glb');
+useGLTF.preload(MAIL_BOX_MODEL_URL);

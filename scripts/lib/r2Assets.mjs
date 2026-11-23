@@ -155,6 +155,28 @@ export function getContentType(filePath) {
   return contentType
 }
 
+/** GLB 로더에 공통 URL 헬퍼 없이 직접 전달된 에셋 경로를 찾는다. */
+export function findRawGlbReferences(source) {
+  const withoutComments = source
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/^\s*\/\/.*$/gm, '')
+  const references = []
+
+  for (const line of withoutComments.split('\n')) {
+    if (!line.includes('/assets/models/') || line.includes('getAssetUrl(')) {
+      continue
+    }
+
+    const matches = line.match(
+      /\/assets\/models\/[A-Za-z0-9_.$/{}/-]+\.glb/g
+    ) ?? []
+    references.push(...matches.map((reference) => reference.slice(1)))
+  }
+
+  return [...new Set(references)].sort()
+}
+
 /** 원본 목록의 객체 키와 중복 파일 충돌을 검사한다. */
 export function validateAssetEntries(entries) {
   const entriesByObjectKey = new Map()

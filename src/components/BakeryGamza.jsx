@@ -10,10 +10,14 @@ import { useGLTF, useAnimations } from '@react-three/drei';
 import { SkeletonUtils } from 'three-stdlib';
 import * as THREE from 'three';
 import { useGraph } from '@react-three/fiber'
+import { getAssetUrl } from '../utils/assetUrl';
 
+const BAKERY_GAMZA_MODEL_URL = getAssetUrl('/assets/models/BakeryGamza-draco.glb');
+
+/** 베이커리 감자 GLB의 애니메이션과 외부 제어 ref를 연결한다. */
 export const BakeryGamza = forwardRef(({ onLoaded, ...props }, ref) => {
   const group = React.useRef()
-  const { scene, animations } = useGLTF('/assets/models/BakeryGamza-draco.glb')
+  const { scene, animations } = useGLTF(BAKERY_GAMZA_MODEL_URL)
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
   const { actions, mixer } = useAnimations(animations, group);
@@ -79,4 +83,4 @@ export const BakeryGamza = forwardRef(({ onLoaded, ...props }, ref) => {
   )
 })
 
-useGLTF.preload('/assets/models/BakeryGamza-draco.glb')
+useGLTF.preload(BAKERY_GAMZA_MODEL_URL)

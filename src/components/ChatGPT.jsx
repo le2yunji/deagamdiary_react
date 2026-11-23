@@ -11,12 +11,15 @@ import { useGLTF, useAnimations,  } from '@react-three/drei';
 import { SkeletonUtils } from 'three-stdlib';
 import * as THREE from 'three';
 import { useGraph } from '@react-three/fiber'
+import { getAssetUrl } from '../utils/assetUrl';
 
+const CHAT_GPT_MODEL_URL = getAssetUrl('/assets/models/gpt3.glb');
 
+/** GPT 장면 GLB와 감자 애니메이션을 외부 장면 제어에 연결한다. */
 export const ChatGPT = forwardRef(({ onLoaded, onGamzaRef, ...props }, ref) => {
   const group = useRef()
   const gamzaRef = useRef();
-  const { scene, animations } = useGLTF('/assets/models/gpt3.glb');
+  const { scene, animations } = useGLTF(CHAT_GPT_MODEL_URL);
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
   const { actions, mixer } = useAnimations(animations, group)
@@ -173,4 +176,4 @@ export const ChatGPT = forwardRef(({ onLoaded, onGamzaRef, ...props }, ref) => {
   )
 })
 
-useGLTF.preload('/assets/models/gpt3.glb');
+useGLTF.preload(CHAT_GPT_MODEL_URL);

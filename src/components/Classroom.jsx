@@ -10,10 +10,14 @@ import React, {
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { SkeletonUtils } from 'three-stdlib';
 import * as THREE from 'three';
+import { getAssetUrl } from '../utils/assetUrl';
 
+const CLASSROOM_MODEL_URL = getAssetUrl('/assets/models/Classroomscene-draco.glb');
+
+/** 교실 배경 GLB를 복제하고 재질·그림자·애니메이션을 설정한다. */
 export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
   const group = useRef();
-  const { scene, animations } = useGLTF('/assets/models/Classroomscene-draco.glb');
+  const { scene, animations } = useGLTF(CLASSROOM_MODEL_URL);
   const { actions, mixer } = useAnimations(animations, group);
 
   const clonedScene = useMemo(() => {
@@ -67,4 +71,4 @@ export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
   );
 });
 
-useGLTF.preload('/assets/models/Classroomscene-draco.glb');
+useGLTF.preload(CLASSROOM_MODEL_URL);

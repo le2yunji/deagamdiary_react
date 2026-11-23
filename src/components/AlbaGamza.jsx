@@ -4,10 +4,14 @@ import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
 import * as THREE from 'three';
+import { getAssetUrl } from '../utils/assetUrl';
 
+const ALBA_GAMZA_MODEL_URL = getAssetUrl('/assets/models/Gamza_Board.glb');
+
+/** 알바 장면 감자 GLB와 애니메이션을 장면 제어 코드에 연결한다. */
 export const AlbaGamza = forwardRef(function AlbaGamza({ onLoaded, ...props }, ref) {
   const group = React.useRef()
-  const { scene, animations } = useGLTF('/assets/models/Gamza_Board.glb')
+  const { scene, animations } = useGLTF(ALBA_GAMZA_MODEL_URL)
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
   const { actions, mixer } = useAnimations(animations, group)
@@ -79,4 +83,4 @@ export const AlbaGamza = forwardRef(function AlbaGamza({ onLoaded, ...props }, r
   )
 })
 
-useGLTF.preload('/assets/models/Gamza_Board.glb')
+useGLTF.preload(ALBA_GAMZA_MODEL_URL)

@@ -10,10 +10,14 @@ import { useGLTF, useAnimations } from '@react-three/drei';
 import { SkeletonUtils } from 'three-stdlib';
 import * as THREE from 'three';
 import { useGraph } from '@react-three/fiber'
+import { getAssetUrl } from '../utils/assetUrl';
 
+const MAIL_GAMZA_MODEL_URL = getAssetUrl('/assets/models/Gamza_Post.glb');
+
+/** 우편 장면 감자 GLB와 단발 애니메이션을 장면 제어에 연결한다. */
 export const MailGamza = forwardRef(({ onLoaded, ...props }, ref) => {
   const group = React.useRef()
-  const { scene, animations } = useGLTF('/assets/models/Gamza_Post.glb')
+  const { scene, animations } = useGLTF(MAIL_GAMZA_MODEL_URL)
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
   const { actions, mixer } = useAnimations(animations, group);
@@ -73,4 +77,4 @@ export const MailGamza = forwardRef(({ onLoaded, ...props }, ref) => {
   )
 })
 
-useGLTF.preload('/assets/models/Gamza_Post.glb')
+useGLTF.preload(MAIL_GAMZA_MODEL_URL)

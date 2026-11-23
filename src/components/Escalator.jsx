@@ -5,10 +5,14 @@ import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
 import * as THREE from 'three'
+import { getAssetUrl } from '../utils/assetUrl'
 
+const ESCALATOR_MODEL_URL = getAssetUrl('/assets/models/escalator.glb')
+
+/** 에스컬레이터 GLB와 감자 애니메이션을 엔딩 장면 제어에 연결한다. */
 export const Escalator = forwardRef(({ onLoaded, onGamzaRef, onGamRef, ...props }, ref) => {
   const group = React.useRef()
-  const { scene, animations } = useGLTF('/assets/models/escalator.glb')
+  const { scene, animations } = useGLTF(ESCALATOR_MODEL_URL)
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
   const { actions, mixer } = useAnimations(animations, group)
@@ -140,4 +144,4 @@ export const Escalator = forwardRef(({ onLoaded, onGamzaRef, onGamRef, ...props 
   )
 })
 
-useGLTF.preload('/assets/models/escalator.glb')
+useGLTF.preload(ESCALATOR_MODEL_URL)

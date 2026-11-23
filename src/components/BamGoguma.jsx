@@ -4,10 +4,14 @@ import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
 import * as THREE from 'three';
+import { getAssetUrl } from '../utils/assetUrl';
 
+const BAM_GOGUMA_MODEL_URL = getAssetUrl('/assets/models/BamGoguma.glb');
+
+/** 밤고구마 GLB를 복제하고 단발 애니메이션을 장면에 제공한다. */
 export const BamGoguma = forwardRef(({ onLoaded, ...props }, ref) => {
   const group = React.useRef()
-  const { scene, animations } = useGLTF('/assets/models/BamGoguma.glb')
+  const { scene, animations } = useGLTF(BAM_GOGUMA_MODEL_URL)
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
   const { actions, mixer } = useAnimations(animations, group)
@@ -65,4 +69,4 @@ export const BamGoguma = forwardRef(({ onLoaded, ...props }, ref) => {
   )
 })
 
-useGLTF.preload('/assets/models/BamGoguma.glb')
+useGLTF.preload(BAM_GOGUMA_MODEL_URL)

@@ -2,10 +2,14 @@
 import React, { useEffect, forwardRef, useImperativeHandle } from 'react';
 import { useGLTF, useAnimations } from '@react-three/drei'
 import * as THREE from 'three';
+import { getAssetUrl } from '../utils/assetUrl';
 
+const FILE_MODEL_URL = getAssetUrl('/assets/models/File.glb');
+
+/** 알바 장면 파일 GLB와 단발 애니메이션을 장면 제어에 연결한다. */
 export const File = forwardRef(({ onLoaded, ...props }, ref) => {
   const group = React.useRef()
-  const { nodes, materials, animations } = useGLTF('/assets/models/File.glb')
+  const { nodes, materials, animations } = useGLTF(FILE_MODEL_URL)
   const { actions, mixer } = useAnimations(animations, group)
 
   useImperativeHandle(ref, () => group.current);
@@ -48,4 +52,4 @@ export const File = forwardRef(({ onLoaded, ...props }, ref) => {
   )
 })
 
-useGLTF.preload('/assets/models/File.glb')
+useGLTF.preload(FILE_MODEL_URL)

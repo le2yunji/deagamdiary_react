@@ -2,13 +2,19 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { useLoader } from '@react-three/fiber';
 import { useMemo, useRef, useState, useEffect } from 'react';
 import { Html } from '@react-three/drei';
+import { getAssetUrl } from '../utils/assetUrl';
 
 const posters = [
   'SushiMemo', 'KidsMemo', 'BakeryMemo',
   'DokseoMemo',  'GamzaMemo'
 ];
+const posterModelUrls = posters.map((name) =>
+  getAssetUrl(`/assets/models/${name}.glb`)
+);
+
+/** 알바 포스터 GLB들을 불러오고 선택한 포스터의 상세 화면을 연다. */
 export function Posters({ selectedPoster, setSelectedPoster }) {
-  const gltfs = useLoader(GLTFLoader, posters.map((name) => `/assets/models/${name}.glb`));
+  const gltfs = useLoader(GLTFLoader, posterModelUrls);
 
   const models = useMemo(() => {
     const result = {};

@@ -10,10 +10,14 @@ import React, {
 import { useGLTF, useAnimations } from '@react-three/drei';
 import * as THREE from 'three';
 import { SkeletonUtils } from 'three-stdlib';
+import { getAssetUrl } from '../utils/assetUrl';
 
+const METRO_MODEL_URL = getAssetUrl('/assets/models/Metro-draco.glb');
+
+/** 지하철 GLB를 복제하고 장면 애니메이션 제어 정보를 전달한다. */
 export const Metro = forwardRef(({ onLoaded, ...props }, ref) => {
   const group = React.useRef()
-  const { scene, animations }= useGLTF('/assets/models/Metro-draco.glb')
+  const { scene, animations }= useGLTF(METRO_MODEL_URL)
 
   // ✅ clone: 애니메이션 충돌 방지
   const clonedScene = useMemo(() => SkeletonUtils.clone(scene), [scene]);
@@ -48,4 +52,4 @@ export const Metro = forwardRef(({ onLoaded, ...props }, ref) => {
   );
 })
 
-useGLTF.preload('/assets/models/Metro-draco.glb')
+useGLTF.preload(METRO_MODEL_URL)

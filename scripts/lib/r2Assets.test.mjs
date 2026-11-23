@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises'
+import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
@@ -8,6 +8,7 @@ import {
   buildAssetInventory,
   buildAwsUploadArgs,
   extractAssetReferences,
+  findRawGlbReferences,
   getContentType,
   validateAssetBuffer,
   validateAssetEntries,
@@ -15,6 +16,56 @@ import {
   validateRemoteAssetResponse,
   validateReferencedAssets,
 } from './r2Assets.mjs'
+
+test('finds raw GLB loader paths but allows getAssetUrl constants', () => {
+  const source = `
+    const rawModel = useGLTF('/assets/models/Raw.glb')
+    useGLTF.preload('/assets/models/Raw.glb')
+    const rawUrls = names.map((name) => \`/assets/models/\${name}.glb\`)
+    const safeUrl = getAssetUrl('/assets/models/Safe.glb')
+    const safeModel = useGLTF(safeUrl)
+  `
+
+  assert.deepEqual(findRawGlbReferences(source), [
+    'assets/models/${name}.glb',
+    'assets/models/Raw.glb',
+  ])
+})
+
+test('runtime component GLB loaders use the shared asset URL helper', async () => {
+  const componentFiles = [
+    'src/components/AlbaBoard.jsx',
+    'src/components/AlbaGamza.jsx',
+    'src/components/AlbaPosters.jsx',
+    'src/components/Bakery.jsx',
+    'src/components/BakeryGamza.jsx',
+    'src/components/BamGoguma.jsx',
+    'src/components/Cafe.jsx',
+    'src/components/CafeGamza.jsx',
+    'src/components/ChatGPT.jsx',
+    'src/components/Classroom.jsx',
+    'src/components/ClassroomGamza.jsx',
+    'src/components/Escalator.jsx',
+    'src/components/File.jsx',
+    'src/components/MailBox.jsx',
+    'src/components/MailGamza.jsx',
+    'src/components/Metro.jsx',
+    'src/components/NomoneyGamza.jsx',
+    'src/components/Onion.jsx',
+    'src/components/Player.jsx',
+    'src/components/PlayerController.jsx',
+  ]
+  const violations = []
+
+  for (const filePath of componentFiles) {
+    const source = await readFile(filePath, 'utf8')
+    for (const reference of findRawGlbReferences(source)) {
+      violations.push(`${filePath}: ${reference}`)
+    }
+  }
+
+  assert.deepEqual(violations, [])
+})
 
 test('builds an R2 upload command without credentials', () => {
   const asset = {
