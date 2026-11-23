@@ -527,9 +527,8 @@ Expected: 모든 GitHub Actions check 통과.
 
 **Step 4: Vercel Preview 검증**
 
-Preview origin이 R2 CORS 허용 목록에 없으면 Preview URL을 임시로 허용하거나 운영 Vercel origin에서만 최종 확인한다. 와일드카드 origin은 사용하지 않는다.
+공개 읽기 전용 에셋은 사용자가 승인한 와일드카드 CORS로 Vercel Preview와 향후 커스텀 도메인에서도 확인한다.
 
 **Step 5: main 병합 뒤 운영 확인**
 
 운영 배포에서 Network와 Console을 다시 확인한다. 정상 동작이 확인되면 이슈 #8을 닫는다.
-
