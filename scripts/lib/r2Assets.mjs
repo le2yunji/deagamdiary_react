@@ -120,7 +120,7 @@ export function validateRemoteAssetResponse(asset, response, expectedOrigin) {
   }
 
   const allowedOrigin = response.headers.get('access-control-allow-origin')
-  if (allowedOrigin !== expectedOrigin) {
+  if (allowedOrigin !== '*' && allowedOrigin !== expectedOrigin) {
     throw new Error(
       `CORS mismatch for ${asset.objectKey}: ` +
       `expected ${expectedOrigin}, received ${allowedOrigin}`

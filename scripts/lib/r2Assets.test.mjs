@@ -237,6 +237,27 @@ test('accepts a matching remote R2 response and CORS origin', () => {
   ))
 })
 
+test('accepts wildcard CORS for public R2 assets', () => {
+  const asset = {
+    objectKey: 'assets/models/Player.glb',
+    size: 6,
+  }
+  const response = new Response(null, {
+    status: 200,
+    headers: {
+      'access-control-allow-origin': '*',
+      'content-length': '6',
+      'content-type': 'model/gltf-binary',
+    },
+  })
+
+  assert.doesNotThrow(() => validateRemoteAssetResponse(
+    asset,
+    response,
+    'http://localhost:4173'
+  ))
+})
+
 test('rejects a remote R2 response without the requested CORS origin', () => {
   const asset = {
     objectKey: 'assets/models/Player.glb',

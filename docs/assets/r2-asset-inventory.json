@@ -8,6 +8,30 @@
     "trackedRequiredFiles": 53,
     "excludedEntries": 10
   },
+  "verification": {
+    "verifiedAt": "2026-11-23T16:15:26Z",
+    "publicBaseUrl": "https://pub-8f16ad22f2904f4fa68a2f18fd268daa.r2.dev",
+    "corsAllowedOrigins": [
+      "*"
+    ],
+    "remoteHeadCheck": {
+      "requiredFiles": 108,
+      "status": "passed"
+    },
+    "browserSmokeCheck": {
+      "observedR2Resources": 53,
+      "unmanagedLocalAssetRequests": 0,
+      "consoleErrorsOrWarnings": 0,
+      "verified": [
+        "start video",
+        "guide images and buttons",
+        "GLB rendering",
+        "player movement animation",
+        "footprint texture"
+      ],
+      "status": "passed"
+    }
+  },
   "assets": [
     {
       "sourcePath": "public/assets/audio/albaScene_aha.mp3",
