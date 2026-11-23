@@ -3,10 +3,13 @@ import React, { forwardRef, useEffect, useState, useMemo } from 'react'
 import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
+import { getAssetUrl } from '../utils/assetUrl'
+
+const PLAYER_MODEL_URL = getAssetUrl('/assets/models/Gamza_cycle.glb')
 
 export const Player = forwardRef((props, ref) => {
   const group = React.useRef()
-  const { scene, animations } = useGLTF('/assets/models/Gamza_cycle.glb')
+  const { scene, animations } = useGLTF(PLAYER_MODEL_URL)
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
   const { actions } = useAnimations(animations, ref)
@@ -56,4 +59,4 @@ export const Player = forwardRef((props, ref) => {
   )
 })
 
-useGLTF.preload('/assets/models/Gamza_cycle.glb')
+useGLTF.preload(PLAYER_MODEL_URL)
