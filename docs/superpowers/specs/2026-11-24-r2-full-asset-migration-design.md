@@ -73,18 +73,18 @@ React 애플리케이션과 무거운 정적 에셋의 배포를 분리한다. �
 JavaScript와 JSX에서는 기존 `getAssetUrl()`을 사용한다.
 
 ```jsx
-const modelUrl = getAssetUrl('/assets/models/Bakery.glb')
+const modelUrl = getAssetUrl("/assets/models/Bakery.glb");
 ```
 
 동적으로 파일명을 조합하는 코드도 마지막에 `getAssetUrl()`을 한 번 거친다.
 
 ```jsx
 const modelUrls = names.map((name) =>
-  getAssetUrl(`/assets/models/${name}.glb`)
-)
+  getAssetUrl(`/assets/models/${name}.glb`),
+);
 ```
 
-`public/index.html`은 Create React App이 빌드할 때 치환하는 `REACT_APP_ASSET_BASE_URL` 값을 사용한다. CSS 배경 이미지는 JavaScript가 공통 헬퍼로 만든 CSS 사용자 지정 속성에 넣고, CSS에서는 `var(...)`로 읽는다. 이렇게 하면 R2 주소를 여러 파일에 직접 복사하지 않아도 된다.
+`public/index.html`은 Create React App이 빌드할 때 치환하는 `VITE_ASSET_BASE_URL` 값을 사용한다. CSS 배경 이미지는 JavaScript가 공통 헬퍼로 만든 CSS 사용자 지정 속성에 넣고, CSS에서는 `var(...)`로 읽는다. 이렇게 하면 R2 주소를 여러 파일에 직접 복사하지 않아도 된다.
 
 기본 URL이 비어 있으면 `getAssetUrl()`은 기존 `/assets/...` 주소를 반환한다. 이는 개발 중 임시 복구용이다. 전체 이전이 끝난 뒤 새 clone 검증에서는 R2 기본 URL을 반드시 사용한다.
 

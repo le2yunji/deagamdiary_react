@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/daegam.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="3D 웹 인터랙티브" />
+    <meta name="keywords" content="나는야 말하는 감자, 3D 웹" />
+
+    <!--Open Graph-->
+    <!--http://ogp.me/-->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="움트" />
+    <meta property="og:title" content="움트" />
+    <meta property="og:description" content="졸업 전시 작품 맛 보세요 ♡" />
+    <meta
+      property="og:image"
+      content="%VITE_ASSET_BASE_URL%/assets/images/poster.png"
+    />
+    <meta property="og:url" content="https://iamtalkingpotato.vercel.app/" />
+
+    <!--Twitter Card-->
+    <!--https://developer.twitter.com/en/docs/twitter-for-websites/cards/guides/getting-started-->
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:site" content="움트" />
+    <meta property="twitter:title" content="움트" />
+    <meta property="twitter:description" content="졸업 전시 작품 맛보세요 ♡" />
+    <meta
+      property="twitter:image"
+      content="%VITE_ASSET_BASE_URL%/assets/images/poster.png"
+    />
+    <meta
+      property="twitter:url"
+      content="https://iamtalkingpotato.vercel.app/"
+    />
+
+    <link rel="apple-touch-icon" href="/daegam.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>나는야 말하는 감자</title>
+  </head>
+  <body>
+    <!-- ✅ 시작화면 -->
+    <div id="start-screen-button">
+      <button id="start-screen-btn" style="display: block"></button>
+    </div>
+
+    <div id="start-screen">
+      <video loop playsinline id="start-video">
+        <source
+          src="%VITE_ASSET_BASE_URL%/assets/video/start.webm"
+          type="video/webm"
+        />
+        <source
+          src="%VITE_ASSET_BASE_URL%/assets/video/start.mp4"
+          type="video/mp4"
+        />
+      </video>
+      <button id="start-button" style="display: none"></button>
+    </div>
+
+    <div id="sound-bgm bgm">
+      <audio
+        id="bg-audio"
+        src="%VITE_ASSET_BASE_URL%/assets/audio/ending_bgm.mp3"
+        loop
+      />
+      <audio
+        id="bg-audio2"
+        src="%VITE_ASSET_BASE_URL%/assets/audio/gotoend.mp3"
+        loop
+      />
+    </div>
+
+    <!-- 첫번째 안내 페이지 -->
+    <div id="start-guide1" style="display: none">
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/guide1.png"
+        alt="images/png"
+      />
+      <button id="start-guide-btn1" style="display: none"></button>
+    </div>
+
+    <div id="start-guide2" style="display: none">
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/guide2.png"
+        alt="images/png"
+      />
+      <button id="start-guide-btn2" style="display: none"></button>
+    </div>
+
+    <div class="sound-btn-set" id="sound-btn">
+      <!-- 누르면 음악이 멈추는 버튼, 음악의 현재 상태를 나타내는 버튼 -->
+      <button
+        class="sound-btn"
+        id="sound-on"
+        style="border: none; display: none"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          fill="currentColor"
+          class="bi bi-volume-up-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z"
+          />
+          <path
+            d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89z"
+          />
+          <path
+            d="M8.707 11.182A4.5 4.5 0 0 0 10.025 8a4.5 4.5 0 0 0-1.318-3.182L8 5.525A3.5 3.5 0 0 1 9.025 8 3.5 3.5 0 0 1 8 10.475zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06"
+          />
+        </svg>
+      </button>
+
+      <!-- 누르면 음악이 다시 재생되는 버튼 -->
+      <button class="sound-btn" id="sound-off" style="display: none">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          fill="currentColor"
+          class="bi bi-volume-mute-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06m7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <div style="width: 100vw; height: 100vh" id="root">
+      <!-- 지하철 배경 영상은 현재 사용하지 않음 -->
+    </div>
+
+    <div class="script" id="cafe-script" style="display: none">
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/cafe_script.png"
+        alt="카페 자막"
+      />
+    </div>
+    <div class="script" id="classroom-script" style="display: none">
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/classroom_script.png"
+        alt="클래스룸 자막"
+      />
+    </div>
+    <div class="script" id="nomoney-script" style="display: none">
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/nomoney_script.png"
+        alt="노머니 자막"
+      />
+    </div>
+    <div class="script" id="alba-script" style="display: none">
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/alba_script.png"
+        alt="알바 자막"
+      />
+    </div>
+    <div class="script" id="bakery-script" style="display: none">
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/bakery_script.png"
+        alt="베이커리 자막"
+      />
+    </div>
+    <div class="script" id="gpt-script" style="display: none">
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/gpt_script.png"
+        alt="지피티 자막"
+      />
+    </div>
+    <div class="script" id="mail-script" style="display: none">
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/mail_script.png"
+        alt="메일 자막"
+      />
+    </div>
+    <div class="script" id="house-script" style="display: none">
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/house_script.png"
+        alt="하우스 자막"
+      />
+    </div>
+
+    <div class="poster" id="click-poster" style="display: none">
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/click_poster.png"
+        alt="포스터 클릭 안내"
+      />
+    </div>
+
+    <div
+      class="alba-poster"
+      id="gamza-poster"
+      style="display: none"
+      onclick="
+        this.style.display = 'none';
+        window.dispatchEvent(
+          new CustomEvent('PosterClosed', { detail: 'GamzaMemo' }),
+        );
+      "
+    >
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/GamzaPoster.png"
+        alt="감자캐기 알바 포스터"
+      />
+    </div>
+
+    <div
+      class="alba-poster"
+      id="bakery-poster"
+      style="display: none"
+      onclick="
+        this.style.display = 'none';
+        window.dispatchEvent(
+          new CustomEvent('PosterClosed', { detail: 'BakeryMemo' }),
+        );
+      "
+    >
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/BakeryPoster.png"
+        alt="베이커리 알바 포스터"
+      />
+    </div>
+
+    <div
+      class="alba-poster"
+      id="kids-poster"
+      style="display: none"
+      onclick="
+        this.style.display = 'none';
+        window.dispatchEvent(
+          new CustomEvent('PosterClosed', { detail: 'KidsMemo' }),
+        );
+      "
+    >
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/KidsPoster.png"
+        alt="키즈카페 알바 포스터"
+      />
+    </div>
+
+    <div
+      class="alba-poster"
+      id="dokseo-poster"
+      style="display: none"
+      onclick="
+        this.style.display = 'none';
+        window.dispatchEvent(
+          new CustomEvent('PosterClosed', { detail: 'DokseoMemo' }),
+        );
+      "
+    >
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/DokseoPoster.png"
+        alt="독서실 알바 포스터"
+      />
+    </div>
+
+    <div
+      class="alba-poster"
+      id="sushi-poster"
+      style="display: none"
+      onclick="
+        this.style.display = 'none';
+        window.dispatchEvent(
+          new CustomEvent('PosterClosed', { detail: 'SushiMemo' }),
+        );
+      "
+    >
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/SushiPoster.png"
+        alt="스시 알바 포스터"
+      />
+    </div>
+
+    <div
+      id="blackout-overlay"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: black;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1000;
+        transition: opacity 1.5s ease-in;
+      "
+    ></div>
+
+    <div id="ending-screen">
+      <video autoplay muted playsinline id="ending-video">
+        <source
+          src="%VITE_ASSET_BASE_URL%/assets/video/ending.webm"
+          type="video/webm"
+        />
+        <source
+          src="%VITE_ASSET_BASE_URL%/assets/video/ending.mp4"
+          type="video/mp4"
+        />
+      </video>
+    </div>
+
+    <div class="after-game scroll-hidden" id="after-game" style="display: none">
+      <img
+        src="%VITE_ASSET_BASE_URL%/assets/images/oummt_web.png"
+        alt="비하인드 미니 웹"
+      />
+    </div>
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>

@@ -11,15 +11,7 @@ import { getAssetUrl } from '../utils/assetUrl';
 
 import {
   disappearPlayer,
-  // appearPlayer,
-  // disableMouseEvents,
-  disablePlayerControlEvents,
-  // enableMouseEvents,
-  // downCameraY,
   returnCameraY,
-  // showArrow,
-  // hideAllArrows,
-  // createArrows,
 } from '../utils/Common';
 
 const METRO_TRIGGER_URL = getAssetUrl('/assets/images/metroTrigger.png');
@@ -32,9 +24,8 @@ export default function MetroScene({
   playerRef,
   setDisableMovement,
   setCameraTarget,
-  setCameraActive,         // 💡 추가
-  setUseSceneCamera,       // 💡 추가
-  useSceneCamera,
+  setCameraActive,
+  setUseSceneCamera,
   activateSceneCamera,
   animateCamera,
   restoreMainCamera,
@@ -136,7 +127,6 @@ export default function MetroScene({
       z: 1.2,
       ease: "power1.in",
     });
-    // if (bgAudio) bgAudio.play(); //📢
   };
  
   // ✅ 씬 시작  
@@ -149,7 +139,6 @@ export default function MetroScene({
       const dist = playerPosXZ.distanceTo(spotPosXZ);
 
       if (dist < 1.5) {
-        // if (bgAudio) bgAudio.pause(); //📢
         if (bgAudio) bgAudio.pause(); //📢
         metroAudioRef.current?.play();
         bbongAudioRef.current?.play()
@@ -172,7 +161,7 @@ export default function MetroScene({
           setInitialCameraPose({
             position: [2, 10, -65],
             lookAt: [-2, 2, -96],
-            zoom: 40
+            zoom: 50
           });
 
         }, 300)
@@ -246,7 +235,7 @@ export default function MetroScene({
           transparent={true} 
           alphaTest={0.5}
           depthWrite={true}
-          premultipliedAlpha={true} // ✅ 핵심 옵션!
+          premultipliedAlpha={true}
           />
         
       </mesh>
@@ -260,7 +249,7 @@ export default function MetroScene({
       <ManualAudioPlayer
           ref={metroAudioRef}
           url={METRO_AUDIO_URL}
-          volume={2.3}
+          volume={6}
           loop={false}
           position={[-7.5, 2, -110]}
         />

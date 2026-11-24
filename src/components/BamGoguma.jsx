@@ -1,4 +1,3 @@
-// Bam.jsx
 import React, { useEffect, forwardRef, useImperativeHandle } from 'react';
 import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'

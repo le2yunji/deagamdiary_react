@@ -282,7 +282,7 @@ Expected: 모든 객체가 200이며 크기, Content-Type, CORS가 일치.
 **Step 2: 각 파일에 URL 상수 추가**
 
 ```jsx
-const BAKERY_MODEL_URL = getAssetUrl('/assets/models/Bakery.glb')
+const BAKERY_MODEL_URL = getAssetUrl("/assets/models/Bakery.glb");
 ```
 
 로딩과 preload는 같은 상수를 사용한다. `AlbaPosters`의 동적 목록도 각 결과에 `getAssetUrl()`을 적용한다.
@@ -380,7 +380,7 @@ export function applyAssetStyleVariables(root = document.documentElement) {}
 실행 중 사용하는 `src`와 소셜 미리보기 이미지를 다음 형태로 바꾼다.
 
 ```html
-<source src="%REACT_APP_ASSET_BASE_URL%/assets/video/start.webm" type="video/webm" />
+<source src="%VITE_ASSET_BASE_URL%/assets/video/start.webm" type="video/webm" />
 ```
 
 주석 처리된 지하철 영상의 `wepm` 오타 경로는 삭제하거나 정확한 설명만 남겨 실행 경로 검사에 잡히지 않게 한다.

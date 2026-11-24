@@ -1,10 +1,8 @@
 // components/BakeryGamza.jsx
 import React, {
-  useRef,
   useEffect,
   forwardRef,
   useImperativeHandle,
-  useMemo,
 } from 'react';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { SkeletonUtils } from 'three-stdlib';
@@ -41,7 +39,6 @@ export const BakeryGamza = forwardRef(({ onLoaded, ...props }, ref) => {
     if (group.current) {
       group.current.traverse((child) => {
         if (child.isMesh) child.castShadow = true;
-        // if (child.isMesh) child.receiveShadow = true;
       }); 
     }
   }, []); 

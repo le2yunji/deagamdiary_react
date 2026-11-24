@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { PointLight, Vector3 } from 'three';
+import { Vector3 } from 'three';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 
@@ -15,14 +15,6 @@ import { getAssetUrl } from '../utils/assetUrl';
 import {
   disappearPlayer,
   appearPlayer,
-  // disableMouseEvents,
-  // disablePlayerControlEvents,
-  // enableMouseEvents,
-  // downCameraY,
-  // returnCameraY,
-  // showArrow,
-  // hideAllArrows,
-  // createArrows,
 } from '../utils/Common';
 
 const BAKERY_TRIGGER_URL = getAssetUrl('/assets/images/bakeryTrigger.png');
@@ -37,16 +29,15 @@ export default function BakeryScene({
   playerRef,
   setDisableMovement,
   setCameraTarget,
-  setCameraActive,         // 💡 추가
-  setUseSceneCamera,       // 💡 추가
-  useSceneCamera,
+  setCameraActive,
+  setUseSceneCamera,
   activateSceneCamera,
   animateCamera,
   restoreMainCamera,
   setInitialCameraPose
 }) {
   const group = useRef();
-  const { scene, camera } = useThree();
+  const { scene } = useThree();
   const clock = new THREE.Clock();
 
   const bakeryRef = useRef();
@@ -65,9 +56,7 @@ export default function BakeryScene({
   const bakerySpotRef = useRef();
 
   const [triggered, setTriggered] = useState(false);
-  const [ovenInteractionReady, setOvenInteractionReady] = useState(false);
   const [showCloudEffect, setShowCloudEffect] = useState(false);
-  const light = new PointLight('white', 3, 200, 1);
 
   const BakerySpotMeshPosition = new Vector3(31, 0.005, -38);
   const bakeryTexture = useTexture(BAKERY_TRIGGER_URL);
@@ -93,7 +82,7 @@ export default function BakeryScene({
       const mesh2 = new THREE.Mesh(geometry, material);
 
 
-      mesh.position.set(10, 0.05, -43);
+      mesh.position.set(21, 0.05, -47);
       mesh2.position.set(43, 0.05, -32.5);
 
       mesh.rotation.x = THREE.MathUtils.degToRad(-90);
@@ -174,7 +163,6 @@ export default function BakeryScene({
     appearPlayer(playerRef, 1.2);
 
     setDisableMovement(false);
-    // enableMouseEvents();
 
 
     if (bgAudio) bgAudio.play(); //📢
@@ -212,7 +200,7 @@ export default function BakeryScene({
         disappearPlayer(playerRef);
         setDisableMovement(true);
 
-        if (bgAudio) bgAudio.pause(); // 혹은 bgAudio.volume = 0;
+        if (bgAudio) bgAudio.pause();
 
         bakeryAudioRef.current?.play();
 
@@ -223,8 +211,8 @@ export default function BakeryScene({
             position: [30, 8, -30],
             lookAt: [30, 2, -37],
             zoom: 40,
-            near: -100,  // ✅ 추가
-            far: 50,    // ✅ 추가
+            near: -100,
+            far: 50,
           });
 
           animateCamera({
@@ -411,7 +399,7 @@ export default function BakeryScene({
           transparent={true}
           alphaTest={0.5}
           depthWrite={true}
-          premultipliedAlpha={true} // ✅ 핵심 옵션!
+          premultipliedAlpha={true}
           />
       </mesh>
     </group>

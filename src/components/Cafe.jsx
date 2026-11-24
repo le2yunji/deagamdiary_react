@@ -1,5 +1,4 @@
-// Cafe.jsx
-import React, { forwardRef, useImperativeHandle, useEffect, useRef } from 'react'
+import React, { forwardRef, useImperativeHandle, useEffect } from 'react'
 import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'

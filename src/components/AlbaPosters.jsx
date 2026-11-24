@@ -1,7 +1,6 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { useLoader } from '@react-three/fiber';
-import { useMemo, useRef, useState, useEffect } from 'react';
-import { Html } from '@react-three/drei';
+import { useMemo, useRef } from 'react';
 import { getAssetUrl } from '../utils/assetUrl';
 
 const posters = [
@@ -12,8 +11,8 @@ const posterModelUrls = posters.map((name) =>
   getAssetUrl(`/assets/models/${name}.glb`)
 );
 
-/** 알바 포스터 GLB들을 불러오고 선택한 포스터의 상세 화면을 연다. */
-export function Posters({ selectedPoster, setSelectedPoster }) {
+/** 알바 포스터 GLB들을 R2에서 불러오고 선택한 포스터의 상세 화면을 연다. */
+export function Posters({ setSelectedPoster }) {
   const gltfs = useLoader(GLTFLoader, posterModelUrls);
 
   const models = useMemo(() => {
@@ -28,7 +27,7 @@ export function Posters({ selectedPoster, setSelectedPoster }) {
 
   return (
     <group ref={groupRef}>
-      {posters.map((name, i) => (
+      {posters.map((name) => (
         <primitive
           key={name}
           object={models[name]?.scene}

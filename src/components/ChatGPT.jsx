@@ -1,11 +1,8 @@
-// ChatGPT.jsx
-
 import React, {
   useRef,
   useEffect,
   forwardRef,
   useImperativeHandle,
-  useMemo,
 } from 'react';
 import { useGLTF, useAnimations,  } from '@react-three/drei';
 import { SkeletonUtils } from 'three-stdlib';

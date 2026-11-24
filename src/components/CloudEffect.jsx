@@ -1,15 +1,16 @@
-import { Cloud } from "@react-three/drei"
-import { useRef, useEffect } from "react"
-import { gsap } from "gsap"
-import { AdditiveBlending, MeshBasicMaterial } from 'three'
+import { Cloud } from '@react-three/drei';
+import { useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
+import { AdditiveBlending } from 'three';
 
+/** 장면 전환 순간에 플레이어 주변으로 퍼지는 구름 효과를 표시한다. */
 const CloudEffect = ({ position = [0, 0, 0] }) => {
-  const cloudRef = useRef()
+  const cloudRef = useRef();
 
   useEffect(() => {
     if (cloudRef.current) {
       // 중심에서 커지게 하기 위해 초기 스케일을 0으로 설정
-      cloudRef.current.scale.set(0, 0, 0)
+      cloudRef.current.scale.set(0, 0, 0);
 
       // gsap으로 스케일 애니메이션
       gsap.to(cloudRef.current.scale, {
@@ -18,18 +19,16 @@ const CloudEffect = ({ position = [0, 0, 0] }) => {
         z: 1,
         duration: 1,
         ease: "power2.out",
-      })
-      cloudRef.current.raycast = () => null  // raycaster 무시
-      cloudRef.current.renderOrder = -1;               // 🎯 먼저 그리기
-        // ✅ 항상 맨 위에 그리도록 설정
-        cloudRef.current.renderOrder = 999
-    if (cloudRef.current.material) {
-      cloudRef.current.material.depthWrite = false
-      cloudRef.current.material.transparent = true
+      });
+      cloudRef.current.raycast = () => null;
+      cloudRef.current.renderOrder = 999;
+
+      if (cloudRef.current.material) {
+        cloudRef.current.material.depthWrite = false;
+        cloudRef.current.material.transparent = true;
+      }
     }
-    }
-    
-  }, [])
+  }, []);
 
   return (
     <group position={position}>
@@ -48,7 +47,7 @@ const CloudEffect = ({ position = [0, 0, 0] }) => {
         blending={AdditiveBlending}
       />
     </group>
-  )
-}
+  );
+};
 
-export default CloudEffect
+export default CloudEffect;

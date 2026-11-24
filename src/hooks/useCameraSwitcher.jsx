@@ -1,15 +1,15 @@
-// hooks/useCameraSwitcher.jsx
 import { useRef } from 'react';
 import { gsap } from 'gsap';
 import * as THREE from 'three';
 
+/** 장면 전용 카메라의 활성화·복귀·이동을 한곳에서 관리한다. */
 export default function useCameraSwitcher() {
   const sceneCameraRef = useRef(); // 전용 카메라 ref
   const initialPosition = useRef(new THREE.Vector3()); // 초기 위치
   const initialLookAt = useRef(new THREE.Vector3());   // 초기 시선
   const initialZoom = useRef(30); // ✅ 줌 값도 저장
 
-  // 🎥 전용 카메라 초기값 등록
+  /** 장면 카메라가 시작할 위치와 시선, 투영 범위를 적용한다. */
   const setInitialCameraPose = ({ position, lookAt, zoom, near, far }) => {
     if (position) initialPosition.current.set(...position);
     if (lookAt) initialLookAt.current.set(...lookAt);
@@ -21,27 +21,27 @@ export default function useCameraSwitcher() {
       camera.lookAt(initialLookAt.current);
       camera.zoom = initialZoom.current;
   
-      if (near !== undefined) camera.near = near;   // ✅ 추가
-      if (far !== undefined) camera.far = far;       // ✅ 추가
+      if (near !== undefined) camera.near = near;
+      if (far !== undefined) camera.far = far;
   
       camera.updateProjectionMatrix();
     }
   };
   
 
-  // 🎥 전용 카메라 활성화
+  /** 메인 카메라를 끄고 장면 전용 카메라를 활성화한다. */
   const activateSceneCamera = (setCameraActive, setUseSceneCamera) => {
     setCameraActive(false);  // 메인 카메라 비활성화
     setUseSceneCamera(true); // 전용 카메라 활성화
   };
 
-  // 🔁 메인 카메라 복구
+  /** 장면 전용 카메라를 끄고 메인 카메라를 복구한다. */
   const restoreMainCamera = (setCameraActive, setUseSceneCamera) => {
     setUseSceneCamera(false);
     setCameraActive(true);
   };
 
-  // 📸 전용 카메라 애니메이션 (이동 + 바라보기)
+  /** 장면 카메라의 위치·시선·줌·투영 범위를 함께 보간한다. */
   const animateCamera = ({ position, lookAt, zoom, near, far, duration = 3 }) => {
     const camera = sceneCameraRef.current;
     if (!camera) return;
@@ -73,7 +73,7 @@ export default function useCameraSwitcher() {
       });
     }
   
-    // near 애니메이션 (추가 ✅)
+    // 절두체 범위도 위치·줌과 함께 보간한다.
     if (near !== undefined && camera.near !== undefined) {
       gsap.to(camera, {
         near,
@@ -85,7 +85,6 @@ export default function useCameraSwitcher() {
       });
     }
   
-    // far 애니메이션 (추가 ✅)
     if (far !== undefined && camera.far !== undefined) {
       gsap.to(camera, {
         far,
@@ -104,6 +103,6 @@ export default function useCameraSwitcher() {
     activateSceneCamera,
     restoreMainCamera,
     animateCamera,
-    setInitialCameraPose, // 👈 새로 추가된 메서드
+    setInitialCameraPose,
   };
 }

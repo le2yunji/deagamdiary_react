@@ -1,6 +1,4 @@
-// Escalator.jsx
-
-import React, { forwardRef, useImperativeHandle, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
@@ -10,7 +8,7 @@ import { getAssetUrl } from '../utils/assetUrl'
 const ESCALATOR_MODEL_URL = getAssetUrl('/assets/models/escalator.glb')
 
 /** 에스컬레이터 GLB와 감자 애니메이션을 엔딩 장면 제어에 연결한다. */
-export const Escalator = forwardRef(({ onLoaded, onGamzaRef, onGamRef, ...props }, ref) => {
+export const Escalator = ({ onLoaded, onGamzaRef, onGamRef, ...props }) => {
   const group = React.useRef()
   const { scene, animations } = useGLTF(ESCALATOR_MODEL_URL)
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
@@ -142,6 +140,6 @@ export const Escalator = forwardRef(({ onLoaded, onGamzaRef, onGamRef, ...props 
       </group>
     </group>
   )
-})
+}
 
 useGLTF.preload(ESCALATOR_MODEL_URL)

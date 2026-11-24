@@ -177,8 +177,8 @@ body, #root {
     padding: 10px 10px;
     font-size: 16px;
     position: absolute; /* relative → absolute 변경 */
-    width: 70px;
-    height: 70px;
+    width: 100px;
+    height: 100px;
     background: var(--start-guide-button-two-image) no-repeat center;
     background-size: cover;
     border: none;

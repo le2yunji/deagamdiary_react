@@ -1,14 +1,5 @@
-// components/Ground.jsx
 import { useTexture } from '@react-three/drei';
-import { useEffect, useState, useRef } from 'react';
-import {
-  PlaneGeometry,
-  MeshBasicMaterial,
-  Mesh,
-  TextureLoader,
-  Vector3,
-  SRGBColorSpace
-} from 'three';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
 import { getAssetUrl } from '../utils/assetUrl';
@@ -17,34 +8,32 @@ import { getAspectFitHeight } from '../utils/planeGeometry';
 const FLOOR_TEXTURE_URL = getAssetUrl('/assets/images/floor.svg');
 const ROAD_ARROW_TEXTURE_URL = getAssetUrl('/assets/images/road_arrow.png');
 const STREET_SVG_URL = getAssetUrl('/assets/images/street.svg');
-const GROUND_WIDTH = 400;
+const FLOOR_PLANE_SIZE = 1200;
+const ROAD_ARROW_PLANE_WIDTH = 800;
 const ROAD_ARROW_IMAGE_WIDTH = 5000;
 const ROAD_ARROW_IMAGE_HEIGHT = 4167;
 const ROAD_ARROW_PLANE_HEIGHT = getAspectFitHeight(
-  GROUND_WIDTH,
+  ROAD_ARROW_PLANE_WIDTH,
   ROAD_ARROW_IMAGE_WIDTH,
   ROAD_ARROW_IMAGE_HEIGHT
 );
+const SHADOW_PLANE_SIZE = 800;
 
-/** 이동 가능한 바닥과 도로 안내 텍스처를 표시하고 클릭 지점을 전달한다. */
+/** 로컬에서 조정한 바닥 크기를 유지하며 R2의 바닥과 이동 경로를 표시한다. */
 export default function Ground({ onClickGround }) {
   const groupRef = useRef();
 
-  // const texture = useTexture('/assets/images/grid_only2.png');
   const texture = useTexture(FLOOR_TEXTURE_URL);
   const isDragging = useRef(false);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.needsUpdate = true;
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.x = 60;
-  texture.repeat.y = 60;
+  texture.repeat.x = 200;
+  texture.repeat.y = 200;
   texture.premultiplyAlpha = true;
 
   const texture2 = useTexture(ROAD_ARROW_TEXTURE_URL);
-  // texture2.colorSpace = THREE.SRGBColorSpace;
-  // texture2.needsUpdate = true;
-  // texture2.premultiplyAlpha = true;
 
 
   const handlePointerDown = (event) => {
@@ -114,7 +103,7 @@ useEffect(() => {
        onPointerMove={handlePointerMove}
        onPointerUp={handlePointerUp}
      >
-       <planeGeometry args={[GROUND_WIDTH, GROUND_WIDTH]} />
+       <planeGeometry args={[FLOOR_PLANE_SIZE, FLOOR_PLANE_SIZE]} />
        <meshBasicMaterial 
         map={texture}
         transparent={true}        // ✨ PNG 알파 반영
@@ -135,14 +124,14 @@ useEffect(() => {
        onPointerMove={handlePointerMove}
        onPointerUp={handlePointerUp}
      >
-       <planeGeometry args={[GROUND_WIDTH, ROAD_ARROW_PLANE_HEIGHT]} />
+       <planeGeometry args={[ROAD_ARROW_PLANE_WIDTH, ROAD_ARROW_PLANE_HEIGHT]} />
        <meshBasicMaterial 
-       map={texture2}
-       transparent={true}        // ✨ PNG 알파 반영
-       depthWrite={false}          // ✅ 테두리 겹침 방지
-       toneMapped={false}        // ✨ 색 왜곡 방지
-       blending={THREE.NormalBlending}
-       side={THREE.DoubleSide}
+        map={texture2}
+        transparent={true}        // ✨ PNG 알파 반영
+        depthWrite={false}          // ✅ 테두리 겹침 방지
+        toneMapped={false}        // ✨ 색 왜곡 방지
+        blending={THREE.NormalBlending}
+        side={THREE.DoubleSide}
         opacity={1} // ✅ 실제 투명도 설정은 여기서!
        />
      </mesh>
@@ -153,31 +142,10 @@ useEffect(() => {
     position={[0, 0, 0]}
     receiveShadow
   >
-    <planeGeometry args={[GROUND_WIDTH, GROUND_WIDTH]} />
+    <planeGeometry args={[SHADOW_PLANE_SIZE, SHADOW_PLANE_SIZE]} />
     <meshStandardMaterial 
  />
-    {/* <shadowMaterial opacity={0.35} /> */}
   </mesh>
-
-
-     {/* 🖼 이미지 plane 렌더링 */}
-     {/* {imagePlanes.map((info, i) => (
-       <mesh
-       receiveShadow
-         castShadow
-         key={i}
-         position={info.position}
-         rotation={info.rotation}
-       >
-         <planeGeometry args={info.size} />
-         <meshStandardMaterial
-           map={info.texture}
-           transparent
-           opacity={1}
-           toneMapped={false}
-         />
-       </mesh>
-     ))} */}
    </group>
  );
 }

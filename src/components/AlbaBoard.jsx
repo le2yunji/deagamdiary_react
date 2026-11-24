@@ -1,26 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useGLTF } from '@react-three/drei';
 import { getAssetUrl } from '../utils/assetUrl';
 
 const ALBA_BOARD_MODEL_URL = getAssetUrl('/assets/models/JustBoard.glb');
 
-/** 알바 포스터 보드 GLB를 표시하고 메시 그림자를 설정한다. */
-export function AlbaBoard({ onLoaded, ...props }) {
+/** 알바 포스터 보드 GLB를 R2에서 불러와 장면에 표시한다. */
+export function AlbaBoard(props) {
   const { nodes, materials } = useGLTF(ALBA_BOARD_MODEL_URL)
-  const group = useRef();
-
-  // ✅ castShadow / receiveShadow 설정
-  useEffect(() => {
-    if (group.current) {
-      group.current.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-        }
-      });
-    }
-  }, []);
-
 
   return (
     <group {...props} dispose={null}>

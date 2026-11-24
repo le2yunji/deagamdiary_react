@@ -11,7 +11,7 @@ const ASSET_STYLE_PATHS = {
 
 describe('applyAssetStyleVariables', () => {
   test('sets every CSS background image to the shared asset base URL', () => {
-    const setProperty = jest.fn()
+    const setProperty = vi.fn()
 
     applyAssetStyleVariables(
       { style: { setProperty } },
@@ -27,7 +27,7 @@ describe('applyAssetStyleVariables', () => {
   })
 
   test('keeps existing local asset paths when the base URL is empty', () => {
-    const setProperty = jest.fn()
+    const setProperty = vi.fn()
 
     applyAssetStyleVariables({ style: { setProperty } }, '')
 

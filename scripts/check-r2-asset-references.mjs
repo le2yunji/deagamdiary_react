@@ -31,7 +31,7 @@ async function checkAssetReferences() {
   const sourceFiles = await collectSourceFiles(sourceRoot)
   const files = [
     ...sourceFiles,
-    path.join(repositoryRoot, 'public/index.html'),
+    path.join(repositoryRoot, 'index.html'),
   ]
   const violations = []
 

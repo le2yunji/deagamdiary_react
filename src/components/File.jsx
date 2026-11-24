@@ -1,4 +1,3 @@
-// File.jsx
 import React, { useEffect, forwardRef, useImperativeHandle } from 'react';
 import { useGLTF, useAnimations } from '@react-three/drei'
 import * as THREE from 'three';

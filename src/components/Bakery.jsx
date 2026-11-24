@@ -23,14 +23,6 @@ export const Bakery = forwardRef(({ onLoaded, ...props }, ref) => {
         child.castShadow = true;
         child.receiveShadow = true;
         child.material.side = THREE.FrontSide;
-
-      }
-
-      if (child.material) {
-        // child.material.side = THREE.DoubleSide;
-        // 필요 시 다음 주석 해제
-        // child.material.depthWrite = true;
-        // child.material.depthTest = true;
       }
     });
 

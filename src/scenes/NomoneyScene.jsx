@@ -13,12 +13,6 @@ import { getAssetUrl } from '../utils/assetUrl';
 import {
   disappearPlayer,
   appearPlayer,
-  disableMouseEvents,
-  // enableMouseEvents,
-  moveModelYPosition,
-  // downCameraY,
-  // returnCameraY,
-  setDisableMovement
 } from '../utils/Common';
 
 const NOMONEY_TRIGGER_URL = getAssetUrl('/assets/images/noMoneyTrigger.png');
@@ -34,9 +28,8 @@ export default function NomoneyScene({
   playerRef,
   setCameraTarget,
   setDisableMovement,
-  setCameraActive,         // 💡 추가
-  setUseSceneCamera,       // 💡 추가
-  useSceneCamera,
+  setCameraActive,
+  setUseSceneCamera,
   activateSceneCamera,
   animateCamera,
   restoreMainCamera,
@@ -51,11 +44,9 @@ export default function NomoneyScene({
   const [triggered, setTriggered] = useState(false); // 씬 시작됐는지 여부
   const [showCloudEffect, setShowCloudEffect] = useState(false);
 
-  const clock = new THREE.Clock(); // 애니메이션용 시간
-  
   const NomoneySpotMeshPosition = new Vector3(-92, 0.005, -15); // -10.5  
-  const { scene, camera } = useThree();
-  const nomoneySpotRef = useRef(); // ✅ 메쉬 ref 추가
+  const { scene } = useThree();
+  const nomoneySpotRef = useRef();
   const bgAudio = document.getElementById("bg-audio");
   const nomoneyAudioRef = useRef();
 
@@ -198,7 +189,6 @@ const nomneyZzal = useRef();
         scene.remove(nomoneySpotRef.current); // ✅ 정확하게 제거됨
         nomoneySpotRef.current.visible = false
 
-        // disableMouseEvents(); 
 
         triggerCloudEffect();
 
@@ -236,23 +226,6 @@ const nomneyZzal = useRef();
             zoom: 70,
             duration: 1.5
           });
-          // gsap.to(camera.position, {
-          //   duration: 0.5,  
-          //   // x: -90,  
-          //   y: 3,   
-          //   ease: "power2.out", // ✅ 부드러운 감속 애니메이션
-          //   onUpdate: () => {
-          //     camera.updateProjectionMatrix(); // ✅ 변경 사항 반영
-          //   }
-          // });
-          // gsap.to(camera, {
-          //   duration: 1,  
-          //   zoom: 50,    // ✅ 목표 zoom 값
-          //   ease: "expo.inOut", // ✅ 부드러운 감속 애니메이션
-          //   onUpdate: () => {
-          //     camera.updateProjectionMatrix(); // ✅ 변경 사항 반영
-          //   }
-          // });
         }, 200)
        
   
@@ -387,7 +360,7 @@ const nomneyZzal = useRef();
         transparent={true}
         alphaTest={0.5}
         depthWrite={true}
-        premultipliedAlpha={true} // ✅ 핵심 옵션!
+        premultipliedAlpha={true}
       />
       </mesh>
     </group>

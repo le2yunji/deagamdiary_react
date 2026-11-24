@@ -1,9 +1,7 @@
-// EscalatorScene.jsx
-import React, { useRef, useState, useEffect, useMemo } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useFrame, useThree,  } from '@react-three/fiber';
-import { PointLight, Vector3 } from 'three';
+import { Vector3 } from 'three';
 import * as THREE from 'three';
-import { gsap } from 'gsap';
 
 import CloudEffect from '../components/CloudEffect';
 import { Escalator } from "../components/Escalator";
@@ -15,30 +13,26 @@ import {
   disappearPlayer,
 } from '../utils/Common';
 
-const ESCALATOR_TRIGGER_URL = getAssetUrl('/assets/images/houseTrigger.png');
+const HOUSE_TRIGGER_URL = getAssetUrl('/assets/images/houseTrigger.png');
 const BBONG_AUDIO_URL = getAssetUrl('/assets/audio/bbong.mp3');
 
-/** 에스컬레이터 엔딩 장면의 모델·카메라·영상 전환을 제어한다. */
+/** 에스컬레이터 엔딩 장면의 모델·카메라·오디오 진행을 제어한다. */
 export default function EscalatorScene({
   playerRef,
   setDisableMovement,
-  setCameraTarget,
-  setCameraActive,         // 💡 추가
-  setUseSceneCamera,       // 💡 추가
-  useSceneCamera,
+  setCameraActive,
+  setUseSceneCamera,
   activateSceneCamera,
   animateCamera,
-  restoreMainCamera,
   setInitialCameraPose
 }) {
   const group = useRef();
   const gamzaRef = useRef();
   const gamRef = useRef();
 
-  const { scene, camera } = useThree();
+  const { scene } = useThree();
   const clock = new THREE.Clock();
 
-  const escalatorRef = useRef();
   const escalatorMixer = useRef();
   const escalatorActions = useRef();
 
@@ -49,7 +43,7 @@ export default function EscalatorScene({
   const [showCloudEffect, setShowCloudEffect] = useState(false);
 
   const EscalatorSpotMeshPosition = new Vector3(43.5, 0.005, 120);
-  const escalatorTexture = useTexture(ESCALATOR_TRIGGER_URL);
+  const escalatorTexture = useTexture(HOUSE_TRIGGER_URL);
 
   const hasEnded = useRef(false); // ✅ 한 번만 실행
 
@@ -144,14 +138,6 @@ export default function EscalatorScene({
                 
             }, 2500)
 
-            // setTimeout(() => {
-            //  gsap.to(gamzaRef.current.position, {
-            //     duration: 4,
-            //     y: 0,
-            //     ease: 'steps(20)'
-            //  })
-            // }, 13000)
-
         setTimeout(() => {
           activateSceneCamera(setCameraActive, setUseSceneCamera);
 
@@ -159,8 +145,8 @@ export default function EscalatorScene({
             position: [28, 10, 150],
             lookAt: [27, 0, 140],
             zoom: 45,
-            near: -100,  // ✅ 추가
-            far: 50,    // ✅ 추가
+            near: -100,
+            far: 50,
           });
 
                 setTimeout(() => {
@@ -185,7 +171,6 @@ export default function EscalatorScene({
                     }, 2000)
 
                     setTimeout(() => {
-                        // gamzaRef.current.visible = false;
                         setTimeout(() => {
                             animateCamera({
                                 position: { x: 34, y: 7, z: 157},// { x: 34, y: 7, z: 157},
@@ -216,7 +201,7 @@ export default function EscalatorScene({
 
 
         const endingScreen = document.getElementById('ending-screen');
-        const endingVideo = document.getElementById('ending-video'); // ✅ 여기에 선언 추가!
+        const endingVideo = document.getElementById('ending-video');
 
         setTimeout(() => {
             // 🖤 화면 어두워지게 만들기
@@ -235,7 +220,7 @@ export default function EscalatorScene({
                             endingScreen.classList.add('fade-in');
                 
                             if (endingVideo) {
-                            endingVideo.muted = false; // 혹시 모르니 재확인
+                            endingVideo.muted = false;
                             endingVideo.play().catch((e) => {
                                 console.warn('Ending video playback failed:', e);
                             });
@@ -258,7 +243,7 @@ export default function EscalatorScene({
                                     }, 1500)
                                 }
                             
-                            }, 123000); // 123000
+                            }, 120000); // 123000
                     }
                 }, 2000)
         
@@ -275,7 +260,6 @@ export default function EscalatorScene({
   return (
     <group ref={group}>
       <Escalator
-        ref={escalatorRef}
         onGamzaRef={(ref) => { gamzaRef.current = ref }}
         onGamRef={(ref) => { gamRef.current = ref }}
         position={[24, 6.2, 143]}
@@ -285,21 +269,8 @@ export default function EscalatorScene({
           escalatorActions.current = actions;
           escalatorMixer.current = mixer;
         }}  
-        // innerWallMaterial={innerWallMaterial} // ✅ 전달
       />
 
-        {/* <EscalatorGamza
-            ref={escalatorGamzaRef}
-            // onGamzaRef={(ref) => { gamzaRef.current = ref }}
-            position={[24, 6.2, 143]}
-            rotation={[0, THREE.MathUtils.degToRad(-45), 0]}
-            scale={[0, 0, 0]}
-            onLoaded={({ actions, mixer }) => {
-            escalatorGamzaActions.current = actions;
-            escalatorGamzaMixer.current = mixer;
-            }}  
-            // innerWallMaterial={innerWallMaterial} // ✅ 전달
-        /> */}
 
       {showCloudEffect && (
             <CloudEffect 
@@ -310,12 +281,6 @@ export default function EscalatorScene({
             ]}
         />      
         )}
-        {/* {showCloudEffect && (
-        <CloudEffect
-          position={[ 30, 0, 152]}
-        />
-      )} */}
-
         <ManualAudioPlayer
         ref={bbongAudioRef}
         url={BBONG_AUDIO_URL}
@@ -337,7 +302,7 @@ export default function EscalatorScene({
           transparent={true}
           alphaTest={0.5}
           depthWrite={true}
-          premultipliedAlpha={true} // ✅ 핵심 옵션!
+          premultipliedAlpha={true}
           />
       </mesh>
     </group>
