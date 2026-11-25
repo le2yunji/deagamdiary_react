@@ -5,7 +5,7 @@ import { Vector3 } from "three";
 import * as THREE from "three";
 import { gsap } from "gsap";
 import { ChatGPT } from "../components/ChatGPT";
-import { useTexture } from "@react-three/drei";
+import { useSpotTexture } from "../hooks/useSceneTexture";
 import ManualAudioPlayer from "../utils/ManualAudioPlayer";
 import { getAssetUrl } from "../utils/assetUrl";
 
@@ -37,7 +37,7 @@ export default function ChatGPTScene({
   const chatGptMixer = useRef();
 
   const [triggered, setTriggered] = useState(false);
-  const [showCloudEffect, setShowCloudEffect] = useState(false);
+  const [cloudPosition, setCloudPosition] = useState(null);
 
   const { scene } = useThree();
   const chatGptSpotRef = useRef();
@@ -47,16 +47,7 @@ export default function ChatGPTScene({
   const bbongAudioRef = useRef();
 
   const ChatGPTSpotMeshPosition = new Vector3(91, 0.005, -17.5); //(92.5, 0.005, -12.5);
-  const gptTexture = useTexture(GPT_TRIGGER_URL);
-
-  useEffect(() => {
-    if (gptTexture) {
-      gptTexture.colorSpace = THREE.SRGBColorSpace;
-      gptTexture.anisotropy = 16;
-      gptTexture.flipY = false;
-      gptTexture.needsUpdate = true;
-    }
-  }, [gptTexture]);
+  const gptTexture = useSpotTexture(GPT_TRIGGER_URL);
 
   const gptZzal = useRef();
 
@@ -85,7 +76,7 @@ export default function ChatGPTScene({
       scene.add(mesh);
       gptZzal.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
   const gpLogo = useRef();
 
@@ -114,7 +105,7 @@ export default function ChatGPTScene({
       scene.add(mesh);
       gpLogo.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
   useEffect(() => {
     if (chatGptRef.current) {
@@ -126,9 +117,13 @@ export default function ChatGPTScene({
     }
   }, []);
 
+  /** 효과가 시작되는 순간의 위치를 저장해 렌더링에서 모델 참조를 읽지 않도록 한다. */
   const triggerCloudEffect = () => {
-    setShowCloudEffect(true);
-    setTimeout(() => setShowCloudEffect(false), 1500);
+    const position = gamzaRef.current?.position;
+    if (!position) return;
+    const { y } = position;
+    setCloudPosition([92, y + 2, -9.5]);
+    setTimeout(() => setCloudPosition(null), 1500);
   };
 
   // 씬 완료
@@ -296,9 +291,7 @@ export default function ChatGPTScene({
         position={[87, 2, -16]}
       />
 
-      {showCloudEffect && gamzaRef.current && (
-        <CloudEffect position={[92, gamzaRef.current.position.y + 2, -9.5]} />
-      )}
+      {cloudPosition && <CloudEffect position={cloudPosition} />}
 
       <mesh
         name="chatGptSpot"

@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
+import { useCallback, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import {
   Vector3,
   MathUtils,
@@ -60,10 +60,12 @@ const PlayerController = forwardRef(
       }
     }, [cameraRef]);
 
-    const directionRef = useKeyboardControls((dir) => {
+    /** 방향키가 눌리면 이동 입력을 키보드로 전환한다. */
+    const handleDirectionChange = useCallback((dir) => {
       const isKeyPressed = Object.values(dir).some(Boolean);
       if (isKeyPressed) lastInputRef.current = "keyboard";
-    });
+    }, []);
+    const directionRef = useKeyboardControls(handleDirectionChange);
 
     useEffect(() => {
       const changed =

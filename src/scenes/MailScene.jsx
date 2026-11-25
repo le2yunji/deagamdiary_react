@@ -4,7 +4,7 @@ import CloudEffect from "../components/CloudEffect";
 import { Vector3 } from "three";
 import * as THREE from "three";
 import { gsap } from "gsap";
-import { useTexture } from "@react-three/drei";
+import { useSpotTexture } from "../hooks/useSceneTexture";
 import { Html } from "@react-three/drei";
 
 import { MailBox } from "../components/MailBox";
@@ -45,7 +45,7 @@ export default function MailScene({
   const { scene, camera } = useThree();
   const mailSpotRef = useRef();
 
-  const [showCloudEffect, setShowCloudEffect] = useState(false);
+  const [cloudPosition, setCloudPosition] = useState(null);
   const bgAudio = document.getElementById("bg-audio");
   const gotoendAudio = document.getElementById("bg-audio2");
 
@@ -53,18 +53,9 @@ export default function MailScene({
   const bbongAudioRef = useRef();
 
   const mailSpotMeshPosition = new Vector3(111, 0.005, 25); // 감자가 도달해야 할 스팟 위치
-  const mailTexture = useTexture(MAIL_TRIGGER_URL);
+  const mailTexture = useSpotTexture(MAIL_TRIGGER_URL);
 
   const [showGif, setShowGif] = useState(false);
-
-  useEffect(() => {
-    if (mailTexture) {
-      mailTexture.colorSpace = THREE.SRGBColorSpace;
-      mailTexture.anisotropy = 16;
-      mailTexture.flipY = false;
-      mailTexture.needsUpdate = true;
-    }
-  }, [mailTexture]);
 
   const mailZzal = useRef();
   useEffect(() => {
@@ -92,12 +83,15 @@ export default function MailScene({
       scene.add(mesh);
       mailZzal.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
-  // ⚪️ 구름 이펙트
+  /** 효과가 시작되는 순간의 위치를 저장해 렌더링에서 모델 참조를 읽지 않도록 한다. */
   const triggerCloudEffect = () => {
-    setShowCloudEffect(true);
-    setTimeout(() => setShowCloudEffect(false), 1500);
+    const position = mailGamzaRef.current?.position;
+    if (!position) return;
+    const { x, y, z } = position;
+    setCloudPosition([x, y + 4, z]);
+    setTimeout(() => setCloudPosition(null), 1500);
   };
 
   // 알바 구하기 이벤트 완료 후 감자 복귀
@@ -164,8 +158,6 @@ export default function MailScene({
 
         // ✅ mail 모델 스케일 애니메이션
         if (mailGamzaRef.current) {
-          setTimeout(() => setShowCloudEffect(false), 1500);
-
           gsap.to(camera, {
             duration: 1,
             zoom: 55,
@@ -305,15 +297,7 @@ export default function MailScene({
         />
 
         {/* ✅ 구름 이펙트 */}
-        {showCloudEffect && mailGamzaRef.current && (
-          <CloudEffect
-            position={[
-              mailGamzaRef.current?.position?.x ?? 0,
-              (mailGamzaRef.current?.position?.y ?? 0) + 4,
-              mailGamzaRef.current?.position?.z ?? 0,
-            ]}
-          />
-        )}
+        {cloudPosition && <CloudEffect position={cloudPosition} />}
         <ManualAudioPlayer
           ref={mailAudioRef}
           url={MAIL_AUDIO_URL}

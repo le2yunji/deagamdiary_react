@@ -8,7 +8,7 @@ import CloudEffect from "../components/CloudEffect";
 import { Bakery } from "../components/Bakery";
 import { BakeryGamza } from "../components/BakeryGamza";
 import { BamGoguma } from "../components/BamGoguma";
-import { useTexture } from "@react-three/drei";
+import { useSpotTexture } from "../hooks/useSceneTexture";
 import ManualAudioPlayer from "../utils/ManualAudioPlayer";
 import { getAssetUrl } from "../utils/assetUrl";
 
@@ -57,7 +57,7 @@ export default function BakeryScene({
   const [showCloudEffect, setShowCloudEffect] = useState(false);
 
   const BakerySpotMeshPosition = new Vector3(31, 0.005, -38);
-  const bakeryTexture = useTexture(BAKERY_TRIGGER_URL);
+  const bakeryTexture = useSpotTexture(BAKERY_TRIGGER_URL);
   const bakeryZzal = useRef();
   const bakeryZzal2 = useRef();
   const bakeryZzal3 = useRef();
@@ -105,7 +105,7 @@ export default function BakeryScene({
       bakeryZzal.current = mesh;
       bakeryZzal2.current = mesh2;
     });
-  }, []);
+  }, [scene]);
 
   useEffect(() => {
     const loader = new THREE.TextureLoader();
@@ -132,16 +132,7 @@ export default function BakeryScene({
       scene.add(mesh);
       bakeryZzal3.current = mesh;
     });
-  }, []);
-
-  useEffect(() => {
-    if (bakeryTexture) {
-      bakeryTexture.colorSpace = THREE.SRGBColorSpace;
-      bakeryTexture.anisotropy = 16;
-      bakeryTexture.flipY = false;
-      bakeryTexture.needsUpdate = true;
-    }
-  }, [bakeryTexture]);
+  }, [scene]);
 
   const bgAudio = document.getElementById("bg-audio");
   const bakeryAudioRef = useRef();
@@ -164,8 +155,9 @@ export default function BakeryScene({
     setCameraTarget(new Vector3(20, 0, -23.5));
   };
 
-  // ⚪️ 구름 이펙트
+  /** 빵집 모델이 준비되면 전환 위치에 잠시 구름을 띄운다. */
   const triggerCloudEffect = () => {
+    if (!bakeryGamzaRef.current) return;
     setShowCloudEffect(true);
     setTimeout(() => setShowCloudEffect(false), 1500);
   };
@@ -362,7 +354,7 @@ export default function BakeryScene({
         position={[30, 2, -38]}
       />
 
-      {showCloudEffect && bakeryGamzaRef.current && (
+      {showCloudEffect && (
         <CloudEffect position={[34, 4, -37]} />
       )}
       <mesh

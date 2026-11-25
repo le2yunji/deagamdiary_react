@@ -8,7 +8,7 @@ import { gsap } from "gsap";
 import { AlbaBoard } from "../components/AlbaBoard";
 import { AlbaGamza } from "../components/AlbaGamza";
 import { Posters } from "../components/AlbaPosters";
-import { useTexture } from "@react-three/drei";
+import { useSpotTexture } from "../hooks/useSceneTexture";
 import ManualAudioPlayer from "../utils/ManualAudioPlayer";
 import { getAssetUrl } from "../utils/assetUrl";
 
@@ -43,7 +43,6 @@ export default function AlbaScene({
 
   const { scene, camera } = useThree();
 
-  const bgAudio = document.getElementById("bg-audio");
   const ahaAudioRef = useRef();
   const hmmAudioRef = useRef();
   const bbongAudioRef = useRef();
@@ -54,16 +53,7 @@ export default function AlbaScene({
   const [selectedPoster, setSelectedPoster] = useState(null);
 
   const AlbaSpotMeshPosition = new Vector3(-25.5, 0.005, -10);
-  const albaTexture = useTexture(ALBA_TRIGGER_URL);
-
-  useEffect(() => {
-    if (albaTexture) {
-      albaTexture.colorSpace = THREE.SRGBColorSpace;
-      albaTexture.anisotropy = 16;
-      albaTexture.flipY = false;
-      albaTexture.needsUpdate = true;
-    }
-  }, [albaTexture]);
+  const albaTexture = useSpotTexture(ALBA_TRIGGER_URL);
 
   const tulip = useRef();
 
@@ -103,7 +93,7 @@ export default function AlbaScene({
       scene.add(mesh3);
       tulip.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
   const tree = useRef();
 
@@ -132,7 +122,7 @@ export default function AlbaScene({
       scene.add(mesh);
       tree.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
   const file = useRef();
 
@@ -161,14 +151,15 @@ export default function AlbaScene({
       scene.add(mesh);
       file.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
-  // ✅ 알바 씬 끝 복귀
+  /** 알바 상호작용을 마치고 플레이어 이동과 배경음을 복구한다. */
   const restorePlayerAfterAlba = () => {
     playerRef.current.visible = true;
     playerRef.current.position.set(-29, 0.3, -6);
     playerRef.current.scale.set(0.3, 0.3, 0.3);
 
+    const bgAudio = document.getElementById("bg-audio");
     if (bgAudio) bgAudio.volume = 0.2;
 
     ahaAudioRef.current?.stop();
@@ -301,6 +292,7 @@ export default function AlbaScene({
 
         setTriggered(true);
         setDisableMovement(true);
+        const bgAudio = document.getElementById("bg-audio");
         if (bgAudio) bgAudio.volume = 0.03;
 
         disappearPlayer(playerRef);

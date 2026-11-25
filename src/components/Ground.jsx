@@ -2,6 +2,7 @@ import { useTexture } from '@react-three/drei';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
+import { useConfiguredTexture } from '../hooks/useSceneTexture';
 import { getAssetUrl } from '../utils/assetUrl';
 import { getAspectFitHeight } from '../utils/planeGeometry';
 
@@ -19,19 +20,21 @@ const ROAD_ARROW_PLANE_HEIGHT = getAspectFitHeight(
 );
 const SHADOW_PLANE_SIZE = 800;
 
+/** 넓은 바닥에 타일이 이어지도록 반복과 투명도 처리를 설정한다. */
+function configureFloorTexture(texture) {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(200, 200);
+  texture.premultiplyAlpha = true;
+}
+
 /** 로컬에서 조정한 바닥 크기를 유지하며 R2의 바닥과 이동 경로를 표시한다. */
 export default function Ground({ onClickGround }) {
   const groupRef = useRef();
 
-  const texture = useTexture(FLOOR_TEXTURE_URL);
+  const texture = useConfiguredTexture(FLOOR_TEXTURE_URL, configureFloorTexture);
   const isDragging = useRef(false);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.needsUpdate = true;
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.x = 200;
-  texture.repeat.y = 200;
-  texture.premultiplyAlpha = true;
 
   const texture2 = useTexture(ROAD_ARROW_TEXTURE_URL);
 

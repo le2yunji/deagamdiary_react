@@ -49,10 +49,10 @@ export default function SceneContent({
   } = useCameraSwitcher();
 
   useEffect(() => {
-    if (destination) {
-      requestAnimationFrame(() => setIsEntered(true));
-    }
-  }, [destination]);
+    if (!destination) return;
+    const frame = requestAnimationFrame(() => setIsEntered(true));
+    return () => cancelAnimationFrame(frame);
+  }, [destination, setIsEntered]);
 
   const hasArrived = useRef(false);
 
@@ -65,12 +65,28 @@ export default function SceneContent({
       lookAt: [8, 0, -112],
       zoom: 40,
     });
-  }, [lockCamera]);
+  }, [activateSceneCamera, lockCamera, setInitialCameraPose]);
+
+  useEffect(() => {
+    const guideButton = document.getElementById("start-guide-btn2");
+    if (!guideButton) return;
+
+    /** 입장 안내를 마친 뒤 플레이어를 따라가는 카메라로 돌아간다. */
+    const handleGuideComplete = () => {
+      if (hasArrived.current) {
+        restoreMainCamera(setCameraActive, setUseSceneCamera);
+      }
+    };
+
+    guideButton.addEventListener("click", handleGuideComplete);
+    return () => guideButton.removeEventListener("click", handleGuideComplete);
+  }, [restoreMainCamera]);
 
   // 감자가 목적지에 도달하면 콜백 실행
   useEffect(() => {
-    if (!destination || !playerRef.current) return;
+    if (!destination || hasArrived.current) return;
 
+    /** 첫 목적지에 도착하면 안내 화면을 한 번만 열도록 알린다. */
     const checkArrival = () => {
       if (hasArrived.current) return;
 
@@ -84,14 +100,6 @@ export default function SceneContent({
       if (distance < 0.5) {
         hasArrived.current = true;
 
-        const startGuideBtn2 = document.getElementById("start-guide-btn2");
-
-        if (startGuideBtn2) {
-          startGuideBtn2.addEventListener("click", () => {
-            restoreMainCamera(setCameraActive, setUseSceneCamera);
-          });
-        }
-
         onPlayerArrived?.();
         clearInterval(interval);
       }
@@ -99,7 +107,7 @@ export default function SceneContent({
 
     const interval = setInterval(checkArrival, 200);
     return () => clearInterval(interval);
-  }, [destination]);
+  }, [destination, onPlayerArrived, playerRef]);
 
   const lightGradient = [
     { z: 0, color: new THREE.Color("#ffffff"), intensity: 2.2 }, // 낮

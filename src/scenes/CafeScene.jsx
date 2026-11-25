@@ -7,7 +7,7 @@ import { gsap } from 'gsap';
 import { Cafe } from '../components/Cafe';
 import { CafeGamza } from '../components/CafeGamza';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
-import { useTexture } from '@react-three/drei';
+import { useSpotTexture } from '../hooks/useSceneTexture';
 import { getAssetUrl } from '../utils/assetUrl';
 
 import {
@@ -45,7 +45,6 @@ export default function CafeScene({
   setInitialCameraPose
 }) {
   const group = useRef();
-  const loader = new TextureLoader();
 
   const cafeRef = useRef();
   const cafeActions = useRef();
@@ -56,28 +55,19 @@ export default function CafeScene({
   const cafeGamzaMixer = useRef();
 
   const [triggered, setTriggered] = useState(false);
-  const [showCloudEffect, setShowCloudEffect] = useState(false);
+  const [cloudPosition, setCloudPosition] = useState(null);
 
   const lightRef = useRef();
   const { scene } = useThree();
   const cafeSpotRef = useRef();
-  const [coffee, setcoffee] = useState([]);
+  const coffeeRef = useRef([]);
 
   const bgAudio = document.getElementById("bg-audio");
   const cafeAudioRef = useRef();
 
 
   const CafeSpotMeshPosition = new Vector3(-37.5, 0.005, -89);
-  const cafeTexture = useTexture(CAFE_TRIGGER_URL);
-
-  useEffect(() => {
-    if (cafeTexture) {
-      cafeTexture.colorSpace = THREE.SRGBColorSpace;
-      cafeTexture.anisotropy = 16;
-      cafeTexture.flipY = false;
-      cafeTexture.needsUpdate = true;
-    }
-  }, [cafeTexture]);
+  const cafeTexture = useSpotTexture(CAFE_TRIGGER_URL);
 
   const cafeZzal = useRef();
 
@@ -106,7 +96,7 @@ export default function CafeScene({
       scene.add(mesh);
       cafeZzal.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
 
 
@@ -116,29 +106,39 @@ export default function CafeScene({
   // 커피 그림
   useEffect(() => {
     const geometry = new PlaneGeometry(4, 6);
-    setcoffee(
-      COFFEE_IMAGE_URLS.map((path) => {
-        const mat = new MeshBasicMaterial({ transparent: true, alphaTest: 0.5 });
-        const mesh = new Mesh(geometry, mat);
-        mesh.rotation.y = THREE.MathUtils.degToRad(20);
-        mesh.rotation.z = THREE.MathUtils.degToRad(-10);
-        mesh.position.set(-34, 5, -82);
-        mesh.visible = false;
-        loader.load(path, (tex) => {
-          tex.colorSpace = THREE.SRGBColorSpace;
-          mat.map = tex;
-          mat.color.set(0xffffff);
-          mat.opacity = 1;
-          mat.needsUpdate = true; 
-        });
-        scene.add(mesh);
-        return mesh;
-      })
-    );
-  }, []);
+    const loader = new TextureLoader();
+    const meshes = COFFEE_IMAGE_URLS.map((path) => {
+      const mat = new MeshBasicMaterial({ transparent: true, alphaTest: 0.5 });
+      const mesh = new Mesh(geometry, mat);
+      mesh.rotation.y = THREE.MathUtils.degToRad(20);
+      mesh.rotation.z = THREE.MathUtils.degToRad(-10);
+      mesh.position.set(-34, 5, -82);
+      mesh.visible = false;
+      mat.map = loader.load(path, (tex) => {
+        tex.colorSpace = THREE.SRGBColorSpace;
+        mat.color.set(0xffffff);
+        mat.opacity = 1;
+        mat.needsUpdate = true;
+      });
+      scene.add(mesh);
+      return mesh;
+    });
+    coffeeRef.current = meshes;
+
+    return () => {
+      coffeeRef.current = [];
+      for (const mesh of meshes) {
+        scene.remove(mesh);
+        mesh.material.map.dispose();
+        mesh.material.dispose();
+      }
+      geometry.dispose();
+    };
+  }, [scene]);
 
   /** 커피 프레임을 순서대로 보여 준 뒤 모두 숨긴다. */
   const animateDrinkCoffee = () => {
+    const coffee = coffeeRef.current;
     if (coffee.length === 0) return;
 
     coffee.forEach((c) => (c.visible = false)); // 초기값 전부 숨김
@@ -157,10 +157,13 @@ export default function CafeScene({
   };
 
 
-  // ⚪️ 구름 이펙트
+  /** 효과가 시작되는 순간의 위치를 저장해 렌더링에서 모델 참조를 읽지 않도록 한다. */
   const triggerCloudEffect = () => {
-    setShowCloudEffect(true);
-    setTimeout(() => setShowCloudEffect(false), 1500);
+    const position = cafeGamzaRef.current?.position;
+    if (!position) return;
+    const { x, y, z } = position;
+    setCloudPosition([x + 1.5, y + 2, z]);
+    setTimeout(() => setCloudPosition(null), 1500);
   };
 
 
@@ -329,15 +332,7 @@ export default function CafeScene({
       }}
     />
 
-      {showCloudEffect && cafeGamzaRef.current && (
-        <CloudEffect
-          position={[
-            cafeGamzaRef.current.position.x + 1.5,
-            cafeGamzaRef.current.position.y + 2,
-            cafeGamzaRef.current.position.z
-          ]}
-        />
-      )}
+      {cloudPosition && <CloudEffect position={cloudPosition} />}
 
       <mesh
         name="cafeSpot"

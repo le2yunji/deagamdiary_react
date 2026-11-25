@@ -6,7 +6,7 @@ import { Vector3 } from 'three';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { NomoneyGamza } from '../components/NomoneyGamza';
-import { useTexture } from '@react-three/drei';
+import { useSpotTexture } from '../hooks/useSceneTexture';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 import { getAssetUrl } from '../utils/assetUrl';
 
@@ -42,27 +42,17 @@ export default function NomoneyScene({
   const nomoneyGamzaMixer = useRef();
 
   const [triggered, setTriggered] = useState(false); // 씬 시작됐는지 여부
-  const [showCloudEffect, setShowCloudEffect] = useState(false);
+  const [cloudPosition, setCloudPosition] = useState(null);
 
   const NomoneySpotMeshPosition = new Vector3(-92, 0.005, -15); // -10.5  
   const { scene } = useThree();
   const nomoneySpotRef = useRef();
-  const bgAudio = document.getElementById("bg-audio");
   const nomoneyAudioRef = useRef();
 
   const nomoneyTalkAudioRef = useRef();
   const bbongAudioRef= useRef();
 
-  const nomoneyTexture = useTexture(NOMONEY_TRIGGER_URL);
-
-  useEffect(() => {
-    if (nomoneyTexture) {
-      nomoneyTexture.colorSpace = THREE.SRGBColorSpace;
-      nomoneyTexture.anisotropy = 16;
-      nomoneyTexture.flipY = false;
-      nomoneyTexture.needsUpdate = true;
-    }
-  }, [nomoneyTexture]);
+  const nomoneyTexture = useSpotTexture(NOMONEY_TRIGGER_URL);
   
 const nomneyZzal = useRef();
   useEffect(() => {
@@ -90,7 +80,7 @@ const nomneyZzal = useRef();
       scene.add(mesh);
       nomneyZzal.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
 
   // 텅장 텍스트 💬
@@ -134,13 +124,16 @@ const nomneyZzal = useRef();
     }
   };
 
-  // ⚪️ 구름 이펙트
+  /** 효과가 시작되는 순간의 위치를 저장해 렌더링에서 모델 참조를 읽지 않도록 한다. */
   const triggerCloudEffect = () => {
-    setShowCloudEffect(true);
-    setTimeout(() => setShowCloudEffect(false), 1000);
+    const position = nomoneyGamzaRef.current?.position;
+    if (!playerRef.current || !position) return;
+    const { x, y, z } = position;
+    setCloudPosition([x, y + 3, z]);
+    setTimeout(() => setCloudPosition(null), 1000);
   };
 
-  // ✅ 노머니 이벤트 완료 후 감자 복귀
+  /** 은행 상호작용을 마치고 플레이어와 배경음을 복구한다. */
   const restorePlayerAfterNomoney = () => {
     playerRef.current.visible = true;
     playerRef.current.position.set(-92, 0.3, -13);
@@ -150,6 +143,7 @@ const nomneyZzal = useRef();
     triggerCloudEffect();
     appearPlayer(playerRef, 1.2); // 부드럽게 다시 나타남
     nomoneyAudioRef.current?.stop();
+    const bgAudio = document.getElementById("bg-audio");
     if (bgAudio) bgAudio.volume = 0.2;
     nomoneyTalkAudioRef.current?.stop();
 
@@ -193,6 +187,7 @@ const nomneyZzal = useRef();
         triggerCloudEffect();
 
 
+        const bgAudio = document.getElementById("bg-audio");
         if (bgAudio) bgAudio.volume = 0.1;
 
         setTimeout(() => {
@@ -305,15 +300,7 @@ const nomneyZzal = useRef();
   return (
     <group ref={group}>
 
-   {showCloudEffect && playerRef.current && (
-      <CloudEffect 
-        position={[
-          nomoneyGamzaRef.current.position.x , 
-          nomoneyGamzaRef.current.position.y + 3,
-          nomoneyGamzaRef.current.position.z 
-        ]}
-      />
-    )}
+   {cloudPosition && <CloudEffect position={cloudPosition} />}
      <ManualAudioPlayer
         ref={nomoneyAudioRef}
         url={NOMONEY_AUDIO_URL}

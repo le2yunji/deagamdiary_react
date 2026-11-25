@@ -5,7 +5,7 @@ import { PointLight, Vector3 } from 'three';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { Metro } from '../components/Metro';
-import { useTexture } from '@react-three/drei';
+import { useSpotTexture } from '../hooks/useSceneTexture';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
 import { getAssetUrl } from '../utils/assetUrl';
 
@@ -47,16 +47,7 @@ export default function MetroScene({
 
 
   const MetroSpotMeshPosition = new Vector3(9, 0.005, -98);
-  const metroTexture = useTexture(METRO_TRIGGER_URL);
-
-  useEffect(() => {
-    if (metroTexture) {
-      metroTexture.colorSpace = THREE.SRGBColorSpace;
-      metroTexture.anisotropy = 16;
-      metroTexture.flipY = false;
-      metroTexture.needsUpdate = true;
-    }
-  }, [metroTexture]);
+  const metroTexture = useSpotTexture(METRO_TRIGGER_URL);
 
   const metroZzal = useRef();
 
@@ -85,7 +76,7 @@ export default function MetroScene({
       scene.add(mesh);
       metroZzal.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
 
   useEffect(() => {

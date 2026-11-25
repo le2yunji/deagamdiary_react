@@ -5,7 +5,7 @@ import * as THREE from "three";
 
 import CloudEffect from "../components/CloudEffect";
 import { Escalator } from "../components/Escalator";
-import { useTexture } from "@react-three/drei";
+import { useSpotTexture } from "../hooks/useSceneTexture";
 import ManualAudioPlayer from "../utils/ManualAudioPlayer";
 import { getAssetUrl } from "../utils/assetUrl";
 
@@ -38,28 +38,20 @@ export default function EscalatorScene({
   const bbongAudioRef = useRef();
 
   const [triggered, setTriggered] = useState(false);
-  const [showCloudEffect, setShowCloudEffect] = useState(false);
+  const [cloudPosition, setCloudPosition] = useState(null);
 
   const EscalatorSpotMeshPosition = new Vector3(43.5, 0.005, 120);
-  const escalatorTexture = useTexture(HOUSE_TRIGGER_URL);
+  const escalatorTexture = useSpotTexture(HOUSE_TRIGGER_URL);
 
   const hasEnded = useRef(false); // ✅ 한 번만 실행
 
-  useEffect(() => {
-    if (escalatorTexture) {
-      escalatorTexture.colorSpace = THREE.SRGBColorSpace;
-      escalatorTexture.anisotropy = 16;
-      escalatorTexture.flipY = false;
-      escalatorTexture.needsUpdate = true;
-    }
-  }, [escalatorTexture]);
-
-  const gotoendAudio = document.getElementById("bg-audio2");
-
-  // ⚪️ 구름 이펙트
+  /** 효과가 시작되는 순간의 위치를 저장해 렌더링에서 모델 참조를 읽지 않도록 한다. */
   const triggerCloudEffect = () => {
-    setShowCloudEffect(true);
-    setTimeout(() => setShowCloudEffect(false), 500);
+    const position = playerRef.current?.position;
+    if (!position) return;
+    const { x, y, z } = position;
+    setCloudPosition([x + 0.3, y + 2, z + 0.8]);
+    setTimeout(() => setCloudPosition(null), 500);
   };
 
   useEffect(() => {
@@ -100,6 +92,7 @@ export default function EscalatorScene({
         scene.remove(scene.getObjectByName("escalatorSpot"));
         escalatorSpotRef.current.visible = false;
 
+        const gotoendAudio = document.getElementById("bg-audio2");
         if (gotoendAudio) gotoendAudio.volume = 0.15; //📢
 
         setTimeout(() => {
@@ -198,8 +191,10 @@ export default function EscalatorScene({
           const blackoutOverlay = document.getElementById("blackout-overlay");
           if (blackoutOverlay) {
             blackoutOverlay.style.opacity = "1"; // 서서히 검정화
-            gotoendAudio.volume = 0;
-            gotoendAudio.pause();
+            if (gotoendAudio) {
+              gotoendAudio.volume = 0;
+              gotoendAudio.pause();
+            }
           }
           setTimeout(() => {
             if (endingScreen) {
@@ -255,15 +250,7 @@ export default function EscalatorScene({
         }}
       />
 
-      {showCloudEffect && (
-        <CloudEffect
-          position={[
-            playerRef.current.position.x + 0.3,
-            playerRef.current.position.y + 2,
-            playerRef.current.position.z + 0.8,
-          ]}
-        />
-      )}
+      {cloudPosition && <CloudEffect position={cloudPosition} />}
       <ManualAudioPlayer
         ref={bbongAudioRef}
         url={BBONG_AUDIO_URL}

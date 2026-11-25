@@ -1,6 +1,18 @@
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { gsap } from 'gsap';
 import * as THREE from 'three';
+
+/** 메인 카메라를 끄고 장면 전용 카메라를 활성화한다. */
+function activateSceneCamera(setCameraActive, setUseSceneCamera) {
+  setCameraActive(false);
+  setUseSceneCamera(true);
+}
+
+/** 장면 전용 카메라를 끄고 메인 카메라를 복구한다. */
+function restoreMainCamera(setCameraActive, setUseSceneCamera) {
+  setUseSceneCamera(false);
+  setCameraActive(true);
+}
 
 /** 장면 전용 카메라의 활성화·복귀·이동을 한곳에서 관리한다. */
 export default function useCameraSwitcher() {
@@ -10,7 +22,7 @@ export default function useCameraSwitcher() {
   const initialZoom = useRef(30); // ✅ 줌 값도 저장
 
   /** 장면 카메라가 시작할 위치와 시선, 투영 범위를 적용한다. */
-  const setInitialCameraPose = ({ position, lookAt, zoom, near, far }) => {
+  const setInitialCameraPose = useCallback(({ position, lookAt, zoom, near, far }) => {
     if (position) initialPosition.current.set(...position);
     if (lookAt) initialLookAt.current.set(...lookAt);
     if (zoom !== undefined) initialZoom.current = zoom;
@@ -26,20 +38,7 @@ export default function useCameraSwitcher() {
   
       camera.updateProjectionMatrix();
     }
-  };
-  
-
-  /** 메인 카메라를 끄고 장면 전용 카메라를 활성화한다. */
-  const activateSceneCamera = (setCameraActive, setUseSceneCamera) => {
-    setCameraActive(false);  // 메인 카메라 비활성화
-    setUseSceneCamera(true); // 전용 카메라 활성화
-  };
-
-  /** 장면 전용 카메라를 끄고 메인 카메라를 복구한다. */
-  const restoreMainCamera = (setCameraActive, setUseSceneCamera) => {
-    setUseSceneCamera(false);
-    setCameraActive(true);
-  };
+  }, []);
 
   /** 장면 카메라의 위치·시선·줌·투영 범위를 함께 보간한다. */
   const animateCamera = ({ position, lookAt, zoom, near, far, duration = 3 }) => {

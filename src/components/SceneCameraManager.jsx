@@ -20,7 +20,7 @@ export default function SceneCameraManager({
       if (cameraRef) cameraRef.current = camera;
       set({ camera });
     }
-  }, [makeActive]);
+  }, [cameraRef, makeActive, set]);
 
   return (
     <OrthographicCamera

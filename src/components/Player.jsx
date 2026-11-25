@@ -29,7 +29,7 @@ export const Player = forwardRef((props, ref) => {
     if (ref.current) {
       ref.current.animations = actions; // ✅ 외부에서 제어할 수 있게 저장
     }
-  }, [actions]);
+  }, [actions, ref]);
 
   return (
     <group

@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useTexture } from "@react-three/drei";
+import { useSpotTexture } from "../hooks/useSceneTexture";
 import {
   PlaneGeometry,
   MeshBasicMaterial,
@@ -74,11 +74,10 @@ export default function ClassroomScene({
   const onionActions = useRef();
   const onionMixer = useRef();
 
-  const loader = new TextureLoader();
   const talkInterval = useRef(null);
-  const [showCloudEffect, setShowCloudEffect] = useState(false);
-  const [slides, setSlides] = useState([]);
-  const [talks, setTalks] = useState([]);
+  const [cloudPosition, setCloudPosition] = useState(null);
+  const slidesRef = useRef([]);
+  const talksRef = useRef([]);
   const slideStarted = useRef(false);
 
   const bgAudio = document.getElementById("bg-audio");
@@ -90,7 +89,7 @@ export default function ClassroomScene({
   const cloudRef = useRef();
 
   const ClassroomSpotMeshPosition = new Vector3(-99, 0.005, -70);
-  const classTexture = useTexture(CLASS_TRIGGER_URL);
+  const classTexture = useSpotTexture(CLASS_TRIGGER_URL);
 
   const classZzal = useRef();
 
@@ -119,7 +118,7 @@ export default function ClassroomScene({
       scene.add(mesh);
       classZzal.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
   useEffect(() => {
     const loader = new THREE.TextureLoader();
@@ -147,26 +146,11 @@ export default function ClassroomScene({
       scene.add(mesh);
       classZzal.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
   const pptClickRef = useRef();
   const pptClickMeshPosition = new Vector3(-92.1, 6.8, -69.5);
-  const pptClickTexture = useTexture(PPT_CLICK_URL);
-
-  useEffect(() => {
-    if (classTexture) {
-      classTexture.colorSpace = THREE.SRGBColorSpace;
-      classTexture.anisotropy = 16;
-      classTexture.flipY = false;
-      classTexture.needsUpdate = true;
-    }
-    if (pptClickTexture) {
-      pptClickTexture.colorSpace = THREE.SRGBColorSpace;
-      pptClickTexture.anisotropy = 16;
-      pptClickTexture.flipY = false;
-      pptClickTexture.needsUpdate = true;
-    }
-  }, [classTexture, pptClickTexture]);
+  const pptClickTexture = useSpotTexture(PPT_CLICK_URL);
 
   useEffect(() => {
     if (cloudRef.current) {
@@ -192,66 +176,88 @@ export default function ClassroomScene({
     }
   }, []);
 
-  // 구름 이펙트
+  /** 효과가 시작되는 순간의 위치를 저장해 렌더링에서 모델 참조를 읽지 않도록 한다. */
   const triggerCloudEffect = () => {
-    setShowCloudEffect(true);
-    setTimeout(() => setShowCloudEffect(false), 1000);
+    const y = classroomGamzaRef.current?.position.y ?? 0;
+    setCloudPosition([-90, y + 2, -67.8]);
+    setTimeout(() => setCloudPosition(null), 1000);
   };
 
   // 피피티, 슬라이드
   useEffect(() => {
     const geometry = new PlaneGeometry(10, 5.7);
-    setSlides(
-      slidePaths.map((path) => {
-        const mat = new MeshBasicMaterial({ transparent: true, opacity: 0 });
-        const mesh = new Mesh(geometry, mat);
-        mesh.rotation.y = THREE.MathUtils.degToRad(-30);
-        mesh.position.set(-92, 6.55, -70); // ppt 위치
-        mesh.visible = false;
-        loader.load(path, (tex) => {
-          tex.colorSpace = THREE.SRGBColorSpace;
-          mat.map = tex;
-          mat.color.set(0xffffff);
-          mat.opacity = 1;
-          mat.needsUpdate = true;
-        });
-        scene.add(mesh);
-        return mesh;
-      }),
-    );
-  }, []);
+    const loader = new TextureLoader();
+    const meshes = slidePaths.map((path) => {
+      const mat = new MeshBasicMaterial({ transparent: true, opacity: 0 });
+      const mesh = new Mesh(geometry, mat);
+      mesh.rotation.y = THREE.MathUtils.degToRad(-30);
+      mesh.position.set(-92, 6.55, -70); // ppt 위치
+      mesh.visible = false;
+      mat.map = loader.load(path, (tex) => {
+        tex.colorSpace = THREE.SRGBColorSpace;
+        mat.color.set(0xffffff);
+        mat.opacity = 1;
+        mat.needsUpdate = true;
+      });
+      scene.add(mesh);
+      return mesh;
+    });
+    slidesRef.current = meshes;
+
+    return () => {
+      slidesRef.current = [];
+      for (const mesh of meshes) {
+        scene.remove(mesh);
+        mesh.material.map.dispose();
+        mesh.material.dispose();
+      }
+      geometry.dispose();
+    };
+  }, [scene]);
 
   // 발표 말풍선 💬
   useEffect(() => {
     const geometry = new PlaneGeometry(2, 2);
-    setTalks(
-      talkPaths.map((path) => {
-        const mat = new MeshBasicMaterial({
-          transparent: true,
-          alphaTest: 0.5,
-        });
-        const mesh = new Mesh(geometry, mat);
-        mesh.position.set(-87, 5.8, -65); // 말풍선 위치
-        mesh.rotation.set(
-          THREE.MathUtils.degToRad(-10),
-          THREE.MathUtils.degToRad(8),
-          0,
-        );
-        mesh.visible = false;
-        loader.load(path, (tex) => {
-          tex.colorSpace = THREE.SRGBColorSpace;
-          mat.map = tex;
-          mat.color.set(0xffffff);
-          mat.needsUpdate = true;
-        });
-        scene.add(mesh);
-        return mesh;
-      }),
-    );
-  }, []);
+    const loader = new TextureLoader();
+    const meshes = talkPaths.map((path) => {
+      const mat = new MeshBasicMaterial({
+        transparent: true,
+        alphaTest: 0.5,
+      });
+      const mesh = new Mesh(geometry, mat);
+      mesh.position.set(-87, 5.8, -65); // 말풍선 위치
+      mesh.rotation.set(
+        THREE.MathUtils.degToRad(-10),
+        THREE.MathUtils.degToRad(8),
+        0,
+      );
+      mesh.visible = false;
+      mat.map = loader.load(path, (tex) => {
+        tex.colorSpace = THREE.SRGBColorSpace;
+        mat.color.set(0xffffff);
+        mat.needsUpdate = true;
+      });
+      scene.add(mesh);
+      return mesh;
+    });
+    talksRef.current = meshes;
 
-  // 💬 감자 발표 말풍선 재생 함수
+    return () => {
+      clearInterval(talkInterval.current);
+      talkInterval.current = null;
+      talksRef.current = [];
+      for (const mesh of meshes) {
+        scene.remove(mesh);
+        mesh.material.map.dispose();
+        mesh.material.dispose();
+      }
+      geometry.dispose();
+    };
+  }, [scene]);
+
+  /** 발표 중 말풍선을 순서대로 보여 준다. */
   const animateTalkBubbles = () => {
+    const talks = talksRef.current;
     let currentIndex = 0;
 
     if (talks.length === 0) return;
@@ -264,13 +270,13 @@ export default function ClassroomScene({
     }, 500); // 0.5초 간격으로 순환
   };
 
-  // 💬⛔️ 감자 발표 말풍선 멈춤 함수
+  /** 발표가 끝나면 반복을 중지하고 말풍선을 숨긴다. */
   const stopTalkBubbles = () => {
     if (talkInterval.current) {
       clearInterval(talkInterval.current);
       talkInterval.current = null;
     }
-    talks.forEach((talk) => {
+    talksRef.current.forEach((talk) => {
       if (talk) {
         talk.visible = false;
         if (talk.material) {
@@ -280,8 +286,9 @@ export default function ClassroomScene({
     });
   };
 
-  // 🌈 🪧 슬라이드 쇼 시작
+  /** 이미지와 음성을 함께 재생해 발표 순서를 진행한다. */
   const startSlideShow = () => {
+    const slides = slidesRef.current;
     if (!slides.length) return;
     classAudioRef.current?.play();
     presentAudioRef.current?.play();
@@ -547,21 +554,9 @@ export default function ClassroomScene({
     }
   }
 
-  const gamzaCloudPosition = useRef(new THREE.Vector3());
-
-  // 구름 이펙트를 띄우기 전에 위치 저장
-  if (classroomGamzaRef.current) {
-    gamzaCloudPosition.current.copy(classroomGamzaRef.current.position);
-  }
-
   return (
     <group ref={group}>
-      {showCloudEffect && (
-        <CloudEffect
-          position={[-90, gamzaCloudPosition.current.y + 2, -67.8]}
-          raycast={() => null}
-        />
-      )}
+      {cloudPosition && <CloudEffect position={cloudPosition} />}
 
       <Onion
         ref={onionRef}
