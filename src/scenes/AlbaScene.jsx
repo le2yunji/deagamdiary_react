@@ -39,7 +39,7 @@ export default function AlbaScene({
   const albaSpotRef = useRef();
 
   const [triggered, setTriggered] = useState(false);
-  const [showCloudEffect, setShowCloudEffect] = useState(false);
+  const [cloudPosition, setCloudPosition] = useState(null);
 
   const { scene, camera } = useThree();
 
@@ -324,11 +324,13 @@ export default function AlbaScene({
           zoom: 45,
           duration: 1.5,
         });
+        const albaGamza = albaGamzaRef.current;
+        if (albaGamza) {
+          const { x, y, z } = albaGamza.position;
+          setCloudPosition([x, y + 4, z]);
+          setTimeout(() => setCloudPosition(null), 1500);
 
-        if (albaGamzaRef.current) {
-          setShowCloudEffect(true);
-          setTimeout(() => setShowCloudEffect(false), 1500);
-          gsap.to(albaGamzaRef.current.scale, {
+          gsap.to(albaGamza.scale, {
             x: 1.7,
             y: 1.7,
             z: 1.7,
@@ -338,8 +340,9 @@ export default function AlbaScene({
         }
 
         setTimeout(() => {
-          if (albaGamzaRef.current) {
-            gsap.to(albaGamzaRef.current.scale, {
+          const albaGamza = albaGamzaRef.current;
+          if (albaGamza) {
+            gsap.to(albaGamza.scale, {
               x: 0,
               y: 0,
               z: 0,
@@ -410,15 +413,8 @@ export default function AlbaScene({
           loop={false}
           position={[87, 2, -16]}
         />
-        {showCloudEffect && albaGamzaRef.current && (
-          <CloudEffect
-            position={[
-              albaGamzaRef.current?.position?.x ?? 0,
-              (albaGamzaRef.current?.position?.y ?? 0) + 4,
-              albaGamzaRef.current?.position?.z ?? 0,
-            ]}
-          />
-        )}
+
+        {cloudPosition && <CloudEffect position={cloudPosition} />}
 
         <Posters setSelectedPoster={setSelectedPoster} />
 
