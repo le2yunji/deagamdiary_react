@@ -1,6 +1,12 @@
 // component/Metro.jsx
 
-import { useEffect, forwardRef, useImperativeHandle, useMemo } from "react";
+import {
+  useEffect,
+  forwardRef,
+  useRef,
+  useMemo,
+  useImperativeHandle,
+} from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
 import { SkeletonUtils } from "three-stdlib";

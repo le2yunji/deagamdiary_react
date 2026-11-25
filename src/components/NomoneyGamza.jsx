@@ -1,9 +1,11 @@
 // components/NomoneyGamza.jsx
-import  {
+import {
   useEffect,
   forwardRef,
+  useRef,
+  useMemo,
   useImperativeHandle,
-} from 'react';
+} from "react";
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { SkeletonUtils } from 'three-stdlib';
 import * as THREE from 'three';

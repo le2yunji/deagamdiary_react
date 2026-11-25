@@ -1,4 +1,4 @@
-import { useEffect, forwardRef, useImperativeHandle } from "react";
+import { useEffect, forwardRef, useRef, useImperativeHandle } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
 import { getAssetUrl } from "../utils/assetUrl";

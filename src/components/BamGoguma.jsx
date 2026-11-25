@@ -1,4 +1,10 @@
-import { useEffect, forwardRef, useImperativeHandle } from "react";
+import {
+  useEffect,
+  forwardRef,
+  useRef,
+  useMemo,
+  useImperativeHandle,
+} from "react";
 import { useGraph } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { SkeletonUtils } from "three-stdlib";

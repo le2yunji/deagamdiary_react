@@ -1,4 +1,4 @@
-import { useEffect, forwardRef } from "react";
+import { useEffect, forwardRef, useRef, useMemo } from "react";
 import { useGraph } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { SkeletonUtils } from "three-stdlib";
