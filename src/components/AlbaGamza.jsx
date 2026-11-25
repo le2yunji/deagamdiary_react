@@ -1,4 +1,4 @@
-import React, { useEffect, forwardRef } from "react";
+import { useEffect, forwardRef } from "react";
 import { useGraph } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { SkeletonUtils } from "three-stdlib";
@@ -11,9 +11,9 @@ export const AlbaGamza = forwardRef(function AlbaGamza(
   { onLoaded, ...props },
   ref,
 ) {
-  const group = React.useRef();
+  const group = useRef();
   const { scene, animations } = useGLTF(ALBA_GAMZA_MODEL_URL);
-  const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes, materials } = useGraph(clone);
   const { actions, mixer } = useAnimations(animations, group);
 
@@ -33,7 +33,6 @@ export const AlbaGamza = forwardRef(function AlbaGamza(
         }
       }
       onLoaded({ ref: group.current, mixer, actions }); // ✅ ref 전달
-
     }
   }, [onLoaded, mixer, actions, ref]);
 

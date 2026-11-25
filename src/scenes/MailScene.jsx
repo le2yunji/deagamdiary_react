@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import CloudEffect from "../components/CloudEffect";
 import { Vector3 } from "three";
@@ -13,11 +13,7 @@ import { File } from "../components/File";
 import ManualAudioPlayer from "../utils/ManualAudioPlayer";
 import { getAssetUrl } from "../utils/assetUrl";
 
-import {
-  returnCameraY,
-  disappearPlayer,
-  appearPlayer,
-} from "../utils/Common";
+import { returnCameraY, disappearPlayer, appearPlayer } from "../utils/Common";
 
 const MAIL_TRIGGER_URL = getAssetUrl("/assets/images/mailTrigger.png");
 const MAIL_ZZAL_URL = getAssetUrl("/assets/images/mail_zzal.png");
@@ -46,8 +42,8 @@ export default function MailScene({
 
   const clock = new THREE.Clock(); // 애니메이션용 시간
 
-    const { scene, camera } = useThree();
-    const mailSpotRef = useRef();
+  const { scene, camera } = useThree();
+  const mailSpotRef = useRef();
 
   const [showCloudEffect, setShowCloudEffect] = useState(false);
   const bgAudio = document.getElementById("bg-audio");
@@ -237,7 +233,6 @@ export default function MailScene({
               });
             }, 3000);
           }, 500);
-
         }
 
         // 감자 다시 등장
@@ -263,7 +258,6 @@ export default function MailScene({
         }, 6000);
       }
     }
-
   });
 
   return (

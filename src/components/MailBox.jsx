@@ -1,18 +1,18 @@
 // component/MailBox.jsx
 
-import React, {
+import {
   useRef,
   useEffect,
   forwardRef,
   useImperativeHandle,
-  useMemo
-} from 'react';
-import * as THREE from 'three';
-import { useGLTF } from '@react-three/drei';
-import { SkeletonUtils } from 'three-stdlib';
-import { getAssetUrl } from '../utils/assetUrl';
+  useMemo,
+} from "react";
+import * as THREE from "three";
+import { useGLTF } from "@react-three/drei";
+import { SkeletonUtils } from "three-stdlib";
+import { getAssetUrl } from "../utils/assetUrl";
 
-const MAIL_BOX_MODEL_URL = getAssetUrl('/assets/models/MailBox.glb');
+const MAIL_BOX_MODEL_URL = getAssetUrl("/assets/models/MailBox.glb");
 
 /** 우편함 GLB를 복제하고 메시 그림자를 설정해 장면에 제공한다. */
 export const MailBox = forwardRef(({ onLoaded, ...props }, ref) => {

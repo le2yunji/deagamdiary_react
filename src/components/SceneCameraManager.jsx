@@ -1,6 +1,6 @@
-import React, { useRef, useEffect } from 'react';
-import { OrthographicCamera } from '@react-three/drei';
-import { useThree } from '@react-three/fiber';
+import { useRef, useEffect } from "react";
+import { OrthographicCamera } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 
 /** 메인 직교 카메라를 만들고 활성화될 때 React Three Fiber의 기본 카메라로 등록한다. */
 export default function SceneCameraManager({

@@ -1,12 +1,18 @@
 // component/Onion.jsx (리팩토링 버전)
 
-import React, { useEffect, useRef, useMemo, forwardRef, useImperativeHandle } from 'react';
-import { useGLTF, useAnimations } from '@react-three/drei';
-import { SkeletonUtils } from 'three-stdlib';
-import * as THREE from 'three';
-import { getAssetUrl } from '../utils/assetUrl';
+import {
+  useEffect,
+  useRef,
+  useMemo,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
+import { useGLTF, useAnimations } from "@react-three/drei";
+import { SkeletonUtils } from "three-stdlib";
+import * as THREE from "three";
+import { getAssetUrl } from "../utils/assetUrl";
 
-const ONION_MODEL_URL = getAssetUrl('/assets/models/ClassroomOnionAnim.glb');
+const ONION_MODEL_URL = getAssetUrl("/assets/models/ClassroomOnionAnim.glb");
 
 /** 양파 GLB를 복제하고 교실 장면의 단발 애니메이션을 연결한다. */
 export const Onion = forwardRef(({ onLoaded, ...props }, ref) => {

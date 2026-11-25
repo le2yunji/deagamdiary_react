@@ -1,10 +1,16 @@
-import React, { forwardRef, useRef, useMemo, useEffect, useImperativeHandle } from 'react';
-import { useGLTF, useAnimations } from '@react-three/drei';
-import { SkeletonUtils } from 'three-stdlib';
-import * as THREE from 'three';
-import { getAssetUrl } from '../utils/assetUrl';
+import {
+  forwardRef,
+  useRef,
+  useMemo,
+  useEffect,
+  useImperativeHandle,
+} from "react";
+import { useGLTF, useAnimations } from "@react-three/drei";
+import { SkeletonUtils } from "three-stdlib";
+import * as THREE from "three";
+import { getAssetUrl } from "../utils/assetUrl";
 
-const BAKERY_MODEL_URL = getAssetUrl('/assets/models/Bakery.glb');
+const BAKERY_MODEL_URL = getAssetUrl("/assets/models/Bakery.glb");
 
 /** 베이커리 배경 GLB와 애니메이션을 복제해 장면에 제공한다. */
 export const Bakery = forwardRef(({ onLoaded, ...props }, ref) => {
@@ -34,9 +40,7 @@ export const Bakery = forwardRef(({ onLoaded, ...props }, ref) => {
     onLoaded?.({ ref: group.current, mixer, actions });
   }, [actions, mixer, onLoaded]);
 
-  return (
-    <primitive ref={group} object={cloned} {...props} />
-  );
+  return <primitive ref={group} object={cloned} {...props} />;
 });
 
 useGLTF.preload(BAKERY_MODEL_URL);

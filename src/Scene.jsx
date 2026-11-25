@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import SceneContent from "./SceneContent";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { shouldPreventPageScroll } from "./utils/keyboard";
 
 /** 전역 키보드 스크롤을 막고 전체 3D 장면에 시작 상태를 전달한다. */

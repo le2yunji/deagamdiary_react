@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import CloudEffect from "../components/CloudEffect";
 import { Vector3 } from "three";
@@ -420,9 +420,7 @@ export default function AlbaScene({
           />
         )}
 
-        <Posters
-          setSelectedPoster={setSelectedPoster}
-        />
+        <Posters setSelectedPoster={setSelectedPoster} />
 
         <mesh
           name="albaSpot"

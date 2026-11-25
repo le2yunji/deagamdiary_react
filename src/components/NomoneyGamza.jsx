@@ -1,5 +1,5 @@
 // components/NomoneyGamza.jsx
-import React, {
+import  {
   useEffect,
   forwardRef,
   useImperativeHandle,
@@ -14,9 +14,9 @@ const NOMONEY_GAMZA_MODEL_URL = getAssetUrl('/assets/models/Gamza_Nomoney.glb');
 
 /** 잔고 부족 장면 감자 GLB와 애니메이션을 장면 제어에 연결한다. */
 export const NomoneyGamza = forwardRef(({ onLoaded, ...props }, ref) => {
-  const group = React.useRef()
+  const group = .useRef()
   const { scene, animations } = useGLTF(NOMONEY_GAMZA_MODEL_URL)
-  const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
+  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
   const { actions, mixer } = useAnimations(animations, group);
 
