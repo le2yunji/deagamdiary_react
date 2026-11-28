@@ -5,30 +5,27 @@ import { PointLight, Vector3 } from 'three';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { Metro } from '../components/Metro';
-import { useTexture } from '@react-three/drei';
+import { useSpotTexture } from '../hooks/useSceneTexture';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
+import { getAssetUrl } from '../utils/assetUrl';
 
 import {
   disappearPlayer,
-  // appearPlayer,
-  // disableMouseEvents,
-  disablePlayerControlEvents,
-  // enableMouseEvents,
-  // downCameraY,
   returnCameraY,
-  // showArrow,
-  // hideAllArrows,
-  // createArrows,
 } from '../utils/Common';
 
+const METRO_TRIGGER_URL = getAssetUrl('/assets/images/metroTrigger.png');
+const METRO_ZZAL_URL = getAssetUrl('/assets/images/metro_zzal.png');
+const METRO_AUDIO_URL = getAssetUrl('/assets/audio/metroScene.mp3');
+const BBONG_AUDIO_URL = getAssetUrl('/assets/audio/bbong.mp3');
 
+/** 지하철 장면의 모델·카메라·이미지·오디오 진행을 제어한다. */
 export default function MetroScene({
   playerRef,
   setDisableMovement,
   setCameraTarget,
-  setCameraActive,         // 💡 추가
-  setUseSceneCamera,       // 💡 추가
-  useSceneCamera,
+  setCameraActive,
+  setUseSceneCamera,
   activateSceneCamera,
   animateCamera,
   restoreMainCamera,
@@ -50,22 +47,13 @@ export default function MetroScene({
 
 
   const MetroSpotMeshPosition = new Vector3(9, 0.005, -98);
-  const metroTexture = useTexture('/assets/images/metroTrigger.png');
-
-  useEffect(() => {
-    if (metroTexture) {
-      metroTexture.colorSpace = THREE.SRGBColorSpace;
-      metroTexture.anisotropy = 16;
-      metroTexture.flipY = false;
-      metroTexture.needsUpdate = true;
-    }
-  }, [metroTexture]);
+  const metroTexture = useSpotTexture(METRO_TRIGGER_URL);
 
   const metroZzal = useRef();
 
   useEffect(() => {
     const loader = new THREE.TextureLoader();
-    loader.load('/assets/images/metro_zzal.png', (texture) => {
+    loader.load(METRO_ZZAL_URL, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
 
@@ -88,7 +76,7 @@ export default function MetroScene({
       scene.add(mesh);
       metroZzal.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
 
   useEffect(() => {
@@ -130,7 +118,6 @@ export default function MetroScene({
       z: 1.2,
       ease: "power1.in",
     });
-    // if (bgAudio) bgAudio.play(); //📢
   };
  
   // ✅ 씬 시작  
@@ -143,7 +130,6 @@ export default function MetroScene({
       const dist = playerPosXZ.distanceTo(spotPosXZ);
 
       if (dist < 1.5) {
-        // if (bgAudio) bgAudio.pause(); //📢
         if (bgAudio) bgAudio.pause(); //📢
         metroAudioRef.current?.play();
         bbongAudioRef.current?.play()
@@ -166,7 +152,7 @@ export default function MetroScene({
           setInitialCameraPose({
             position: [2, 10, -65],
             lookAt: [-2, 2, -96],
-            zoom: 40
+            zoom: 50
           });
 
         }, 300)
@@ -240,21 +226,21 @@ export default function MetroScene({
           transparent={true} 
           alphaTest={0.5}
           depthWrite={true}
-          premultipliedAlpha={true} // ✅ 핵심 옵션!
+          premultipliedAlpha={true}
           />
         
       </mesh>
       <ManualAudioPlayer
         ref={bbongAudioRef}
-        url="/assets/audio/bbong.mp3"
+        url={BBONG_AUDIO_URL}
         volume={3}
         loop={false}
         position={[-7.5, 2, -110]}
         />
       <ManualAudioPlayer
           ref={metroAudioRef}
-          url="/assets/audio/metroScene.mp3"
-          volume={2.3}
+          url={METRO_AUDIO_URL}
+          volume={6}
           loop={false}
           position={[-7.5, 2, -110]}
         />

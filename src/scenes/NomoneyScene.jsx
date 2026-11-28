@@ -6,29 +6,30 @@ import { Vector3 } from 'three';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { NomoneyGamza } from '../components/NomoneyGamza';
-import { useTexture } from '@react-three/drei';
+import { useSpotTexture } from '../hooks/useSceneTexture';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
+import { getAssetUrl } from '../utils/assetUrl';
 
 import {
   disappearPlayer,
   appearPlayer,
-  disableMouseEvents,
-  // enableMouseEvents,
-  moveModelYPosition,
-  // downCameraY,
-  // returnCameraY,
-  setDisableMovement
 } from '../utils/Common';
 
-// 지하철 씬을 담당하는 컴포넌트입니다.
-// 플레이어가 특정 위치(스팟)에 도달하면 지하철이 등장하고 애니메이션이 실행됩니다.
+const NOMONEY_TRIGGER_URL = getAssetUrl('/assets/images/noMoneyTrigger.png');
+const NOMONEY_ZZAL_URL = getAssetUrl('/assets/images/nomoney_zzal.png');
+const NOMONEY_TEXT_URL = getAssetUrl('/assets/images/nomoney.webp');
+const NOMONEY_TALK_URL = getAssetUrl('/assets/images/nomoney_talk.webp');
+const NOMONEY_AUDIO_URL = getAssetUrl('/assets/audio/nomoneyScene.mp3');
+const NOMONEY_MONEY_AUDIO_URL = getAssetUrl('/assets/audio/nomoney_money.mp3');
+const BBONG_AUDIO_URL = getAssetUrl('/assets/audio/bbong.mp3');
+
+/** 잔고 부족 장면의 모델·카메라·대화 이미지·오디오 진행을 제어한다. */
 export default function NomoneyScene({
   playerRef,
   setCameraTarget,
   setDisableMovement,
-  setCameraActive,         // 💡 추가
-  setUseSceneCamera,       // 💡 추가
-  useSceneCamera,
+  setCameraActive,
+  setUseSceneCamera,
   activateSceneCamera,
   animateCamera,
   restoreMainCamera,
@@ -41,34 +42,22 @@ export default function NomoneyScene({
   const nomoneyGamzaMixer = useRef();
 
   const [triggered, setTriggered] = useState(false); // 씬 시작됐는지 여부
-  const [showCloudEffect, setShowCloudEffect] = useState(false);
+  const [cloudPosition, setCloudPosition] = useState(null);
 
-  const clock = new THREE.Clock(); // 애니메이션용 시간
-  
   const NomoneySpotMeshPosition = new Vector3(-92, 0.005, -15); // -10.5  
-  const { scene, camera } = useThree();
-  const nomoneySpotRef = useRef(); // ✅ 메쉬 ref 추가
-  const bgAudio = document.getElementById("bg-audio");
+  const { scene } = useThree();
+  const nomoneySpotRef = useRef();
   const nomoneyAudioRef = useRef();
 
   const nomoneyTalkAudioRef = useRef();
   const bbongAudioRef= useRef();
 
-  const nomoneyTexture = useTexture('/assets/images/noMoneyTrigger.png');
-
-  useEffect(() => {
-    if (nomoneyTexture) {
-      nomoneyTexture.colorSpace = THREE.SRGBColorSpace;
-      nomoneyTexture.anisotropy = 16;
-      nomoneyTexture.flipY = false;
-      nomoneyTexture.needsUpdate = true;
-    }
-  }, [nomoneyTexture]);
+  const nomoneyTexture = useSpotTexture(NOMONEY_TRIGGER_URL);
   
 const nomneyZzal = useRef();
   useEffect(() => {
     const loader = new THREE.TextureLoader();
-    loader.load('/assets/images/nomoney_zzal.png', (texture) => {
+    loader.load(NOMONEY_ZZAL_URL, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
 
@@ -91,13 +80,13 @@ const nomneyZzal = useRef();
       scene.add(mesh);
       nomneyZzal.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
 
   // 텅장 텍스트 💬
   const noMoneyText = useRef();
   useEffect(() => {
-    const texture = new THREE.TextureLoader().load('/assets/images/nomoney.webp');
+    const texture = new THREE.TextureLoader().load(NOMONEY_TEXT_URL);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
@@ -114,7 +103,7 @@ const nomneyZzal = useRef();
  // 💭
   const nomoneyTalk = useRef();
   useEffect(() => {
-    const texture = new THREE.TextureLoader().load('/assets/images/nomoney_talk.webp');
+    const texture = new THREE.TextureLoader().load(NOMONEY_TALK_URL);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.needsUpdate = true;
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.5 });
@@ -135,13 +124,16 @@ const nomneyZzal = useRef();
     }
   };
 
-  // ⚪️ 구름 이펙트
+  /** 효과가 시작되는 순간의 위치를 저장해 렌더링에서 모델 참조를 읽지 않도록 한다. */
   const triggerCloudEffect = () => {
-    setShowCloudEffect(true);
-    setTimeout(() => setShowCloudEffect(false), 1000);
+    const position = nomoneyGamzaRef.current?.position;
+    if (!playerRef.current || !position) return;
+    const { x, y, z } = position;
+    setCloudPosition([x, y + 3, z]);
+    setTimeout(() => setCloudPosition(null), 1000);
   };
 
-  // ✅ 노머니 이벤트 완료 후 감자 복귀
+  /** 은행 상호작용을 마치고 플레이어와 배경음을 복구한다. */
   const restorePlayerAfterNomoney = () => {
     playerRef.current.visible = true;
     playerRef.current.position.set(-92, 0.3, -13);
@@ -151,6 +143,7 @@ const nomneyZzal = useRef();
     triggerCloudEffect();
     appearPlayer(playerRef, 1.2); // 부드럽게 다시 나타남
     nomoneyAudioRef.current?.stop();
+    const bgAudio = document.getElementById("bg-audio");
     if (bgAudio) bgAudio.volume = 0.2;
     nomoneyTalkAudioRef.current?.stop();
 
@@ -190,11 +183,11 @@ const nomneyZzal = useRef();
         scene.remove(nomoneySpotRef.current); // ✅ 정확하게 제거됨
         nomoneySpotRef.current.visible = false
 
-        // disableMouseEvents(); 
 
         triggerCloudEffect();
 
 
+        const bgAudio = document.getElementById("bg-audio");
         if (bgAudio) bgAudio.volume = 0.1;
 
         setTimeout(() => {
@@ -228,23 +221,6 @@ const nomneyZzal = useRef();
             zoom: 70,
             duration: 1.5
           });
-          // gsap.to(camera.position, {
-          //   duration: 0.5,  
-          //   // x: -90,  
-          //   y: 3,   
-          //   ease: "power2.out", // ✅ 부드러운 감속 애니메이션
-          //   onUpdate: () => {
-          //     camera.updateProjectionMatrix(); // ✅ 변경 사항 반영
-          //   }
-          // });
-          // gsap.to(camera, {
-          //   duration: 1,  
-          //   zoom: 50,    // ✅ 목표 zoom 값
-          //   ease: "expo.inOut", // ✅ 부드러운 감속 애니메이션
-          //   onUpdate: () => {
-          //     camera.updateProjectionMatrix(); // ✅ 변경 사항 반영
-          //   }
-          // });
         }, 200)
        
   
@@ -324,32 +300,24 @@ const nomneyZzal = useRef();
   return (
     <group ref={group}>
 
-   {showCloudEffect && playerRef.current && (
-      <CloudEffect 
-        position={[
-          nomoneyGamzaRef.current.position.x , 
-          nomoneyGamzaRef.current.position.y + 3,
-          nomoneyGamzaRef.current.position.z 
-        ]}
-      />
-    )}
+   {cloudPosition && <CloudEffect position={cloudPosition} />}
      <ManualAudioPlayer
         ref={nomoneyAudioRef}
-        url="/assets/audio/nomoneyScene.mp3"
+        url={NOMONEY_AUDIO_URL}
         volume={1.3}
         loop={false}
         position={[-92, 2, -15]}
       />
       <ManualAudioPlayer
         ref={nomoneyTalkAudioRef}
-        url="/assets/audio/nomoney_money.mp3"
+        url={NOMONEY_MONEY_AUDIO_URL}
         volume={1.3}
         loop={false}
         position={[-92, 2, -15]}
       />
      <ManualAudioPlayer
         ref={bbongAudioRef}
-        url="/assets/audio/bbong.mp3"
+        url={BBONG_AUDIO_URL}
         volume={3}
         loop={false}
         position={[-92, 2, -15]}
@@ -379,7 +347,7 @@ const nomneyZzal = useRef();
         transparent={true}
         alphaTest={0.5}
         depthWrite={true}
-        premultipliedAlpha={true} // ✅ 핵심 옵션!
+        premultipliedAlpha={true}
       />
       </mesh>
     </group>

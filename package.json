@@ -9,49 +9,40 @@
     "@react-three/cannon": "^6.6.0",
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "dat.gui": "^0.7.9",
     "framer-motion": "^10.18.0",
     "framer-motion-3d": "^10.16.4",
     "gsap": "^3.12.7",
     "leva": "^0.9.35",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "recoil": "^0.7.7",
-    "styled-components": "^6.1.16",
-    "three": "^0.175.0",
-    "web-vitals": "^2.1.4"
+    "styled-components": "^6.6.0",
+    "three": "^0.175.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test:ci": "react-scripts test --watchAll=false --detectOpenHandles",
-    "lint": "eslint src --ext .js,.jsx",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "test": "vitest",
+    "test:unit": "vitest run",
+    "test:assets": "node --test scripts/lib/*.test.mjs",
+    "test:ci": "npm run test:unit && npm run test:assets",
+    "assets:inventory": "node scripts/generate-r2-asset-inventory.mjs",
+    "assets:upload": "node scripts/upload-r2-assets.mjs",
+    "assets:verify-r2": "node scripts/verify-r2-assets.mjs",
+    "assets:check": "node scripts/check-r2-asset-references.mjs"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@eslint/js": "^10.0.1",
+    "@vitejs/plugin-react": "^6.3.0",
+    "eslint": "^10.15.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "globals": "^17.14.0",
+    "vite": "^8.3.8",
+    "vitest": "^4.0.18"
   }
 }

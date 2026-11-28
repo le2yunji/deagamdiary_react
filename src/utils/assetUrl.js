@@ -4,13 +4,13 @@
  */
 export const getAssetUrl = (
   path,
-  baseUrl = process.env.REACT_APP_ASSET_BASE_URL
+  baseUrl = import.meta.env.VITE_ASSET_BASE_URL,
 ) => {
-  const normalizedPath = `/${path.replace(/^\/+/, '')}`
+  const normalizedPath = `/${path.replace(/^\/+/, "")}`;
 
   if (!baseUrl) {
-    return normalizedPath
+    return normalizedPath;
   }
 
-  return `${baseUrl.replace(/\/+$/, '')}${normalizedPath}`
-}
+  return `${baseUrl.replace(/\/+$/, "")}${normalizedPath}`;
+};

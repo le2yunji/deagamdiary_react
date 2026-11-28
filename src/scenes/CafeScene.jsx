@@ -1,5 +1,3 @@
-// CafeScene.jsx
-
 import { useRef, useState, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import CloudEffect from '../components/CloudEffect';
@@ -8,10 +6,9 @@ import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { Cafe } from '../components/Cafe';
 import { CafeGamza } from '../components/CafeGamza';
-import { AudioTimelinePlayer } from '../utils/AudioTimelinePlayer';
-// import useCameraSwitcher from '../hooks/useCameraSwitcher';
 import ManualAudioPlayer from '../utils/ManualAudioPlayer';
-import { useTexture } from '@react-three/drei';
+import { useSpotTexture } from '../hooks/useSceneTexture';
+import { getAssetUrl } from '../utils/assetUrl';
 
 import {
   PlaneGeometry,
@@ -23,25 +20,31 @@ import {
 import {
   disappearPlayer,
   appearPlayer,
-  // disableMouseEvents,
-  // enableMouseEvents,
-  // downCameraY,
-  // returnCameraY
 } from '../utils/Common';
 
+const CAFE_TRIGGER_URL = getAssetUrl('/assets/images/cafeTrigger.png');
+const CAFE_ZZAL_URL = getAssetUrl('/assets/images/cafe_zzal.png');
+const COFFEE_IMAGE_URLS = [
+  getAssetUrl('/assets/images/coffee1.webp'),
+  getAssetUrl('/assets/images/coffee2.webp'),
+  getAssetUrl('/assets/images/coffee3.webp'),
+  getAssetUrl('/assets/images/coffee4.webp'),
+];
+const CAFE_AUDIO_URL = getAssetUrl('/assets/audio/cafeScene.mp3');
+
+/** 카페 주문 장면의 모델·프레임 이미지·카메라·오디오 진행을 제어한다. */
 export default function CafeScene({
   playerRef,
   setCameraTarget,
   setDisableMovement,
-  setCameraActive,         // 💡 추가
-  setUseSceneCamera,       // 💡 추가
+  setCameraActive,
+  setUseSceneCamera,
   activateSceneCamera,
   animateCamera,
   restoreMainCamera,
   setInitialCameraPose
 }) {
   const group = useRef();
-  const loader = new TextureLoader();
 
   const cafeRef = useRef();
   const cafeActions = useRef();
@@ -52,43 +55,25 @@ export default function CafeScene({
   const cafeGamzaMixer = useRef();
 
   const [triggered, setTriggered] = useState(false);
-  const [showCloudEffect, setShowCloudEffect] = useState(false);
+  const [cloudPosition, setCloudPosition] = useState(null);
 
   const lightRef = useRef();
-  const clock = new THREE.Clock();
-
-  const { scene, camera } = useThree();
+  const { scene } = useThree();
   const cafeSpotRef = useRef();
-  const [coffee, setcoffee] = useState([]);
+  const coffeeRef = useRef([]);
 
   const bgAudio = document.getElementById("bg-audio");
   const cafeAudioRef = useRef();
 
 
   const CafeSpotMeshPosition = new Vector3(-37.5, 0.005, -89);
-  const cafeTexture = useTexture('/assets/images/cafeTrigger.png');
-
-  useEffect(() => {
-    if (cafeTexture) {
-      cafeTexture.colorSpace = THREE.SRGBColorSpace;
-      cafeTexture.anisotropy = 16;
-      cafeTexture.flipY = false;
-      cafeTexture.needsUpdate = true;
-    }
-  }, [cafeTexture]);
-
-  const coffeePaths = [
-    '/assets/images/coffee1.webp',
-    '/assets/images/coffee2.webp',
-    '/assets/images/coffee3.webp',
-    '/assets/images/coffee4.webp',
-  ];
+  const cafeTexture = useSpotTexture(CAFE_TRIGGER_URL);
 
   const cafeZzal = useRef();
 
   useEffect(() => {
     const loader = new THREE.TextureLoader();
-    loader.load('/assets/images/cafe_zzal.png', (texture) => {
+    loader.load(CAFE_ZZAL_URL, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
 
@@ -111,7 +96,7 @@ export default function CafeScene({
       scene.add(mesh);
       cafeZzal.current = mesh;
     });
-  }, []);
+  }, [scene]);
 
 
 
@@ -121,52 +106,64 @@ export default function CafeScene({
   // 커피 그림
   useEffect(() => {
     const geometry = new PlaneGeometry(4, 6);
-    setcoffee(
-      coffeePaths.map((path, i) => {
-        const mat = new MeshBasicMaterial({ transparent: true, alphaTest: 0.5 });
-        const mesh = new Mesh(geometry, mat);
-        mesh.rotation.y = THREE.MathUtils.degToRad(20);
-        mesh.rotation.z = THREE.MathUtils.degToRad(-10);
-        mesh.position.set(-34, 5, -82);
-        // mesh.scale.set(1.3, 1.25, 1.3);
-        mesh.visible = false;
-        loader.load(path, (tex) => {
-          tex.colorSpace = THREE.SRGBColorSpace;
-          mat.map = tex;
-          mat.color.set(0xffffff);
-          mat.opacity = 1;
-          mat.needsUpdate = true; 
-        });
-        scene.add(mesh);
-        return mesh;
-      })
-    );
-  }, []);
+    const loader = new TextureLoader();
+    const meshes = COFFEE_IMAGE_URLS.map((path) => {
+      const mat = new MeshBasicMaterial({ transparent: true, alphaTest: 0.5 });
+      const mesh = new Mesh(geometry, mat);
+      mesh.rotation.y = THREE.MathUtils.degToRad(20);
+      mesh.rotation.z = THREE.MathUtils.degToRad(-10);
+      mesh.position.set(-34, 5, -82);
+      mesh.visible = false;
+      mat.map = loader.load(path, (tex) => {
+        tex.colorSpace = THREE.SRGBColorSpace;
+        mat.color.set(0xffffff);
+        mat.opacity = 1;
+        mat.needsUpdate = true;
+      });
+      scene.add(mesh);
+      return mesh;
+    });
+    coffeeRef.current = meshes;
 
-// 커피 그림 재생 함수
-const animateDrinkCoffee = () => {
-  if (coffee.length === 0) return;
+    return () => {
+      coffeeRef.current = [];
+      for (const mesh of meshes) {
+        scene.remove(mesh);
+        mesh.material.map.dispose();
+        mesh.material.dispose();
+      }
+      geometry.dispose();
+    };
+  }, [scene]);
 
-  coffee.forEach((c) => (c.visible = false)); // 초기값 전부 숨김
+  /** 커피 프레임을 순서대로 보여 준 뒤 모두 숨긴다. */
+  const animateDrinkCoffee = () => {
+    const coffee = coffeeRef.current;
+    if (coffee.length === 0) return;
 
-  coffee.forEach((c, index) => {
+    coffee.forEach((c) => (c.visible = false)); // 초기값 전부 숨김
+
+    coffee.forEach((_, index) => {
+      setTimeout(() => {
+        // 현재 프레임만 visible = true
+        coffee.forEach((c, i) => (c.visible = i === index));
+      }, index * 300);
+    });
+
+    // 마지막 프레임 이후 전부 숨김
     setTimeout(() => {
-      // 현재 프레임만 visible = true
-      coffee.forEach((c, i) => (c.visible = i === index));
-    }, index * 300);
-  });
-
-  // 마지막 프레임 이후 전부 숨김
-  setTimeout(() => {
-    coffee.forEach((c) => (c.visible = false));
-  }, coffee.length * 300);
-};
+      coffee.forEach((c) => (c.visible = false));
+    }, coffee.length * 300);
+  };
 
 
-  // ⚪️ 구름 이펙트
+  /** 효과가 시작되는 순간의 위치를 저장해 렌더링에서 모델 참조를 읽지 않도록 한다. */
   const triggerCloudEffect = () => {
-    setShowCloudEffect(true);
-    setTimeout(() => setShowCloudEffect(false), 1500);
+    const position = cafeGamzaRef.current?.position;
+    if (!position) return;
+    const { x, y, z } = position;
+    setCloudPosition([x + 1.5, y + 2, z]);
+    setTimeout(() => setCloudPosition(null), 1500);
   };
 
 
@@ -221,7 +218,6 @@ const animateDrinkCoffee = () => {
         scene.remove(cafeSpotRef.current);
         if (cafeSpotRef.current) cafeSpotRef.current.visible = false;
 
-        // disableMouseEvents();
         setDisableMovement(true);
 
   
@@ -336,15 +332,7 @@ const animateDrinkCoffee = () => {
       }}
     />
 
-      {showCloudEffect && cafeGamzaRef.current && (
-        <CloudEffect
-          position={[
-            cafeGamzaRef.current.position.x + 1.5,
-            cafeGamzaRef.current.position.y + 2,
-            cafeGamzaRef.current.position.z
-          ]}
-        />
-      )}
+      {cloudPosition && <CloudEffect position={cloudPosition} />}
 
       <mesh
         name="cafeSpot"
@@ -359,13 +347,13 @@ const animateDrinkCoffee = () => {
         transparent={true} 
         alphaTest={0.5}
         depthWrite={true}
-        premultipliedAlpha={true} // ✅ 핵심 옵션!
+        premultipliedAlpha={true}
         />
       </mesh>
 
       <ManualAudioPlayer
         ref={cafeAudioRef}
-        url="/assets/audio/cafeScene.mp3"
+        url={CAFE_AUDIO_URL}
         volume={2}
         loop={false}
         position={[-38, 2, -86]}

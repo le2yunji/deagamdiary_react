@@ -1,0 +1,1454 @@
+{
+  "version": 1,
+  "generatedAt": "2026-11-23T15:31:04.567Z",
+  "sourceRoot": "<R2_ASSET_SOURCE_ROOT>",
+  "summary": {
+    "requiredFiles": 108,
+    "requiredBytes": 159871960,
+    "trackedRequiredFiles": 53,
+    "excludedEntries": 10
+  },
+  "verification": {
+    "verifiedAt": "2026-11-23T16:15:26Z",
+    "publicBaseUrl": "https://pub-8f16ad22f2904f4fa68a2f18fd268daa.r2.dev",
+    "corsAllowedOrigins": [
+      "*"
+    ],
+    "remoteHeadCheck": {
+      "requiredFiles": 108,
+      "status": "passed"
+    },
+    "browserSmokeCheck": {
+      "observedR2Resources": 53,
+      "unmanagedLocalAssetRequests": 0,
+      "consoleErrorsOrWarnings": 0,
+      "verified": [
+        "start video",
+        "guide images and buttons",
+        "GLB rendering",
+        "player movement animation",
+        "footprint texture"
+      ],
+      "status": "passed"
+    }
+  },
+  "assets": [
+    {
+      "sourcePath": "public/assets/audio/albaScene_aha.mp3",
+      "objectKey": "assets/audio/albaScene_aha.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 45925,
+      "sha256": "b37462e2161b2609d2f33a28893b0c86ba7395bfda55beabe453b4921725acf9",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/AlbaScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/albaScene_hmm.mp3",
+      "objectKey": "assets/audio/albaScene_hmm.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 45925,
+      "sha256": "a44b32cb6f54d53a0b0499a6964a97b9dab554dc5ce92c3dc57dc7207e0cd1b2",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/AlbaScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/bakeryScene.mp3",
+      "objectKey": "assets/audio/bakeryScene.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 707161,
+      "sha256": "daabc7fad237111029e2ed3e410501da43d9293afafcd2ffa5d7f91035198d50",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/BakeryScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/bakeryScene_sorry.mp3",
+      "objectKey": "assets/audio/bakeryScene_sorry.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 188257,
+      "sha256": "a5714d7c7fb8d5f1d7ae43c95e5d8c561b57b9119bc9a0247b066cc39dbe66fa",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/BakeryScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/bbong.mp3",
+      "objectKey": "assets/audio/bbong.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 176942,
+      "sha256": "978cd0df3dae599677b644d2c85c7d42a160e9c79620990135a41e7a5ad577aa",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/AlbaScene.jsx",
+        "src/scenes/ChatGPTScene.jsx",
+        "src/scenes/ClassroomScene.jsx",
+        "src/scenes/EscalatorScene.jsx",
+        "src/scenes/MailScene.jsx",
+        "src/scenes/MetroScene.jsx",
+        "src/scenes/NomoneyScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/cafeScene.mp3",
+      "objectKey": "assets/audio/cafeScene.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 512560,
+      "sha256": "b6f7a41509c2aebcaf4c13cc528bad4ad862d1e655bf1ddb4f5e7580188eed16",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/CafeScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/classScene_bgm.mp3",
+      "objectKey": "assets/audio/classScene_bgm.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 744987,
+      "sha256": "f7fcd28e4c248ae322afe0e0b8add44a9e053c80ade2b50805546e583756c64d",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/classScene_daegam_talk.mp3",
+      "objectKey": "assets/audio/classScene_daegam_talk.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 388602,
+      "sha256": "01faf6cde4db3d4c65c65bac26ae4c924c9802889d901003ddbf3b04a8e14cf0",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/classScene_onion_daegam.mp3",
+      "objectKey": "assets/audio/classScene_onion_daegam.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 7974,
+      "sha256": "b5fa7b0df18ebc4a1318ee6aef5ca5d645ad71bacffcfb5f8840c1ebbc4c6969",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/ending_bgm.mp3",
+      "objectKey": "assets/audio/ending_bgm.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 2156589,
+      "sha256": "ab1488b4933d4ddd680512a01a0f267b596b07afa4bbf30b5e8f96bce1b15713",
+      "gitTracked": true,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "objectKey": "assets/audio/escalatorScene.mp3",
+      "kind": "audio",
+      "status": "excluded",
+      "reason": "원본이 없고 Vercel에서도 HTML fallback을 반환해 재생되지 않는 기존 깨진 참조",
+      "size": null,
+      "sha256": null,
+      "gitTracked": false,
+      "references": [
+        "src/scenes/EscalatorScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/gogumi.mp3",
+      "objectKey": "assets/audio/gogumi.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 474745,
+      "sha256": "92162648061d80c9b626aedab0310e835843c8bc5e0cdd713043a79a486c68bb",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/BakeryScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/gotoend.mp3",
+      "objectKey": "assets/audio/gotoend.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 1778733,
+      "sha256": "f7403432e110cb20c5b7b3c102d4f8d62e6d6bb680e76ba62ca3eecb50444784",
+      "gitTracked": true,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/gptScene.mp3",
+      "objectKey": "assets/audio/gptScene.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 561756,
+      "sha256": "825806f309dbdb3f1267ae8c3b9e6ebe5c23c1de99335213b5c74f6a95e4f759",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/ChatGPTScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/mail.mp3",
+      "objectKey": "assets/audio/mail.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 8392,
+      "sha256": "f8482035dc9de4b4a0800b41003fd4b2166323b04b1fe653336f55ee0fe98ed2",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/MailScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/metroScene.mp3",
+      "objectKey": "assets/audio/metroScene.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 607230,
+      "sha256": "78996e847aaf5ad7d7568a7b1d88bb9eb44758728f18a5a7a5c2e2c14ae801d9",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/MetroScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/nomoneyScene.mp3",
+      "objectKey": "assets/audio/nomoneyScene.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 129286,
+      "sha256": "ff2580ac3dc43c699036197b4200462b2ec041293c652b5b9284c000e2e1af20",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/NomoneyScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/nomoney_money.mp3",
+      "objectKey": "assets/audio/nomoney_money.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 55304,
+      "sha256": "0587cc09a26376a8b31ba66cb4a36934d1ceb3c519c8b0afd41292fa9d100ebe",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/NomoneyScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/audio/walk_sound.mp3",
+      "objectKey": "assets/audio/walk_sound.mp3",
+      "kind": "audio",
+      "status": "required",
+      "size": 7308,
+      "sha256": "2340617f3918ffea00057074416912dc382691ac4ce6289c16ef9a49f24e5622",
+      "gitTracked": true,
+      "references": [
+        "src/components/PlayerController.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/BakeryPoster.png",
+      "objectKey": "assets/images/BakeryPoster.png",
+      "kind": "image",
+      "status": "required",
+      "size": 216541,
+      "sha256": "b69adbb82afe263097ebbbdf4d344289b4ea0550b0dc62657d6b705ebdb0338d",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/DokseoPoster.png",
+      "objectKey": "assets/images/DokseoPoster.png",
+      "kind": "image",
+      "status": "required",
+      "size": 130557,
+      "sha256": "4418f4e276f84d16bec2b173832b1dd62fe5543cb113c1b4096e02c9b3f9e302",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/GamzaPoster.png",
+      "objectKey": "assets/images/GamzaPoster.png",
+      "kind": "image",
+      "status": "required",
+      "size": 139947,
+      "sha256": "31f4214ab8afdfb94ec189e38d143add55a9aa18532a4594e56d9ab8659ab30b",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/KidsPoster.png",
+      "objectKey": "assets/images/KidsPoster.png",
+      "kind": "image",
+      "status": "required",
+      "size": 146134,
+      "sha256": "2eb09c2462fa7821468ff808a146670b6665f30646867acb45eb3ae9c45eb3fd",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/SushiPoster.png",
+      "objectKey": "assets/images/SushiPoster.png",
+      "kind": "image",
+      "status": "required",
+      "size": 132534,
+      "sha256": "75d5be27f2da68554b9a78b8cde2a33e15e5cccb3395fd175dce3525f967f6c6",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/albaTrigger.png",
+      "objectKey": "assets/images/albaTrigger.png",
+      "kind": "image",
+      "status": "required",
+      "size": 308281,
+      "sha256": "642d1d268b7071cf01a180862ef71aadca7c504b8a2b9acd6851efd1e642e515",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/AlbaScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/alba_script.png",
+      "objectKey": "assets/images/alba_script.png",
+      "kind": "image",
+      "status": "required",
+      "size": 28996,
+      "sha256": "41287b2ad9cbf4506da42a275f94e1c5144b28d6299ab476d1ab99360de286b0",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/bakeryTrigger.png",
+      "objectKey": "assets/images/bakeryTrigger.png",
+      "kind": "image",
+      "status": "required",
+      "size": 167775,
+      "sha256": "858c42c17464639c30529446f20bbe2aabcc83ca7e1ff482d7a720fd4a14c0ed",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/BakeryScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/bakery_script.png",
+      "objectKey": "assets/images/bakery_script.png",
+      "kind": "image",
+      "status": "required",
+      "size": 29185,
+      "sha256": "df3f6bdebfd11def3adbd58b2d07a7c859ef4ca897dcc3f19a2b0feea9743292",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/bakery_zzal.png",
+      "objectKey": "assets/images/bakery_zzal.png",
+      "kind": "image",
+      "status": "required",
+      "size": 92847,
+      "sha256": "8478db6f3248a84098f080622ec7bce6c5da20d9a9263b7da48d9e2c104d4d82",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/BakeryScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/bakery_zzal2.png",
+      "objectKey": "assets/images/bakery_zzal2.png",
+      "kind": "image",
+      "status": "required",
+      "size": 175239,
+      "sha256": "038aa44cbab09b9c95cabc752ef637ce73d3ca14acf7158f0edd3e6ab7dbf367",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/BakeryScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/cafeTrigger.png",
+      "objectKey": "assets/images/cafeTrigger.png",
+      "kind": "image",
+      "status": "required",
+      "size": 351985,
+      "sha256": "d5f2de1e25a0c5616a2078fc4034a02e075bfdf97ee062a99da1f75464f46ca2",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/CafeScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/cafe_script.png",
+      "objectKey": "assets/images/cafe_script.png",
+      "kind": "image",
+      "status": "required",
+      "size": 26466,
+      "sha256": "c70055ee7e7203ca1d36a0674ff6095e052587ff19293bcbfaf1723e16225e30",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/cafe_zzal.png",
+      "objectKey": "assets/images/cafe_zzal.png",
+      "kind": "image",
+      "status": "required",
+      "size": 141227,
+      "sha256": "1d2bfd98663419c8499e3ffba99bf479a0e685136ea3968c8f2a6cc43bc4aef6",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/CafeScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/classTrigger.png",
+      "objectKey": "assets/images/classTrigger.png",
+      "kind": "image",
+      "status": "required",
+      "size": 385030,
+      "sha256": "aaa53a3e8ff08ff311c0f7589d13bd86f3680e3fc89a41c2bff6b6676d71a110",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/class_zzal.png",
+      "objectKey": "assets/images/class_zzal.png",
+      "kind": "image",
+      "status": "required",
+      "size": 379566,
+      "sha256": "e2e17a96891994596f1a2f8640909bdb991d53b8b44f5b91e5cd554abd63daa2",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/class_zzal2.png",
+      "objectKey": "assets/images/class_zzal2.png",
+      "kind": "image",
+      "status": "required",
+      "size": 273465,
+      "sha256": "c8a79ffeb5f21860cc9ec91fef7a26edded46d64ee277a4e3603338fd73b26c3",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/classroom_script.png",
+      "objectKey": "assets/images/classroom_script.png",
+      "kind": "image",
+      "status": "required",
+      "size": 35058,
+      "sha256": "02f05efde53169363f790c104058359732916a86c9f8f7439590e2c2a2e25a68",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/click_poster.png",
+      "objectKey": "assets/images/click_poster.png",
+      "kind": "image",
+      "status": "required",
+      "size": 12151,
+      "sha256": "a27506eb789f3c38b7a590c276a31af7e5b6b2faa3b42989eb0c7324a6eeb294",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/coffee1.webp",
+      "objectKey": "assets/images/coffee1.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 493468,
+      "sha256": "7afaaa93a113e4e93d77ff1ace37bb12a75344c7ce2f54717750651cc15353f6",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/CafeScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/coffee2.webp",
+      "objectKey": "assets/images/coffee2.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 506180,
+      "sha256": "45ce07c99763ebd0203429f3a4ce051deec7970694e31dbba1d6ca0eed23cb36",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/CafeScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/coffee3.webp",
+      "objectKey": "assets/images/coffee3.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 432720,
+      "sha256": "c0efb90b7ef8d64ce55a1a786ebf8ff49fb6b926dfaf62c574d6cc6937dfe7b8",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/CafeScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/coffee4.webp",
+      "objectKey": "assets/images/coffee4.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 398946,
+      "sha256": "a48da02a7560342da12d65b0836e285a3fbc746a371575629e81291295abf4a7",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/CafeScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/firecracker.gif",
+      "objectKey": "assets/images/firecracker.gif",
+      "kind": "image",
+      "status": "required",
+      "size": 672337,
+      "sha256": "0a5b1c5b6daeb6f1d8a31ec10cce97ebb99c7c08813cd4af52e8ffd487871d48",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/MailScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/floor.svg",
+      "objectKey": "assets/images/floor.svg",
+      "kind": "image",
+      "status": "required",
+      "size": 106224,
+      "sha256": "2daffa96325ac4f790022d38c0788a8b6201e8aac0eec0b2378d52a0fc084a04",
+      "gitTracked": false,
+      "references": [
+        "src/components/Ground.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/footprint.webp",
+      "objectKey": "assets/images/footprint.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 6348,
+      "sha256": "330533b1af3519170e81b5c5bad121d3c709e9ed012bd83c4fa4fa64c48dfba0",
+      "gitTracked": true,
+      "references": [
+        "src/components/PlayerController.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/gptTrigger.png",
+      "objectKey": "assets/images/gptTrigger.png",
+      "kind": "image",
+      "status": "required",
+      "size": 406197,
+      "sha256": "c16f5ca5248c4d2bf56d846ce7b9d5a137b6c611bf0fecb97dd62a5457384c0f",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/ChatGPTScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/gpt_script.png",
+      "objectKey": "assets/images/gpt_script.png",
+      "kind": "image",
+      "status": "required",
+      "size": 31065,
+      "sha256": "0d1dd8d0145107a69b1ed05579e8f9d4ad3da3e7dcc7221d7bf409899f15e4a1",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/gpt_zzal.png",
+      "objectKey": "assets/images/gpt_zzal.png",
+      "kind": "image",
+      "status": "required",
+      "size": 201529,
+      "sha256": "0f4a1a8ee78c8e2e4087b158099cbac88de2c2af48a01ae0deeeedb608ef952c",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/ChatGPTScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/guide1.png",
+      "objectKey": "assets/images/guide1.png",
+      "kind": "image",
+      "status": "required",
+      "size": 384615,
+      "sha256": "1886d6db63eeec4cd5c6f1852eb3de34a58b33ee2072f17de73d9f93ac7c48fe",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/guide2.png",
+      "objectKey": "assets/images/guide2.png",
+      "kind": "image",
+      "status": "required",
+      "size": 424646,
+      "sha256": "6688a6906767b19be601fdd7ea7e4343b4243c97a2eac5c9fdcad60db33a87d0",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/guide_btn1.png",
+      "objectKey": "assets/images/guide_btn1.png",
+      "kind": "image",
+      "status": "required",
+      "size": 14140,
+      "sha256": "51fdb43a262535ff1af76d802abfbbeb651c2be89bdfc513ef57c7f8282e4a54",
+      "gitTracked": true,
+      "references": [
+        "src/index.css"
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/guide_btn2.png",
+      "objectKey": "assets/images/guide_btn2.png",
+      "kind": "image",
+      "status": "required",
+      "size": 14254,
+      "sha256": "3f871d401d74a2353cb50676f2772f12174679ca26a32418c28f5376ab4c573a",
+      "gitTracked": true,
+      "references": [
+        "src/index.css"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/houseTrigger.png",
+      "objectKey": "assets/images/houseTrigger.png",
+      "kind": "image",
+      "status": "required",
+      "size": 357141,
+      "sha256": "6486ac2532f3bceb2d6bc007e201a2bebeba3392ad12ba93efa7466d5c0cd18d",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/EscalatorScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/house_script.png",
+      "objectKey": "assets/images/house_script.png",
+      "kind": "image",
+      "status": "required",
+      "size": 30917,
+      "sha256": "b7313a7445859e514546aee35f48f3efe2effaf277a22820f8409997525ca814",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/mailTrigger.png",
+      "objectKey": "assets/images/mailTrigger.png",
+      "kind": "image",
+      "status": "required",
+      "size": 350773,
+      "sha256": "949a72479de40afae56da4b864ceb1d4382d72cb93ecbbd0c045238c71501454",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/MailScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/mail_script.png",
+      "objectKey": "assets/images/mail_script.png",
+      "kind": "image",
+      "status": "required",
+      "size": 25312,
+      "sha256": "a2a3ad99030c0331e7e0708a336fec646e8442fb813df8866dc45d2c76b48116",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/mail_zzal.png",
+      "objectKey": "assets/images/mail_zzal.png",
+      "kind": "image",
+      "status": "required",
+      "size": 150069,
+      "sha256": "0bcf930f4d00eb18472069b2dea5481a311d4b2b06e2380ad5f223109daa06bb",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/MailScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/metroTrigger.png",
+      "objectKey": "assets/images/metroTrigger.png",
+      "kind": "image",
+      "status": "required",
+      "size": 369894,
+      "sha256": "5b4f29265f1bd7e57d89796b80730380bebeaa618415ccedadcf36f44a608cca",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/MetroScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/metro_zzal.png",
+      "objectKey": "assets/images/metro_zzal.png",
+      "kind": "image",
+      "status": "required",
+      "size": 212651,
+      "sha256": "329ecc6394014508f46e620e7865baddf1990e79276cb75297ebbee6eb139d0a",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/MetroScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/noMoneyTrigger.png",
+      "objectKey": "assets/images/noMoneyTrigger.png",
+      "kind": "image",
+      "status": "required",
+      "size": 383415,
+      "sha256": "b08b468c336f7daabe8eafd09167bc9b80dbbc6f7c6eded56cbfd2d725587286",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/NomoneyScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/nomoney.webp",
+      "objectKey": "assets/images/nomoney.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 13962,
+      "sha256": "4f21a4ca37ac72d71c91528731e4b849b89f91e7abc81401812856af5eebe8ea",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/NomoneyScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/nomoney_script.png",
+      "objectKey": "assets/images/nomoney_script.png",
+      "kind": "image",
+      "status": "required",
+      "size": 33499,
+      "sha256": "61f26584bf2cde3f7e0305ae24642dc8e3aada851ffb637ea3910e6706b01c60",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/nomoney_talk.webp",
+      "objectKey": "assets/images/nomoney_talk.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 32068,
+      "sha256": "575ceba65b5cae035861968ff5643402c1b676988f479da0e35c9e34f29a1eee",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/NomoneyScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/nomoney_zzal.png",
+      "objectKey": "assets/images/nomoney_zzal.png",
+      "kind": "image",
+      "status": "required",
+      "size": 114691,
+      "sha256": "0b85550358f12f0bc2835225c50002feee7b296ebbffa47f5b0a62b92c9d109d",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/NomoneyScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/oummt_web.png",
+      "objectKey": "assets/images/oummt_web.png",
+      "kind": "image",
+      "status": "required",
+      "size": 2446540,
+      "sha256": "8bd0144f0010f1047a0a4380cf3a90a3a44c385fb5a970d832c9a35b6b42e25a",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/poster.png",
+      "objectKey": "assets/images/poster.png",
+      "kind": "image",
+      "status": "required",
+      "size": 666052,
+      "sha256": "d0b8245139c5f876de8e764285ffbcf170ea125b086c9e4a2eeb9340995d18df",
+      "gitTracked": false,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/ppt1.webp",
+      "objectKey": "assets/images/ppt1.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 665504,
+      "sha256": "13e44c67dd8a5289296a95ec2a97b27e9df0c124948bc7d6c32a1fb98c64aeb5",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/ppt2.webp",
+      "objectKey": "assets/images/ppt2.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 235832,
+      "sha256": "c6f0cdf5ab2cf1514395beacb1d356c0941127dd73274608a7b12130de5c4dc4",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/ppt3.webp",
+      "objectKey": "assets/images/ppt3.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 429786,
+      "sha256": "735dd20cdc0b7e7a4f59f52fd8c1dce3ab9449d4095319001b563d8eb2ef1b0a",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/ppt4.webp",
+      "objectKey": "assets/images/ppt4.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 53414,
+      "sha256": "e780ca66ed57d283f85f555bcac3555493fb260dcce4a7c168abc936e5230169",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/ppt5.webp",
+      "objectKey": "assets/images/ppt5.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 422918,
+      "sha256": "b00ac3b224eec6a6b258156d706744eb4f7047b62d77084ce67fd7893b83e32c",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/ppt_click.png",
+      "objectKey": "assets/images/ppt_click.png",
+      "kind": "image",
+      "status": "required",
+      "size": 26388,
+      "sha256": "3f78c66423dac12f86a49b9627b451792002cdea5b5174c52ed20ef0025b7594",
+      "gitTracked": false,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/redsun.png",
+      "objectKey": "assets/images/redsun.png",
+      "kind": "image",
+      "status": "required",
+      "size": 21665,
+      "sha256": "f16b49887041262f824c66f79e7b2e6d3fcf49921ad9433478152fb3166d2041",
+      "gitTracked": true,
+      "references": [
+        "src/index.css"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/road_arrow.png",
+      "objectKey": "assets/images/road_arrow.png",
+      "kind": "image",
+      "status": "required",
+      "size": 101930,
+      "sha256": "727ea73b6df73340df411c32dbff4804a46a67f41d096854147cbd5446195d51",
+      "gitTracked": false,
+      "references": [
+        "src/components/Ground.jsx"
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/start_button.png",
+      "objectKey": "assets/images/start_button.png",
+      "kind": "image",
+      "status": "required",
+      "size": 153465,
+      "sha256": "78c8039e2628457408b375075e25693eba1fc67eb06e6efa3e0130b006e5f763",
+      "gitTracked": true,
+      "references": [
+        "src/index.css"
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/start_button_hover.png",
+      "objectKey": "assets/images/start_button_hover.png",
+      "kind": "image",
+      "status": "required",
+      "size": 132777,
+      "sha256": "79b2e3893e5ddbad10d4d083215735b5afec279c80e21466fabddec12557f592",
+      "gitTracked": true,
+      "references": [
+        "src/index.css"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/street.svg",
+      "objectKey": "assets/images/street.svg",
+      "kind": "image",
+      "status": "required",
+      "size": 142753,
+      "sha256": "d87e04407c8f12e42b2cc85774715bd9b696edd7c59ff306ab4c305ccae5ab7a",
+      "gitTracked": false,
+      "references": [
+        "src/components/Ground.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/talk1.webp",
+      "objectKey": "assets/images/talk1.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 2976,
+      "sha256": "8bace47e723b897c84a7df74a118582fa7b2956835c050037562b75290a6d49e",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/talk2.webp",
+      "objectKey": "assets/images/talk2.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 3348,
+      "sha256": "fad9b557b07c389f8252b8ebd16d19ba61d7abb68ff1abc0b1f7a5caa4d8ff1a",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/talk3.webp",
+      "objectKey": "assets/images/talk3.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 3736,
+      "sha256": "77c5699722556e0115ff8ee34d6354a5a1b27cabd92c809146bb11086d1cb0ae",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/images/talk4.webp",
+      "objectKey": "assets/images/talk4.webp",
+      "kind": "image",
+      "status": "required",
+      "size": 4132,
+      "sha256": "fdc3a31aee5e34f0f8712003058f8c64a80c285bb94309cbee20869fd8bf0aff",
+      "gitTracked": true,
+      "references": [
+        "src/scenes/ClassroomScene.jsx"
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/yellowsun.png",
+      "objectKey": "assets/images/yellowsun.png",
+      "kind": "image",
+      "status": "required",
+      "size": 21696,
+      "sha256": "274753e2af0761610e5aca750292da3367de5e9311bb9311e1ae74db8a06a22c",
+      "gitTracked": true,
+      "references": [
+        "src/index.css"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/Bakery.glb",
+      "objectKey": "assets/models/Bakery.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 16163588,
+      "sha256": "32085bd3fb601b5b8ec6f72ca97a1f0956ecdb88f1b51467963808c13add2432",
+      "gitTracked": false,
+      "references": [
+        "src/components/Bakery.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/BakeryGamza-draco.glb",
+      "objectKey": "assets/models/BakeryGamza-draco.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 346420,
+      "sha256": "a3f78c300dfe1792aa746ec8586c974b28fd96b9c059db67ec70ac770671573a",
+      "gitTracked": false,
+      "references": [
+        "src/components/BakeryGamza.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/BakeryMemo.glb",
+      "objectKey": "assets/models/BakeryMemo.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 3861996,
+      "sha256": "def75c932fe4d37bdd1916179b14bb12307dced11b5a33b1a8b0327c157d1982",
+      "gitTracked": true,
+      "references": [
+        "src/components/AlbaPosters.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/BamGoguma.glb",
+      "objectKey": "assets/models/BamGoguma.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 2202228,
+      "sha256": "73031966e5914334f56a411858306d89c3dc189f67f493f1a30371d409503c5c",
+      "gitTracked": false,
+      "references": [
+        "src/components/BamGoguma.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/CafeScene.glb",
+      "objectKey": "assets/models/CafeScene.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 4576648,
+      "sha256": "964a39a77b2a306d5f097a560ff09936d5be8b17bfce1a3591e33793783e6293",
+      "gitTracked": false,
+      "references": [
+        "src/components/Cafe.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/ClassroomGamAnim.glb",
+      "objectKey": "assets/models/ClassroomGamAnim.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 5187604,
+      "sha256": "9a6d34a4cb829ab3ff27e186b88fc0fa6709c48d17787d63f7c3ecff85221a42",
+      "gitTracked": false,
+      "references": [
+        "src/components/ClassroomGamza.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/ClassroomOnionAnim.glb",
+      "objectKey": "assets/models/ClassroomOnionAnim.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 3851984,
+      "sha256": "3b623d471a11f9e2316bb412d9bcccab739d6fdcbad383d281833f9b4fda02c8",
+      "gitTracked": false,
+      "references": [
+        "src/components/Onion.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/Classroomscene-draco.glb",
+      "objectKey": "assets/models/Classroomscene-draco.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 9458452,
+      "sha256": "cbb20d98ec79df60c248da1b6c27fc2e5bc71fc70e7367af20ed479f696df67c",
+      "gitTracked": false,
+      "references": [
+        "src/components/Classroom.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/DokseoMemo.glb",
+      "objectKey": "assets/models/DokseoMemo.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 1339300,
+      "sha256": "2c4150221fa6e9857b77ab446df42d65547fe2f676df4b093c7b22ab2769b43c",
+      "gitTracked": true,
+      "references": [
+        "src/components/AlbaPosters.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/File.glb",
+      "objectKey": "assets/models/File.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 48516,
+      "sha256": "95db8d7dff1841cb64a7c8310e688ce68c55c027d4c37cde324020bb2aacc477",
+      "gitTracked": true,
+      "references": [
+        "src/components/File.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/GamzaMemo.glb",
+      "objectKey": "assets/models/GamzaMemo.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 588928,
+      "sha256": "dc23b67cb38a520bb6989ee19aa1425cd803885e00a518afe50a72bf3f8ba4d1",
+      "gitTracked": true,
+      "references": [
+        "src/components/AlbaPosters.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/Gamza_Board.glb",
+      "objectKey": "assets/models/Gamza_Board.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 692276,
+      "sha256": "abcd8705d28bbe217755f27cb0ada0f0487216047b7722e050380bf9c8b100f7",
+      "gitTracked": true,
+      "references": [
+        "src/components/AlbaGamza.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/Gamza_Coffee.glb",
+      "objectKey": "assets/models/Gamza_Coffee.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 1239584,
+      "sha256": "7cb556adf7572e9b482a852459903ddd55de85fe93488c950a3231f9818cb18a",
+      "gitTracked": true,
+      "references": [
+        "src/components/CafeGamza.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/Gamza_Nomoney.glb",
+      "objectKey": "assets/models/Gamza_Nomoney.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 2220100,
+      "sha256": "a69657597386e77f8db1ca0ba9e21b2968600f84f672d3f60641a52a1aed51d0",
+      "gitTracked": true,
+      "references": [
+        "src/components/NomoneyGamza.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/Gamza_Post.glb",
+      "objectKey": "assets/models/Gamza_Post.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 344920,
+      "sha256": "bc2392fc0e4977f8b43d3cf7ec3d16568a22a63fac21fb783d6e3554da39f7e1",
+      "gitTracked": true,
+      "references": [
+        "src/components/MailGamza.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/Gamza_cycle.glb",
+      "objectKey": "assets/models/Gamza_cycle.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 1146932,
+      "sha256": "5ffc89a5b362b6545c8b94ceebe91d9e018fbde109fac112ca67337a5ae6467b",
+      "gitTracked": true,
+      "references": [
+        "src/components/Player.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/JustBoard.glb",
+      "objectKey": "assets/models/JustBoard.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 613972,
+      "sha256": "b7129954d9eb2ee1562d287c13c682af30ebea399e00d36204b2a41d4d9510af",
+      "gitTracked": true,
+      "references": [
+        "src/components/AlbaBoard.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/KidsMemo.glb",
+      "objectKey": "assets/models/KidsMemo.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 615580,
+      "sha256": "5fcbdaf2b05d23f882abf142a63a05ca193b6195795524ad28e57cdbba39afdf",
+      "gitTracked": true,
+      "references": [
+        "src/components/AlbaPosters.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/MailBox.glb",
+      "objectKey": "assets/models/MailBox.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 26796,
+      "sha256": "ea46709639600cc14fd88b2b5bf1c4281e6153f02dcd492bb2c511d41a6f7781",
+      "gitTracked": true,
+      "references": [
+        "src/components/MailBox.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/Metro-draco.glb",
+      "objectKey": "assets/models/Metro-draco.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 372316,
+      "sha256": "f5a5a0b8b30442895b1af7aeba3919a08a7f1001d7a3cffca9d627d34a4df1a5",
+      "gitTracked": false,
+      "references": [
+        "src/components/Metro.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/SushiMemo.glb",
+      "objectKey": "assets/models/SushiMemo.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 962404,
+      "sha256": "614ba02f6a5e96a7235e5c4f745ada5c94fec6335808b550039da341c355fb94",
+      "gitTracked": true,
+      "references": [
+        "src/components/AlbaPosters.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/escalator.glb",
+      "objectKey": "assets/models/escalator.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 7660500,
+      "sha256": "3cbb326a2f5e15d60e94f54d198cff191af1caf5dab01d980145a9f15eb2eb94",
+      "gitTracked": false,
+      "references": [
+        "src/components/Escalator.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/models/gpt3.glb",
+      "objectKey": "assets/models/gpt3.glb",
+      "kind": "model",
+      "status": "required",
+      "size": 3646708,
+      "sha256": "a5950cd7c9c4c4acba6e016a379a573388d20a4b33cd75919a3843e256df38dc",
+      "gitTracked": true,
+      "references": [
+        "src/components/ChatGPT.jsx"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/video/ending.mp4",
+      "objectKey": "assets/video/ending.mp4",
+      "kind": "video",
+      "status": "required",
+      "size": 17826117,
+      "sha256": "cb8a034a3a48d4dc14f8b4fdcb377e588a3b9c34aa71fe9891ec5b4ce68ee662",
+      "gitTracked": true,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/video/ending.webm",
+      "objectKey": "assets/video/ending.webm",
+      "kind": "video",
+      "status": "required",
+      "size": 38352651,
+      "sha256": "974929378c2a8d68b4a41f08636b5b46bead90ce587e7d4464c64af4994879b0",
+      "gitTracked": true,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/video/start.mp4",
+      "objectKey": "assets/video/start.mp4",
+      "kind": "video",
+      "status": "required",
+      "size": 11089533,
+      "sha256": "7e5cbacf566f8d8ccb78d3d8a8af5064383789d286a7ed347cceff3a2381e1b0",
+      "gitTracked": true,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "public/assets/video/start.webm",
+      "objectKey": "assets/video/start.webm",
+      "kind": "video",
+      "status": "required",
+      "size": 1963274,
+      "sha256": "c173c91466749697a66d662e59757fb3a58c49de8001d7cf8a7c2448f21a1540",
+      "gitTracked": true,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/first_guide.png",
+      "objectKey": "assets/images/first_guide.png",
+      "kind": "image",
+      "status": "excluded",
+      "reason": "실행 코드에서 참조하지 않으며 public 원본과 내용이 다름",
+      "size": 264628,
+      "sha256": "0fd8d7f1bb445784b149df7a3ba57ecb9cdf0882ee1bd796613fc1a3f15e048a",
+      "gitTracked": true,
+      "references": []
+    },
+    {
+      "sourcePath": "src/assets/images/oummt_web.png",
+      "objectKey": "assets/images/oummt_web.png",
+      "kind": "image",
+      "status": "excluded",
+      "reason": "실행 중에는 public 원본을 사용함",
+      "size": 8626372,
+      "sha256": "02bf63faea14fdf9b961437d2b32fa5b24391fc197d2411ce1a9158c84681f42",
+      "gitTracked": true,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "src/assets/video/ending.mp4",
+      "objectKey": "assets/video/ending.mp4",
+      "kind": "video",
+      "status": "excluded",
+      "reason": "실행 중에는 public 원본을 사용함",
+      "size": 17886702,
+      "sha256": "d3c383fc933442e8aa37a0165327f7f8efb179ec6ed693e30173f419b86b0174",
+      "gitTracked": true,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "src/assets/video/ending.webm",
+      "objectKey": "assets/video/ending.webm",
+      "kind": "video",
+      "status": "excluded",
+      "reason": "실행 중에는 public 원본을 사용함",
+      "size": 7732750,
+      "sha256": "45ca2f6f3f859ea7fbdbbbab817cd8d3392231033a845db41cf3253351b2e6c8",
+      "gitTracked": true,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "sourcePath": "src/assets/video/start.webm",
+      "objectKey": "assets/video/start.webm",
+      "kind": "video",
+      "status": "excluded",
+      "reason": "실행 중에는 public 원본을 사용함",
+      "size": 2367744,
+      "sha256": "5cb98624ef80a26a947ff10d68d47a445af68ac30f4817ee70ec27d82b629322",
+      "gitTracked": true,
+      "references": [
+        "public/index.html"
+      ]
+    },
+    {
+      "objectKey": "assets/video/subway.wepm",
+      "kind": "video",
+      "status": "excluded",
+      "reason": "HTML 주석 속 확장자 오타이며 실행 요청이 아님",
+      "size": null,
+      "sha256": null,
+      "gitTracked": false,
+      "references": []
+    },
+    {
+      "objectKey": "assets/models/Coffee.glb",
+      "kind": "model",
+      "status": "excluded",
+      "reason": "가져오지 않는 Coffee 컴포넌트의 경로이며 원본도 없음",
+      "size": null,
+      "sha256": null,
+      "gitTracked": false,
+      "references": []
+    },
+    {
+      "objectKey": "assets/models/NomoneyBank.glb",
+      "kind": "model",
+      "status": "excluded",
+      "reason": "가져오지 않는 NomoneyBank 컴포넌트의 경로",
+      "size": null,
+      "sha256": null,
+      "gitTracked": false,
+      "references": []
+    },
+    {
+      "objectKey": "assets/models/escalator02.glb",
+      "kind": "model",
+      "status": "excluded",
+      "reason": "복사본 컴포넌트의 경로이며 원본도 없음",
+      "size": null,
+      "sha256": null,
+      "gitTracked": false,
+      "references": []
+    }
+  ]
+}

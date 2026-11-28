@@ -1,0 +1,9 @@
+export { default as AlbaScene } from "./AlbaScene";
+export { default as BakeryScene } from "./BakeryScene";
+export { default as CafeScene } from "./CafeScene";
+export { default as ChatGPTScene } from "./ChatGPTScene";
+export { default as ClassroomScene } from "./ClassroomScene";
+export { default as EscalatorScene } from "./EscalatorScene";
+export { default as MailScene } from "./MailScene";
+export { default as MetroScene } from "./MetroScene";
+export { default as NomoneyScene } from "./NomoneyScene";

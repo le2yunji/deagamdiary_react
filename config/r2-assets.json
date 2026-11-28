@@ -1,0 +1,734 @@
+{
+  "version": 1,
+  "referenceScanExclusions": [
+    "src/components/AlbaPosters copy.jsx",
+    "src/components/Coffee.jsx",
+    "src/components/Emotion.jsx",
+    "src/components/Escalator copy.jsx",
+    "src/components/NomoneyBank.jsx"
+  ],
+  "referenceOverrides": {
+    "src/components/AlbaPosters.jsx": [
+      "assets/models/SushiMemo.glb",
+      "assets/models/KidsMemo.glb",
+      "assets/models/BakeryMemo.glb",
+      "assets/models/DokseoMemo.glb",
+      "assets/models/GamzaMemo.glb"
+    ]
+  },
+  "assets": [
+    {
+      "sourcePath": "public/assets/audio/albaScene_aha.mp3",
+      "objectKey": "assets/audio/albaScene_aha.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/albaScene_hmm.mp3",
+      "objectKey": "assets/audio/albaScene_hmm.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/bakeryScene.mp3",
+      "objectKey": "assets/audio/bakeryScene.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/bakeryScene_sorry.mp3",
+      "objectKey": "assets/audio/bakeryScene_sorry.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/bbong.mp3",
+      "objectKey": "assets/audio/bbong.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/cafeScene.mp3",
+      "objectKey": "assets/audio/cafeScene.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/classScene_bgm.mp3",
+      "objectKey": "assets/audio/classScene_bgm.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/classScene_daegam_talk.mp3",
+      "objectKey": "assets/audio/classScene_daegam_talk.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/classScene_onion_daegam.mp3",
+      "objectKey": "assets/audio/classScene_onion_daegam.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/ending_bgm.mp3",
+      "objectKey": "assets/audio/ending_bgm.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "objectKey": "assets/audio/escalatorScene.mp3",
+      "kind": "audio",
+      "status": "excluded",
+      "reason": "원본이 없고 Vercel에서도 HTML fallback을 반환해 재생되지 않는 기존 깨진 참조"
+    },
+    {
+      "sourcePath": "public/assets/audio/gogumi.mp3",
+      "objectKey": "assets/audio/gogumi.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/gotoend.mp3",
+      "objectKey": "assets/audio/gotoend.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/gptScene.mp3",
+      "objectKey": "assets/audio/gptScene.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/mail.mp3",
+      "objectKey": "assets/audio/mail.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/metroScene.mp3",
+      "objectKey": "assets/audio/metroScene.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/nomoneyScene.mp3",
+      "objectKey": "assets/audio/nomoneyScene.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/nomoney_money.mp3",
+      "objectKey": "assets/audio/nomoney_money.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/audio/walk_sound.mp3",
+      "objectKey": "assets/audio/walk_sound.mp3",
+      "kind": "audio",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/BakeryPoster.png",
+      "objectKey": "assets/images/BakeryPoster.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/DokseoPoster.png",
+      "objectKey": "assets/images/DokseoPoster.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/GamzaPoster.png",
+      "objectKey": "assets/images/GamzaPoster.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/KidsPoster.png",
+      "objectKey": "assets/images/KidsPoster.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/SushiPoster.png",
+      "objectKey": "assets/images/SushiPoster.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/albaTrigger.png",
+      "objectKey": "assets/images/albaTrigger.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/alba_script.png",
+      "objectKey": "assets/images/alba_script.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/bakeryTrigger.png",
+      "objectKey": "assets/images/bakeryTrigger.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/bakery_script.png",
+      "objectKey": "assets/images/bakery_script.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/bakery_zzal.png",
+      "objectKey": "assets/images/bakery_zzal.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/bakery_zzal2.png",
+      "objectKey": "assets/images/bakery_zzal2.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/cafeTrigger.png",
+      "objectKey": "assets/images/cafeTrigger.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/cafe_script.png",
+      "objectKey": "assets/images/cafe_script.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/cafe_zzal.png",
+      "objectKey": "assets/images/cafe_zzal.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/classTrigger.png",
+      "objectKey": "assets/images/classTrigger.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/class_zzal.png",
+      "objectKey": "assets/images/class_zzal.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/class_zzal2.png",
+      "objectKey": "assets/images/class_zzal2.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/classroom_script.png",
+      "objectKey": "assets/images/classroom_script.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/click_poster.png",
+      "objectKey": "assets/images/click_poster.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/coffee1.webp",
+      "objectKey": "assets/images/coffee1.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/coffee2.webp",
+      "objectKey": "assets/images/coffee2.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/coffee3.webp",
+      "objectKey": "assets/images/coffee3.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/coffee4.webp",
+      "objectKey": "assets/images/coffee4.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/firecracker.gif",
+      "objectKey": "assets/images/firecracker.gif",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/floor.svg",
+      "objectKey": "assets/images/floor.svg",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/footprint.webp",
+      "objectKey": "assets/images/footprint.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/gptTrigger.png",
+      "objectKey": "assets/images/gptTrigger.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/gpt_script.png",
+      "objectKey": "assets/images/gpt_script.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/gpt_zzal.png",
+      "objectKey": "assets/images/gpt_zzal.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/guide1.png",
+      "objectKey": "assets/images/guide1.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/guide2.png",
+      "objectKey": "assets/images/guide2.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "src/assets/images/guide_btn1.png",
+      "objectKey": "assets/images/guide_btn1.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "src/assets/images/guide_btn2.png",
+      "objectKey": "assets/images/guide_btn2.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/houseTrigger.png",
+      "objectKey": "assets/images/houseTrigger.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/house_script.png",
+      "objectKey": "assets/images/house_script.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/mailTrigger.png",
+      "objectKey": "assets/images/mailTrigger.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/mail_script.png",
+      "objectKey": "assets/images/mail_script.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/mail_zzal.png",
+      "objectKey": "assets/images/mail_zzal.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/metroTrigger.png",
+      "objectKey": "assets/images/metroTrigger.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/metro_zzal.png",
+      "objectKey": "assets/images/metro_zzal.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/noMoneyTrigger.png",
+      "objectKey": "assets/images/noMoneyTrigger.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/nomoney.webp",
+      "objectKey": "assets/images/nomoney.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/nomoney_script.png",
+      "objectKey": "assets/images/nomoney_script.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/nomoney_talk.webp",
+      "objectKey": "assets/images/nomoney_talk.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/nomoney_zzal.png",
+      "objectKey": "assets/images/nomoney_zzal.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/oummt_web.png",
+      "objectKey": "assets/images/oummt_web.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/poster.png",
+      "objectKey": "assets/images/poster.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/ppt1.webp",
+      "objectKey": "assets/images/ppt1.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/ppt2.webp",
+      "objectKey": "assets/images/ppt2.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/ppt3.webp",
+      "objectKey": "assets/images/ppt3.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/ppt4.webp",
+      "objectKey": "assets/images/ppt4.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/ppt5.webp",
+      "objectKey": "assets/images/ppt5.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/ppt_click.png",
+      "objectKey": "assets/images/ppt_click.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "src/assets/images/redsun.png",
+      "objectKey": "assets/images/redsun.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/road_arrow.png",
+      "objectKey": "assets/images/road_arrow.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "src/assets/images/start_button.png",
+      "objectKey": "assets/images/start_button.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "src/assets/images/start_button_hover.png",
+      "objectKey": "assets/images/start_button_hover.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/street.svg",
+      "objectKey": "assets/images/street.svg",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/talk1.webp",
+      "objectKey": "assets/images/talk1.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/talk2.webp",
+      "objectKey": "assets/images/talk2.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/talk3.webp",
+      "objectKey": "assets/images/talk3.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/images/talk4.webp",
+      "objectKey": "assets/images/talk4.webp",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "src/assets/images/yellowsun.png",
+      "objectKey": "assets/images/yellowsun.png",
+      "kind": "image",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/Bakery.glb",
+      "objectKey": "assets/models/Bakery.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/BakeryGamza-draco.glb",
+      "objectKey": "assets/models/BakeryGamza-draco.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/BakeryMemo.glb",
+      "objectKey": "assets/models/BakeryMemo.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/BamGoguma.glb",
+      "objectKey": "assets/models/BamGoguma.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/CafeScene.glb",
+      "objectKey": "assets/models/CafeScene.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/ClassroomGamAnim.glb",
+      "objectKey": "assets/models/ClassroomGamAnim.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/ClassroomOnionAnim.glb",
+      "objectKey": "assets/models/ClassroomOnionAnim.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/Classroomscene-draco.glb",
+      "objectKey": "assets/models/Classroomscene-draco.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/DokseoMemo.glb",
+      "objectKey": "assets/models/DokseoMemo.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/File.glb",
+      "objectKey": "assets/models/File.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/GamzaMemo.glb",
+      "objectKey": "assets/models/GamzaMemo.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/Gamza_Board.glb",
+      "objectKey": "assets/models/Gamza_Board.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/Gamza_Coffee.glb",
+      "objectKey": "assets/models/Gamza_Coffee.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/Gamza_Nomoney.glb",
+      "objectKey": "assets/models/Gamza_Nomoney.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/Gamza_Post.glb",
+      "objectKey": "assets/models/Gamza_Post.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/Gamza_cycle.glb",
+      "objectKey": "assets/models/Gamza_cycle.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/JustBoard.glb",
+      "objectKey": "assets/models/JustBoard.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/KidsMemo.glb",
+      "objectKey": "assets/models/KidsMemo.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/MailBox.glb",
+      "objectKey": "assets/models/MailBox.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/Metro-draco.glb",
+      "objectKey": "assets/models/Metro-draco.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/SushiMemo.glb",
+      "objectKey": "assets/models/SushiMemo.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/escalator.glb",
+      "objectKey": "assets/models/escalator.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/models/gpt3.glb",
+      "objectKey": "assets/models/gpt3.glb",
+      "kind": "model",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/video/ending.mp4",
+      "objectKey": "assets/video/ending.mp4",
+      "kind": "video",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/video/ending.webm",
+      "objectKey": "assets/video/ending.webm",
+      "kind": "video",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/video/start.mp4",
+      "objectKey": "assets/video/start.mp4",
+      "kind": "video",
+      "status": "required"
+    },
+    {
+      "sourcePath": "public/assets/video/start.webm",
+      "objectKey": "assets/video/start.webm",
+      "kind": "video",
+      "status": "required"
+    },
+    {
+      "sourcePath": "src/assets/images/first_guide.png",
+      "objectKey": "assets/images/first_guide.png",
+      "kind": "image",
+      "status": "excluded",
+      "reason": "실행 코드에서 참조하지 않으며 public 원본과 내용이 다름"
+    },
+    {
+      "sourcePath": "src/assets/images/oummt_web.png",
+      "objectKey": "assets/images/oummt_web.png",
+      "kind": "image",
+      "status": "excluded",
+      "reason": "실행 중에는 public 원본을 사용함"
+    },
+    {
+      "sourcePath": "src/assets/video/ending.mp4",
+      "objectKey": "assets/video/ending.mp4",
+      "kind": "video",
+      "status": "excluded",
+      "reason": "실행 중에는 public 원본을 사용함"
+    },
+    {
+      "sourcePath": "src/assets/video/ending.webm",
+      "objectKey": "assets/video/ending.webm",
+      "kind": "video",
+      "status": "excluded",
+      "reason": "실행 중에는 public 원본을 사용함"
+    },
+    {
+      "sourcePath": "src/assets/video/start.webm",
+      "objectKey": "assets/video/start.webm",
+      "kind": "video",
+      "status": "excluded",
+      "reason": "실행 중에는 public 원본을 사용함"
+    },
+    {
+      "objectKey": "assets/video/subway.wepm",
+      "kind": "video",
+      "status": "excluded",
+      "reason": "HTML 주석 속 확장자 오타이며 실행 요청이 아님"
+    },
+    {
+      "objectKey": "assets/models/Coffee.glb",
+      "kind": "model",
+      "status": "excluded",
+      "reason": "가져오지 않는 Coffee 컴포넌트의 경로이며 원본도 없음"
+    },
+    {
+      "objectKey": "assets/models/NomoneyBank.glb",
+      "kind": "model",
+      "status": "excluded",
+      "reason": "가져오지 않는 NomoneyBank 컴포넌트의 경로"
+    },
+    {
+      "objectKey": "assets/models/escalator02.glb",
+      "kind": "model",
+      "status": "excluded",
+      "reason": "복사본 컴포넌트의 경로이며 원본도 없음"
+    }
+  ]
+}

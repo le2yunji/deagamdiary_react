@@ -1,31 +1,37 @@
 // component/Classroom.jsx
 
-import React, {
+import {
   useRef,
   useEffect,
   forwardRef,
   useImperativeHandle,
   useMemo,
-} from 'react';
-import { useGLTF, useAnimations } from '@react-three/drei';
-import { SkeletonUtils } from 'three-stdlib';
-import * as THREE from 'three';
+} from "react";
+import { useGLTF, useAnimations } from "@react-three/drei";
+import { SkeletonUtils } from "three-stdlib";
+import * as THREE from "three";
+import { getAssetUrl } from "../utils/assetUrl";
 
+const CLASSROOM_MODEL_URL = getAssetUrl(
+  "/assets/models/Classroomscene-draco.glb",
+);
+
+/** 교실 배경 GLB를 복제하고 재질·그림자·애니메이션을 설정한다. */
 export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
   const group = useRef();
-  const { scene, animations } = useGLTF('/assets/models/Classroomscene-draco.glb');
+  const { scene, animations } = useGLTF(CLASSROOM_MODEL_URL);
   const { actions, mixer } = useAnimations(animations, group);
 
   const clonedScene = useMemo(() => {
     const clone = SkeletonUtils.clone(scene);
-  
+
     // ✅ clone 하면서 mesh 단위로 직접 찾음
     clone.traverse((child) => {
       if (child.isMesh) {
         // 💡 조건: 이름이 mesh_25이고, 재질 이름이 Black이면
-        if (child.name === 'mesh_25' && child.material?.name === 'Black') {
+        if (child.name === "mesh_25" && child.material?.name === "Black") {
           child.material = new THREE.MeshStandardMaterial({
-            color: 'white',
+            color: "white",
             side: THREE.DoubleSide,
             transparent: true,
             opacity: 1,
@@ -37,7 +43,6 @@ export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
 
     return clone;
   }, [scene]);
-  
 
   useImperativeHandle(ref, () => group.current);
 
@@ -67,4 +72,4 @@ export const Classroom = forwardRef(({ onLoaded, ...props }, ref) => {
   );
 });
 
-useGLTF.preload('/assets/models/Classroomscene-draco.glb');
+useGLTF.preload(CLASSROOM_MODEL_URL);

@@ -1,43 +1,42 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import { PointLight, Vector3 } from 'three';
-import * as THREE from 'three';
-import { gsap } from 'gsap';
+import { useRef, useState, useEffect } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { Vector3 } from "three";
+import * as THREE from "three";
+import { gsap } from "gsap";
 
-import CloudEffect from '../components/CloudEffect';
-import { Bakery } from '../components/Bakery';
-import { BakeryGamza } from '../components/BakeryGamza';
-import { BamGoguma } from '../components/BamGoguma';
-import { useTexture } from '@react-three/drei';
-import ManualAudioPlayer from '../utils/ManualAudioPlayer';
+import CloudEffect from "../components/CloudEffect";
+import { Bakery } from "../components/Bakery";
+import { BakeryGamza } from "../components/BakeryGamza";
+import { BamGoguma } from "../components/BamGoguma";
+import { useSpotTexture } from "../hooks/useSceneTexture";
+import ManualAudioPlayer from "../utils/ManualAudioPlayer";
+import { getAssetUrl } from "../utils/assetUrl";
 
-import {
-  disappearPlayer,
-  appearPlayer,
-  // disableMouseEvents,
-  // disablePlayerControlEvents,
-  // enableMouseEvents,
-  // downCameraY,
-  // returnCameraY,
-  // showArrow,
-  // hideAllArrows,
-  // createArrows,
-} from '../utils/Common';
+import { disappearPlayer, appearPlayer } from "../utils/Common";
 
+const BAKERY_TRIGGER_URL = getAssetUrl("/assets/images/bakeryTrigger.png");
+const BAKERY_ZZAL_URL = getAssetUrl("/assets/images/bakery_zzal.png");
+const BAKERY_ZZAL_SECOND_URL = getAssetUrl("/assets/images/bakery_zzal2.png");
+const BAKERY_AUDIO_URL = getAssetUrl("/assets/audio/bakeryScene.mp3");
+const BAKERY_SORRY_AUDIO_URL = getAssetUrl(
+  "/assets/audio/bakeryScene_sorry.mp3",
+);
+const GOGUMI_AUDIO_URL = getAssetUrl("/assets/audio/gogumi.mp3");
+
+/** 베이커리 아르바이트 장면의 모델·카메라·오디오 진행을 제어한다. */
 export default function BakeryScene({
   playerRef,
   setDisableMovement,
   setCameraTarget,
-  setCameraActive,         // 💡 추가
-  setUseSceneCamera,       // 💡 추가
-  useSceneCamera,
+  setCameraActive,
+  setUseSceneCamera,
   activateSceneCamera,
   animateCamera,
   restoreMainCamera,
-  setInitialCameraPose
+  setInitialCameraPose,
 }) {
   const group = useRef();
-  const { scene, camera } = useThree();
+  const { scene } = useThree();
   const clock = new THREE.Clock();
 
   const bakeryRef = useRef();
@@ -49,42 +48,38 @@ export default function BakeryScene({
   const bakeryGamzaActions = useRef();
 
   const bamGogumaRef = useRef();
-  const bamGogumaMixer = useRef();  
+  const bamGogumaMixer = useRef();
   const bamGogumaActions = useRef();
-
 
   const bakerySpotRef = useRef();
 
   const [triggered, setTriggered] = useState(false);
-  const [ovenInteractionReady, setOvenInteractionReady] = useState(false);
   const [showCloudEffect, setShowCloudEffect] = useState(false);
-  const light = new PointLight('white', 3, 200, 1);
 
   const BakerySpotMeshPosition = new Vector3(31, 0.005, -38);
-  const bakeryTexture = useTexture('/assets/images/bakeryTrigger.png');
+  const bakeryTexture = useSpotTexture(BAKERY_TRIGGER_URL);
   const bakeryZzal = useRef();
   const bakeryZzal2 = useRef();
   const bakeryZzal3 = useRef();
 
   useEffect(() => {
     const loader = new THREE.TextureLoader();
-    loader.load('/assets/images/bakery_zzal.png', (texture) => {
+    loader.load(BAKERY_ZZAL_URL, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
-  
+
       const material = new THREE.MeshBasicMaterial({
         map: texture,
         transparent: true,
         alphaTest: 0.5,
         // depthWrite: false,
       });
-  
+
       const geometry = new THREE.PlaneGeometry(1.3, 1.2);
       const mesh = new THREE.Mesh(geometry, material);
       const mesh2 = new THREE.Mesh(geometry, material);
 
-
-      mesh.position.set(10, 0.05, -43);
+      mesh.position.set(21, 0.05, -47);
       mesh2.position.set(43, 0.05, -32.5);
 
       mesh.rotation.x = THREE.MathUtils.degToRad(-90);
@@ -110,11 +105,11 @@ export default function BakeryScene({
       bakeryZzal.current = mesh;
       bakeryZzal2.current = mesh2;
     });
-  }, []);
-  
+  }, [scene]);
+
   useEffect(() => {
     const loader = new THREE.TextureLoader();
-    loader.load('/assets/images/bakery_zzal2.png', (texture) => {
+    loader.load(BAKERY_ZZAL_SECOND_URL, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.needsUpdate = true;
 
@@ -124,7 +119,7 @@ export default function BakeryScene({
         alphaTest: 0.5,
         // depthWrite: false,
       });
-  
+
       const geometry = new THREE.PlaneGeometry(1.3, 1.2);
       const mesh = new THREE.Mesh(geometry, material);
       mesh.position.set(43, 0.05, -13.5);
@@ -137,24 +132,12 @@ export default function BakeryScene({
       scene.add(mesh);
       bakeryZzal3.current = mesh;
     });
-  }, []);
-
-
-  useEffect(() => {
-    if (bakeryTexture) {
-      bakeryTexture.colorSpace = THREE.SRGBColorSpace;
-      bakeryTexture.anisotropy = 16;
-      bakeryTexture.flipY = false;
-      bakeryTexture.needsUpdate = true;
-    }
-  }, [bakeryTexture]);
-
+  }, [scene]);
 
   const bgAudio = document.getElementById("bg-audio");
   const bakeryAudioRef = useRef();
   const bakerySorryAudioRef = useRef();
   const gogumiAudioRef = useRef();
-
 
   // ✅ 씬 복귀
   const restorePlayerAfterBakery = () => {
@@ -165,17 +148,16 @@ export default function BakeryScene({
     appearPlayer(playerRef, 1.2);
 
     setDisableMovement(false);
-    // enableMouseEvents();
-
 
     if (bgAudio) bgAudio.play(); //📢
     bakeryAudioRef.current?.stop();
 
     setCameraTarget(new Vector3(20, 0, -23.5));
-  };        
+  };
 
-  // ⚪️ 구름 이펙트
+  /** 빵집 모델이 준비되면 전환 위치에 잠시 구름을 띄운다. */
   const triggerCloudEffect = () => {
+    if (!bakeryGamzaRef.current) return;
     setShowCloudEffect(true);
     setTimeout(() => setShowCloudEffect(false), 1500);
   };
@@ -188,22 +170,25 @@ export default function BakeryScene({
     bamGogumaMixer.current?.update(delta);
 
     if (!triggered && playerRef.current) {
-      const dist = playerRef.current.position.clone().setY(0).distanceTo(BakerySpotMeshPosition);
-      const bakeryScript = document.getElementById('bakery-script')
-      bakeryScript.style.display = 'none'
-  
+      const dist = playerRef.current.position
+        .clone()
+        .setY(0)
+        .distanceTo(BakerySpotMeshPosition);
+      const bakeryScript = document.getElementById("bakery-script");
+      bakeryScript.style.display = "none";
+
       if (dist < 15 && !triggered) {
-        bakeryScript.style.display = 'block'
+        bakeryScript.style.display = "block";
       }
-      
+
       if (dist < 3.5) {
-        bakeryScript.style.display = 'none'
+        bakeryScript.style.display = "none";
 
         setTriggered(true);
         disappearPlayer(playerRef);
         setDisableMovement(true);
 
-        if (bgAudio) bgAudio.pause(); // 혹은 bgAudio.volume = 0;
+        if (bgAudio) bgAudio.pause();
 
         bakeryAudioRef.current?.play();
 
@@ -214,20 +199,19 @@ export default function BakeryScene({
             position: [30, 8, -30],
             lookAt: [30, 2, -37],
             zoom: 40,
-            near: -100,  // ✅ 추가
-            far: 50,    // ✅ 추가
+            near: -100,
+            far: 50,
           });
 
           animateCamera({
-            position: { x: 30, y: 6, z: -30},
+            position: { x: 30, y: 6, z: -30 },
             lookAt: [30, 2, -37],
             zoom: 45,
             duration: 3,
             near: -100,
             far: 50,
           });
-
-        }, 200)
+        }, 200);
 
         // triggerCloudEffect()
 
@@ -237,7 +221,7 @@ export default function BakeryScene({
           y: 1.7,
           z: 1.7,
           duration: 0.5,
-          ease: "expo.inOut"
+          ease: "expo.inOut",
         });
 
         gsap.to(bakeryGamzaRef.current.scale, {
@@ -245,7 +229,7 @@ export default function BakeryScene({
           y: 1.7,
           z: 1.7,
           duration: 0.5,
-          ease: "expo.inOut"       
+          ease: "expo.inOut",
         });
         gsap.to(bamGogumaRef.current.scale, {
           x: 1.7,
@@ -255,51 +239,47 @@ export default function BakeryScene({
           ease: "expo.inOut",
         });
 
-        gogumiAudioRef.current.play()
+        gogumiAudioRef.current.play();
         setTimeout(() => {
-          bakerySorryAudioRef.current.play()
-        }, 26000)
+          bakerySorryAudioRef.current.play();
+        }, 26000);
 
-        const bakeryAnim = bakeryActions.current?.["Scene"]
+        const bakeryAnim = bakeryActions.current?.["Scene"];
         bakeryAnim.reset().play();
         bakeryAnim.timeScale = 0.7;
 
-        const bakeryGamzaAnim = bakeryGamzaActions.current?.["Scene"]
+        const bakeryGamzaAnim = bakeryGamzaActions.current?.["Scene"];
         bakeryGamzaAnim.reset().play();
         bakeryGamzaAnim.timeScale = 0.7;
 
-        const bamGogumaAnim = bamGogumaActions.current?.["Scene"]
+        const bamGogumaAnim = bamGogumaActions.current?.["Scene"];
         bamGogumaAnim.reset().play();
         bamGogumaAnim.timeScale = 0.7;
 
         setTimeout(() => {
-  
           animateCamera({
-            position: { x: 30, y: 6, z: -33},
+            position: { x: 30, y: 6, z: -33 },
             lookAt: [30, 2, -37],
             zoom: 40,
             duration: 3,
             near: -100,
             far: 50,
           });
-
-        }, 10000)
+        }, 10000);
 
         setTimeout(() => {
-  
           animateCamera({
-            position: { x: 30, y: 3.2, z: -35},
+            position: { x: 30, y: 3.2, z: -35 },
             lookAt: [30, 2, -37],
             zoom: 50,
             duration: 2,
             near: -100,
             far: 50,
           });
-
-        }, 15000)
+        }, 15000);
 
         setTimeout(() => {
-          triggerCloudEffect()
+          triggerCloudEffect();
           gsap.to(bakeryGamzaRef.current.scale, {
             x: 0,
             y: 0,
@@ -309,18 +289,13 @@ export default function BakeryScene({
           });
         }, 30000);
 
-
-
         setTimeout(() => {
           restoreMainCamera(setCameraActive, setUseSceneCamera);
           restorePlayerAfterBakery();
         }, 35000);
-
       }
     }
   });
-
-
 
   return (
     <group ref={group}>
@@ -359,35 +334,28 @@ export default function BakeryScene({
 
       <ManualAudioPlayer
         ref={bakeryAudioRef}
-        url="/assets/audio/bakeryScene.mp3"
+        url={BAKERY_AUDIO_URL}
         volume={3}
         loop={false}
         position={[30, 2, -38]}
       />
       <ManualAudioPlayer
         ref={bakerySorryAudioRef}
-        url="/assets/audio/bakeryScene_sorry.mp3"
+        url={BAKERY_SORRY_AUDIO_URL}
         volume={3}
         loop={false}
         position={[30, 2, -38]}
       />
       <ManualAudioPlayer
         ref={gogumiAudioRef}
-        url="/assets/audio/gogumi.mp3"
+        url={GOGUMI_AUDIO_URL}
         volume={3}
         loop={false}
         position={[30, 2, -38]}
       />
 
-
-      {showCloudEffect && bakeryGamzaRef.current && (
-        <CloudEffect
-          position={[
-            34,
-            4,
-            -37,
-          ]}
-        />
+      {showCloudEffect && (
+        <CloudEffect position={[34, 4, -37]} />
       )}
       <mesh
         name="bakerySpot"
@@ -397,13 +365,13 @@ export default function BakeryScene({
         receiveShadow
       >
         <planeGeometry args={[7, 7]} />
-        <meshStandardMaterial  
+        <meshStandardMaterial
           map={bakeryTexture}
           transparent={true}
           alphaTest={0.5}
           depthWrite={true}
-          premultipliedAlpha={true} // ✅ 핵심 옵션!
-          />
+          premultipliedAlpha={true}
+        />
       </mesh>
     </group>
   );
